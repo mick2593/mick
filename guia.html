@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="icon-192.png">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Ficha de Ejecución</title>
+<style>
+/* Layout: sticky day-index strip + exercise cards styled as spec sheets —
+   pictogram tile, rep/tempo/rest data block, form notes — read like equipment tech cards. */
+:root{
+  --paper:#F1EFE9; --panel:#FFFFFF; --ink:#16181B; --muted:#5B5E63;
+  --accent:#E8622C; --accent-2:#1F6E80; --line:rgba(22,24,27,0.14);
+  --rest-chip:#EDE3D8; --font-display:'Barlow Condensed',system-ui,sans-serif;
+  --font-body:'IBM Plex Sans',system-ui,sans-serif; --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121316; --panel:#1B1D21; --ink:#ECEAE4; --muted:#9EA1A7;
+    --accent:#FF7A45; --accent-2:#4FB6C9; --line:rgba(236,234,228,0.16); --rest-chip:#2A2520;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121316; --panel:#1B1D21; --ink:#ECEAE4; --muted:#9EA1A7;
+  --accent:#FF7A45; --accent-2:#4FB6C9; --line:rgba(236,234,228,0.16); --rest-chip:#2A2520;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper); color:var(--ink); font-family:var(--font-body); line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px));}
+h1,h2,h3{font-family:var(--font-display); text-wrap:balance; margin:0; letter-spacing:0.01em}
+.wrap{max-width:860px; margin:0 auto}
+.mono{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+
+/* Header */
+header.hero{padding-block:40px 24px}
+.kicker{font-family:var(--font-mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent-2); font-weight:600}
+h1.title{font-size:clamp(34px,8vw,52px); font-weight:800; margin-top:6px}
+.sub{color:var(--muted); font-size:15px; max-width:60ch; margin-top:10px}
+
+/* Legend */
+.legend{background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:18px 20px; margin-top:20px; display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.legend h3{font-size:13px; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); font-family:var(--font-body); font-weight:700}
+.legend p{margin:6px 0 0; font-size:13.5px; color:var(--muted)}
+.legend .mono{color:var(--ink); font-weight:600}
+
+/* Day nav */
+nav.dayindex{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--paper);
+  border-bottom:1px solid var(--line); margin-top:28px; padding-block:10px;}
+nav.dayindex .row{display:flex; gap:8px; overflow-x:auto; padding-bottom:2px}
+nav.dayindex a{flex:0 0 auto; font-family:var(--font-mono); font-size:12px; text-decoration:none; color:var(--ink);
+  border:1px solid var(--line); border-radius:999px; padding:7px 14px; white-space:nowrap; transition:background .15s,color .15s,border-color .15s}
+nav.dayindex a:hover,nav.dayindex a:focus-visible{border-color:var(--accent); color:var(--accent)}
+nav.dayindex a.active{background:var(--accent); border-color:var(--accent); color:#fff}
+
+/* Day section */
+section.day{padding-top:44px; scroll-margin-top:60px}
+.daytag{display:inline-block; font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+  background:var(--accent); color:#fff; border-radius:3px; padding:4px 9px; font-weight:600}
+.daytag.rest{background:var(--muted)}
+h2.dayname{font-size:clamp(26px,6vw,36px); font-weight:800; margin-top:10px}
+.dayfocus{color:var(--muted); font-size:14px; margin-top:4px}
+
+/* Exercise card */
+.card{display:grid; grid-template-columns:120px 1fr; gap:18px; background:var(--panel); border:1px solid var(--line);
+  border-radius:6px; padding:16px; margin-top:16px}
+@media (max-width:480px){.card{grid-template-columns:1fr}}
+.pictile{background:var(--paper); border:1px solid var(--line); border-radius:4px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:10px; gap:6px; min-height:120px}
+.pictogram{width:72px; height:72px; color:var(--ink)}
+.phase{font-family:var(--font-mono); font-size:9.5px; color:var(--muted); text-align:center; line-height:1.3}
+.cardbody h3.exname{font-size:18px; font-weight:700; font-family:var(--font-body)}
+.specs{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+.chip{font-family:var(--font-mono); font-size:12px; border:1px solid var(--line); border-radius:4px; padding:4px 9px; display:flex; gap:5px; align-items:baseline}
+.chip .lbl{color:var(--muted); font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em}
+.chip.sets{border-color:var(--accent); color:var(--accent); font-weight:700}
+.chip.rest{background:var(--rest-chip)}
+.form{margin:10px 0 0; padding:0; list-style:none; display:grid; gap:5px}
+.form li{font-size:13.5px; padding-left:16px; position:relative; color:var(--ink)}
+.form li::before{content:"–"; position:absolute; left:0; color:var(--accent-2); font-weight:700}
+
+footer{padding-block:40px 60px; color:var(--muted); font-size:12.5px; border-top:1px solid var(--line); margin-top:50px}
+footer p{max-width:60ch}
+
+@media (prefers-reduced-motion:no-preference){ a{transition:color .15s} }
+
+/* ---- Animación 3D ---- */
+.card{grid-template-columns:290px 1fr}
+@media (max-width:720px){.card{grid-template-columns:1fr}}
+.pictile{padding:8px; gap:6px; align-items:stretch; min-height:0; justify-content:flex-start}
+svg.stage{display:block; width:100%; height:auto; aspect-ratio:260/240; touch-action:manipulation}
+.stage line{stroke-linecap:round}
+.stage .b{stroke:var(--ink)} .stage .h{stroke:var(--accent)} .stage .g{stroke:var(--muted); opacity:.24}
+.stage .e{stroke:var(--muted)} .stage .bar{stroke:var(--ink)} .stage .k{stroke:var(--muted)} .stage .f{stroke:var(--line)}
+.stage .pad{fill:var(--line); stroke:var(--muted)}
+.stage .plate{fill:var(--panel); fill-opacity:.6; stroke:var(--ink); stroke-width:1}
+.stage .torso{fill:var(--ink); fill-opacity:.1; stroke:none}
+.stage .torsoh{fill:var(--accent); fill-opacity:.3; stroke:none}
+.stage .head{fill:var(--paper); stroke:var(--ink); stroke-width:1.6}
+.stage .jt{fill:var(--ink)}
+.stage .arc{fill:none; stroke:var(--accent-2); stroke-width:2.2; stroke-linecap:round}
+.livebox{display:flex; flex-direction:column; gap:6px}
+.live{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; font-family:var(--font-mono); font-size:12px; min-height:20px}
+.live .ph{font-weight:700; color:var(--accent); min-width:62px; letter-spacing:.04em}
+.live .ph.pausa,.live .ph.mantén{color:var(--accent-2)}
+.live .tm{color:var(--muted)}
+.live .ang{margin-left:auto; color:var(--accent-2); font-weight:600}
+.ctl{display:flex; flex-wrap:wrap; gap:5px}
+.ctl button{font-family:var(--font-mono); font-size:11px; color:var(--ink); background:transparent; border:1px solid var(--line);
+  border-radius:999px; padding:6px 10px; min-height:32px; cursor:pointer}
+.ctl button[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+.ctl button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.phase{font-size:10.5px}
+
+/* ---- v5: calentamiento, paso a paso, aviso de hombro ---- */
+.callout{background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:4px; padding:18px 20px; margin-top:20px}
+.callout h2{font-size:24px; font-weight:800}
+.callout p{margin:8px 0 0; font-size:14px; max-width:68ch}
+.callout ul{margin:8px 0 0; padding-left:18px; font-size:14px; display:grid; gap:4px}
+.callout .cols{display:grid; gap:14px 28px; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); margin-top:6px}
+.callout h3{font-family:var(--font-body); font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); font-weight:700; margin-top:12px}
+.callout .fine{font-size:12.5px; color:var(--muted)}
+.warm{margin-top:20px; border:1px solid var(--line); border-left:4px solid var(--accent-2); border-radius:6px; background:var(--panel); padding:16px 16px 6px}
+.warmhead{display:flex; flex-wrap:wrap; gap:8px 12px; align-items:baseline}
+.warmhead h3{font-size:22px; font-weight:800}
+.warmhead .mins{font-family:var(--font-mono); font-size:12px; color:var(--accent-2); font-weight:600; border:1px solid var(--accent-2); border-radius:999px; padding:2px 10px}
+.warm .intro{margin:6px 0 0; color:var(--muted); font-size:14px; max-width:68ch}
+.warm .card{background:var(--paper); margin-top:12px; grid-template-columns:230px 1fr; padding:12px}
+.warm .pictile{background:var(--panel)}
+@media (max-width:720px){.warm .card{grid-template-columns:1fr}}
+.warm .cardbody h3.exname{font-size:16px}
+.warm .cardbody p{margin:8px 0 0; font-size:13.5px}
+.warm .cardbody p b{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-2); margin-right:6px}
+.chip.dose{border-color:var(--accent-2); color:var(--accent-2); font-weight:600}
+.ramp{margin:14px 0 12px; padding-top:12px; border-top:1px dashed var(--line)}
+.ramp h4{margin:0; font-family:var(--font-body); font-size:13px; font-weight:700}
+.ramp ol{list-style:none; margin:8px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px; align-items:stretch}
+.ramp li{font-family:var(--font-mono); font-size:12px; border:1px solid var(--line); background:var(--paper); border-radius:4px; padding:6px 10px; display:flex; flex-direction:column; gap:2px}
+.ramp li b{font-size:12.5px}
+.ramp li span{color:var(--muted); font-size:11px}
+.ramp li.work{background:var(--accent); border-color:var(--accent); color:#fff}
+.ramp li.work span{color:#fff}
+.ramp p{margin:8px 0 0; font-size:12.5px; color:var(--muted)}
+.worktitle{font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:26px 0 0; display:flex; align-items:center; gap:10px}
+.worktitle::after{content:""; flex:1; border-top:1px solid var(--line)}
+.steps{margin:12px 0 0; display:grid; gap:8px}
+.steps div{display:grid; grid-template-columns:78px 1fr; gap:10px; align-items:baseline}
+@media (max-width:480px){.steps div{grid-template-columns:1fr; gap:2px}}
+.steps dt{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; font-weight:600; color:var(--accent-2)}
+.steps div.err dt{color:var(--accent)}
+.steps dd{margin:0; font-size:13.5px}
+.note{margin:10px 0 0; font-size:12.5px; color:var(--muted); border-left:3px solid var(--accent); padding-left:10px}
+</style>
+</head>
+<body>
+<div style="padding:10px 16px;font:600 13px system-ui"><a href="./" style="color:inherit">← Volver a la Bitácora</a></div>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+
+<div class="wrap">
+<header class="hero">
+  <div class="kicker">Miguel Ángel · Gimnasio en casa</div>
+  <h1 class="title">Ficha de Ejecución</h1>
+  <p class="sub">Cada día con su calentamiento específico y cada ejercicio explicado: posición, movimiento con ángulos, errores comunes y músculos que trabaja. Todo con animación 3D que respeta el tempo.</p>
+  <div class="legend">
+    <div><h3>Calentamiento</h3><p>Cada día empieza con un bloque de ~8–10 min: <span class="mono">general → movilidad → activación → series de aproximación</span>. Cabe dentro de tu hora 20 de entrenamiento.</p></div>
+    <div><h3>Tempo</h3><p>Tres números: <span class="mono">bajada–pausa–subida</span>, en segundos. Ej. <span class="mono">3-1-1</span> = 3 s bajando, 1 s de pausa, 1 s subiendo.</p></div>
+    <div><h3>Descanso</h3><p>Tiempo entre series del mismo ejercicio. Respétalo: permite recuperar fuerza sin perder técnica.</p></div>
+    <div><h3>Animación</h3><p>La silueta tenue marca las posiciones extremas y el arco azul mide el ángulo clave. Toca <span class="mono">Lado / Frente / 3/4</span> para rotar, <span class="mono">❚❚</span> para pausar y <span class="mono">×½</span> para cámara lenta.</p></div>
+  </div>
+</header>
+
+<nav class="dayindex" aria-label="Índice de días"><div class="row">
+  <a href="#hombro">Dolor</a><a href="#martes">Martes · A</a><a href="#miercoles">Miércoles · B</a><a href="#viernes">Viernes · C</a><a href="#sabado">Sábado · D</a><a href="#abdomen">Abdomen noche</a>
+</div></nav>
+
+<section class="day" id="hombro">
+  <div class="callout">
+    <h2>Si el hombro te duele después del empuje</h2>
+    <p>No puedo diagnosticar desde aquí. Estas son las causas más comunes y lo que conviene ajustar; si no mejora, que lo revise un fisioterapeuta o médico.</p>
+    <div class="cols">
+      <div><h3>Causas probables</h3><ul>
+        <li>Calentamiento corto o sin series de aproximación.</li>
+        <li>Mucho volumen de hombro junto: banca, press militar, fondos y laterales.</li>
+        <li>Codos muy abiertos en banca (a 90° del torso) o fondos por debajo de 90° de codo.</li>
+        <li>Subir peso rápido sin que el manguito rotador esté activado.</li></ul></div>
+      <div><h3>Qué hacer esta semana</h3><ul>
+        <li>Haz el calentamiento completo, incluida la rotación externa y el wall slide.</li>
+        <li>Banca con codos a ~45–60° y fondos hasta 90° como máximo (o cámbialos por flexiones).</li>
+        <li>Regla práctica: una molestia de hasta 3/10 que no empeora al calentar es aceptable. Un dolor punzante: corta ese ejercicio.</li>
+        <li>No fuerces el rango doloroso en aperturas ni en elevaciones laterales.</li></ul></div>
+      <div><h3>Ve con un profesional si…</h3><ul>
+        <li>El dolor es agudo al elevar el brazo o te despierta de noche.</li>
+        <li>Hay hormigueo, adormecimiento o pérdida de fuerza.</li>
+        <li>Sigue igual o peor después de ~2 semanas con estos ajustes.</li></ul></div>
+    </div>
+  </div>
+  <div class="callout">
+    <h2>Si te duele la espalda baja después de pierna</h2>
+    <p>Un dolor que dura todo el día después de la sentadilla trasera es una señal para cambiar el ejercicio, no para aguantarlo. Por eso el viernes ahora empieza con sentadilla goblet.</p>
+    <div class="cols">
+      <div><h3>Causas probables</h3><ul>
+        <li>Barra apoyada sobre la nuca y no sobre el trapecio: empuja el torso hacia adelante.</li>
+        <li>Perder la tensión del abdomen al bajar o redondear la lumbar en el fondo.</li>
+        <li>Sentadilla y peso muerto rumano el mismo día: los dos cargan los erectores.</li></ul></div>
+      <div><h3>Qué cambia en tu plan</h3><ul>
+        <li>Sentadilla goblet con talones elevados en lugar de la trasera: la carga va al frente y es ligera para la columna.</li>
+        <li>Bird dog y puente de glúteo en el calentamiento.</li>
+        <li>Si el rumano también molesta, baja a 3 series y detén la bajada a la altura de las rodillas.</li></ul></div>
+      <div><h3>Ve con un profesional si…</h3><ul>
+        <li>El dolor baja a la pierna o hay hormigueo o adormecimiento.</li>
+        <li>No cede con reposo o empeora de noche.</li>
+        <li>Sigue igual después de 2 semanas sin la sentadilla trasera.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="day" id="martes"><span class="daytag">Martes</span><h2 class="dayname">Rutina A — Empuje</h2><p class="dayfocus">Pecho · Hombro · Tríceps</p><div class="warm" id="cal-martes"><div class="warmhead"><h3>Calentamiento de empuje</h3><span class="mins">≈ 10 min</span></div><p class="intro">Del general a lo específico: sube la temperatura, moviliza la espalda alta, activa el manguito rotador y el serrato, y termina con series de aproximación en el press de banca. No es un relleno: aquí es donde se protege el hombro.</p><article class="card"><div class="pictile" data-ex="jj" data-tempo="1-0-1"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Jumping jacks"></svg><span class="phase">Abre y cierra brazos y piernas</span></div><div class="cardbody"><h3 class="exname">Jumping jacks</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 30 s</span></div><p><b>Cómo</b>Salta abriendo piernas y llevando los brazos por encima de la cabeza; cierra al aterrizar. Ritmo ligero, aterriza suave sobre la punta de los pies. Si el hombro molesta, sube los brazos solo hasta la altura de los hombros.</p><p><b>Para qué</b>Sube temperatura y frecuencia cardiaca antes de mover articulaciones.</p></div></article><article class="card"><div class="pictile" data-ex="armcircles" data-hold="20"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Círculos de brazo"></svg><span class="phase">Círculos grandes y controlados</span></div><div class="cardbody"><h3 class="exname">Círculos de brazo</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × (10 adelante + 10 atrás)</span></div><p><b>Cómo</b>Brazos extendidos, círculos de ~55 cm de radio desde el hombro. Empieza pequeños y agrándalos con cada vuelta; luego invierte el sentido.</p><p><b>Para qué</b>Lubrica el hombro y sube el flujo sanguíneo al manguito rotador y al deltoide.</p></div></article><article class="card"><div class="pictile" data-ex="catcow" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Gato–vaca"></svg><span class="phase">Redondea → arquea</span></div><div class="cardbody"><h3 class="exname">Gato–vaca</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 8–10 repeticiones lentas</span></div><p><b>Cómo</b>En cuatro apoyos, manos bajo los hombros y rodillas bajo la cadera. Redondea toda la espalda (2 s), luego arquea mirando al frente (2 s). Mueve sobre todo la parte alta de la espalda.</p><p><b>Para qué</b>Movilidad de la columna torácica: si no se mueve, el hombro compensa en cada press.</p></div></article><article class="card"><div class="pictile" data-ex="wallslide" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Wall slide"></svg><span class="phase">De &quot;W&quot; a &quot;Y&quot; pegado a la pared</span></div><div class="cardbody"><h3 class="exname">Wall slide</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 10</span></div><p><b>Cómo</b>Frente a la pared, antebrazos y muñecas pegados formando una &quot;W&quot; (codos ~90°). Desliza hacia arriba hasta una &quot;Y&quot; sin despegar los antebrazos ni arquear la lumbar; baja a la &quot;W&quot;.</p><p><b>Para qué</b>Activa serrato anterior y trapecio inferior, que giran la escápula al elevar el brazo.</p></div></article><article class="card"><div class="pictile" data-ex="extrot" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Rotación externa en polea"></svg><span class="phase">Rota el antebrazo hacia afuera → regresa</span></div><div class="cardbody"><h3 class="exname">Rotación externa en polea</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 12–15 por lado, carga mínima</span></div><p><b>Cómo</b>Polea a la altura del codo, de lado. Codo pegado a la costilla con una toalla enrollada entre ambos, antebrazo a 90°. Rota el antebrazo hacia afuera ~45–55° y regresa en 2 s. Si no se mueve la toalla, vas bien.</p><p><b>Para qué</b>Activa infraespinoso y redondo menor, que mantienen la cabeza del húmero centrada durante los presses.</p></div></article><div class="ramp"><h4>Series de aproximación · Press de banca</h4><ol><li class=""><b>Barra vacía</b><span>×10</span></li><li class=""><b>50 %</b><span>×6</span></li><li class=""><b>70 %</b><span>×4</span></li><li class=""><b>85 %</b><span>×2</span></li><li class="work"><b>Serie de trabajo</b></li></ol><p>Descansa 45–60 s entre aproximaciones. Ninguna debe acercarse al fallo.</p></div></div><div class="worktitle">Trabajo principal</div><article class="card"><div class="pictile" data-ex="bench" data-tempo="3-1-1"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Press de banca con barra"></svg><span class="phase">Baja hasta rozar pecho → empuja arriba</span></div><div class="cardbody"><h3 class="exname">Press de banca con barra</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x 6–8</span><span class="chip"><span class="lbl">Tempo</span> 3-1-1</span><span class="chip rest"><span class="lbl">Descanso</span> 120 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Acostado con los ojos bajo la barra. Omóplatos juntos y hacia abajo (como metidos en los bolsillos de atrás), pies firmes bajo las rodillas, arco lumbar natural. Agarre ~1.5 veces el ancho de hombros, muñecas rectas.</dd></div><div><dt>Movimiento</dt><dd>Baja en 3 s hasta rozar el pecho a la altura del pezón, con los codos a ~45–60° del torso (el codo llega a ~90°). Pausa 1 s sin relajarte. Sube en 1 s en línea ligeramente diagonal hacia los ojos.</dd></div><div class="err"><dt>Error común</dt><dd>Codos abiertos a 90° (en &quot;T&quot;): es lo que más carga el hombro. Rebotar la barra; despegar los glúteos; doblar las muñecas hacia atrás.</dd></div><div><dt>Trabaja</dt><dd>Pectoral mayor, deltoide anterior, tríceps.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="ohp" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Press militar de pie con mancuernas"></svg><span class="phase">Empuja arriba → baja controlado a los hombros</span></div><div class="cardbody"><h3 class="exname">Press militar de pie con mancuernas</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 8–10</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 90 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De pie, pies al ancho de caderas, glúteos y abdomen apretados. Mancuernas a la altura de los hombros, antebrazos verticales y codos un poco por delante del cuerpo (~30°).</dd></div><div><dt>Movimiento</dt><dd>Empuja en 2 s hasta casi extender los codos (sin bloquear); las mancuernas se juntan sobre la cabeza, ligeramente por detrás de las orejas. Baja en 2 s hasta que el codo quede a ~90°.</dd></div><div class="err"><dt>Error común</dt><dd>Arquear la zona lumbar y sacar las costillas; empujar hacia adelante en vez de hacia arriba; bloquear los codos; ayudarte con las piernas.</dd></div><div><dt>Trabaja</dt><dd>Deltoide anterior y medio, tríceps, trapecio superior. El abdomen estabiliza.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="fly" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Aperturas en polea cruzada"></svg><span class="phase">Abre los brazos → junta al frente del pecho</span></div><div class="cardbody"><h3 class="exname">Aperturas en polea cruzada</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 12–15</span><span class="chip"><span class="lbl">Tempo</span> 2-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Poleas altas a ambos lados. Un paso al frente en postura escalonada, torso inclinado ~10–15° y codos con flexión suave y fija (~15–20°).</dd></div><div><dt>Movimiento</dt><dd>Abre en 2 s hasta que las manos queden a la altura de los hombros (codos un poco por detrás del torso), sin forzar el estiramiento. Junta en 2 s trazando un arco al frente del esternón y pausa 1 s apretando el pecho.</dd></div><div class="err"><dt>Error común</dt><dd>Doblar y estirar los codos (se vuelve press); encoger los hombros; abrir tanto que el hombro se va hacia adelante. Si el hombro molesta, abre solo hasta la línea del torso.</dd></div><div><dt>Trabaja</dt><dd>Pectoral mayor y deltoide anterior.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="dip" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Fondos en power tower"></svg><span class="phase">Baja hasta 90° de codo → empuja arriba</span></div><div class="cardbody"><h3 class="exname">Fondos en power tower</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x al fallo</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 90 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Brazos extendidos entre las barras, hombros lejos de las orejas, torso inclinado ~15–20° hacia adelante, piernas cruzadas detrás.</dd></div><div><dt>Movimiento</dt><dd>Baja en 2 s hasta ~90° de codo (el hombro a la altura de los codos, no más profundo); sube en 2 s sin bloquear. Codos hacia atrás y ligeramente afuera.</dd></div><div class="err"><dt>Error común</dt><dd>Bajar más de 90°: es la causa más común de dolor de hombro en fondos. Encogerte de hombros; balancearte. Si hoy el hombro duele, cambia los fondos por flexiones o por una serie más de tríceps en polea.</dd></div><div><dt>Trabaja</dt><dd>Pecho inferior, tríceps y deltoide anterior.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="pushdown" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Extensión de tríceps en polea"></svg><span class="phase">Extiende abajo → sube controlado</span></div><div class="cardbody"><h3 class="exname">Extensión de tríceps en polea</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 10–12</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Polea alta con cuerda o barra. De pie con inclinación ~10° hacia adelante y los codos pegados a las costillas.</dd></div><div><dt>Movimiento</dt><dd>Empuja hacia abajo en 2 s hasta extender el codo (~170°, sin bloquear). Sube en 2 s hasta ~80–90° de codo. Solo se mueve el antebrazo.</dd></div><div class="err"><dt>Error común</dt><dd>Dejar que los codos se vayan adelante; usar el peso del cuerpo; subir más de 90° (el hombro entra a compensar).</dd></div><div><dt>Trabaja</dt><dd>Tríceps (cabezas lateral y medial).</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="lateral" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Elevación lateral en polea baja (cable por detrás de las piernas)"></svg><span class="phase">Eleva el brazo hasta la altura del hombro → baja con control</span></div><div class="cardbody"><h3 class="exname">Elevación lateral en polea baja (cable por detrás de las piernas)</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x 12–15</span><span class="chip"><span class="lbl">Tempo</span> 2-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 45–60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Polea en la posición más baja, de lado a la torre. Toma la agarradera con la mano más lejana a la polea y pasa el cable por detrás de tus piernas. Pies firmes, torso casi recto (~5°), codo con flexión suave (~15°).</dd></div><div><dt>Movimiento</dt><dd>Lidera con el codo: sube en 2 s hasta la altura del hombro (≈90°), un poco por delante del plano del cuerpo; pausa 1 s; baja en 2 s sin dejar que el cable te jale. Todas las series de un brazo y cambia de lado.</dd></div><div class="err"><dt>Error común</dt><dd>Subir más de 90° (entra el trapecio y se pellizca el hombro); balancear el torso para generar impulso; subir la muñeca antes que el codo.</dd></div><div><dt>Trabaja</dt><dd>Deltoide medio.</dd></div></dl><p class="note">Ajuste del plan: 3 → 4 series (más volumen para el deltoide medio, según la evidencia de la guía).</p></div></article></section>
+<section class="day" id="miercoles"><span class="daytag">Miércoles</span><h2 class="dayname">Rutina B — Tirón</h2><p class="dayfocus">Espalda · Bíceps · Deltoide posterior · Pantorrilla</p><div class="warm" id="cal-miercoles"><div class="warmhead"><h3>Calentamiento de tirón</h3><span class="mins">≈ 8 min</span></div><p class="intro">Prepara agarre, dorsal y hombro. Las dominadas son lo primero que haces, así que el colgado y las aproximaciones son parte del trabajo.</p><article class="card"><div class="pictile" data-ex="jj" data-tempo="1-0-1"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Jumping jacks"></svg><span class="phase">Abre y cierra brazos y piernas</span></div><div class="cardbody"><h3 class="exname">Jumping jacks</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 30 s</span></div><p><b>Cómo</b>Salta abriendo piernas y llevando los brazos por encima de la cabeza; cierra al aterrizar. Ritmo ligero, aterriza suave sobre la punta de los pies. Si el hombro molesta, sube los brazos solo hasta la altura de los hombros.</p><p><b>Para qué</b>Sube temperatura y frecuencia cardiaca antes de mover articulaciones.</p></div></article><article class="card"><div class="pictile" data-ex="deadhang" data-hold="20"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Colgado pasivo"></svg><span class="phase">Cuelga relajado con brazos extendidos</span></div><div class="cardbody"><h3 class="exname">Colgado pasivo</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 20 s</span></div><p><b>Cómo</b>Agarre a ancho de hombros, brazos estirados. Primero relaja y deja que los hombros suban; luego baja los omóplatos suavemente, sin doblar los codos. Respira.</p><p><b>Para qué</b>Descomprime el hombro y prepara antebrazos y dorsal para las dominadas.</p></div></article><article class="card"><div class="pictile" data-ex="catcow" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Gato–vaca"></svg><span class="phase">Redondea → arquea</span></div><div class="cardbody"><h3 class="exname">Gato–vaca</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 8–10 repeticiones lentas</span></div><p><b>Cómo</b>En cuatro apoyos, manos bajo los hombros y rodillas bajo la cadera. Redondea toda la espalda (2 s), luego arquea mirando al frente (2 s). Mueve sobre todo la parte alta de la espalda.</p><p><b>Para qué</b>Movilidad de la columna torácica: si no se mueve, el hombro compensa en cada press.</p></div></article><article class="card"><div class="pictile" data-ex="extrot" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Rotación externa en polea"></svg><span class="phase">Rota el antebrazo hacia afuera → regresa</span></div><div class="cardbody"><h3 class="exname">Rotación externa en polea</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 12–15 por lado, carga mínima</span></div><p><b>Cómo</b>Polea a la altura del codo, de lado. Codo pegado a la costilla con una toalla enrollada entre ambos, antebrazo a 90°. Rota el antebrazo hacia afuera ~45–55° y regresa en 2 s. Si no se mueve la toalla, vas bien.</p><p><b>Para qué</b>Activa infraespinoso y redondo menor, que mantienen la cabeza del húmero centrada durante los presses.</p></div></article><article class="card"><div class="pictile" data-ex="facepull" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Face pull ligero"></svg><span class="phase">Jala hacia la frente, codos altos</span></div><div class="cardbody"><h3 class="exname">Face pull ligero</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 1 × 15 con carga muy ligera</span></div><p><b>Cómo</b>Cuerda a la altura de la cara, carga mínima. Jala separando las manos hasta las orejas con los codos altos; pausa 1 s; regresa en 2 s.</p><p><b>Para qué</b>Calienta deltoide posterior y manguito rotador con carga baja.</p></div></article><div class="ramp"><h4>Aproximación · Dominadas</h4><ol><li class=""><b>Colgado</b><span>20 s</span></li><li class=""><b>Dominadas fáciles</b><span>×3</span></li><li class=""><b>Dominadas</b><span>×5 sin acercarte al fallo</span></li><li class="work"><b>Serie de trabajo</b></li></ol><p>Si aún no llegas a 5 con comodidad, cambia las aproximaciones por jalón ligero ×10.</p></div></div><div class="worktitle">Trabajo principal</div><article class="card"><div class="pictile" data-ex="pullup_close" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Dominadas agarre cerrado"></svg><span class="phase">Agarre cerrado · jala el pecho a la barra</span></div><div class="cardbody"><h3 class="exname">Dominadas agarre cerrado</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x al fallo</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 120 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Cuélgate con brazos extendidos, manos a ancho de hombros, palmas hacia ti o neutras. Antes de jalar baja los omóplatos (aleja los hombros de las orejas). Piernas cruzadas un poco detrás.</dd></div><div><dt>Movimiento</dt><dd>Jala en 2 s llevando el pecho hacia la barra y los codos hacia las costillas hasta pasar la barbilla; baja en 2 s hasta casi extender (~165–170° de codo).</dd></div><div class="err"><dt>Error común</dt><dd>Balancearte (kipping); jalar solo con el cuello estirado; no extender abajo; subir los hombros hacia las orejas.</dd></div><div><dt>Trabaja</dt><dd>Dorsal ancho, redondo mayor, bíceps y romboides.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="pulldown" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Jalón al pecho en polea alta"></svg><span class="phase">Jala al pecho → regresa con control</span></div><div class="cardbody"><h3 class="exname">Jalón al pecho en polea alta</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x 10–12</span><span class="chip"><span class="lbl">Tempo</span> 2-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 90 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Muslos bajo el cojín, pecho arriba, inclinación ~10–20° hacia atrás. Agarre un poco más ancho que los hombros.</dd></div><div><dt>Movimiento</dt><dd>Jala en 2 s llevando los codos hacia abajo y atrás hasta que la barra toque la parte alta del pecho; pausa 1 s; regresa en 2 s hasta casi extender los brazos.</dd></div><div class="err"><dt>Error común</dt><dd>Jalar la barra detrás de la nuca; usar impulso con el torso; encoger los hombros.</dd></div><div><dt>Trabaja</dt><dd>Dorsal ancho, redondo mayor y bíceps.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="row" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Remo sentado en polea baja"></svg><span class="phase">Jala hacia el abdomen → extiende al frente</span></div><div class="cardbody"><h3 class="exname">Remo sentado en polea baja</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 10–12</span><span class="chip"><span class="lbl">Tempo</span> 2-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 90 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Sentado con las rodillas ligeramente flexionadas, pecho erguido y columna neutra. Brazos extendidos al frente.</dd></div><div><dt>Movimiento</dt><dd>Jala en 2 s llevando los codos atrás, rozando las costillas, con las manos hacia el abdomen bajo; pausa 1 s apretando los omóplatos; extiende en 2 s sin redondear la espalda.</dd></div><div class="err"><dt>Error común</dt><dd>Echar el torso hacia atrás para jalar; redondear la lumbar al extender; encoger los hombros.</dd></div><div><dt>Trabaja</dt><dd>Dorsal ancho, romboides, trapecio medio e inferior, bíceps.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="pullup_wide" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Dominadas agarre abierto"></svg><span class="phase">Agarre abierto · jala el pecho a la barra</span></div><div class="cardbody"><h3 class="exname">Dominadas agarre abierto</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x al fallo</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 120 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Manos ~1.5 veces el ancho de hombros, palmas al frente. Omóplatos hacia abajo antes de empezar.</dd></div><div><dt>Movimiento</dt><dd>Jala en 2 s llevando los codos hacia el piso y los lados hasta pasar la barbilla; baja en 2 s hasta extensión casi completa.</dd></div><div class="err"><dt>Error común</dt><dd>Media repetición abajo; agarrar demasiado ancho (más de ~2 veces el ancho de hombros estresa el hombro); jalar hasta la nuca.</dd></div><div><dt>Trabaja</dt><dd>Dorsal ancho, redondo mayor, trapecio inferior.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="curl" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Curl de bíceps con barra Z"></svg><span class="phase">Flexiona el codo → baja controlado</span></div><div class="cardbody"><h3 class="exname">Curl de bíceps con barra Z</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 10–12</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De pie con la barra Z en agarre medio, codos pegados a las costillas y hombros atrás.</dd></div><div><dt>Movimiento</dt><dd>Sube en 2 s flexionando el codo hasta ~145° (la barra a la altura del pecho) sin mover los codos; baja en 2 s hasta casi extender.</dd></div><div class="err"><dt>Error común</dt><dd>Balancear el torso; adelantar los codos; doblar las muñecas; soltar la bajada.</dd></div><div><dt>Trabaja</dt><dd>Bíceps braquial y braquial.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="hammer" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Curl martillo con mancuernas"></svg><span class="phase">Agarre neutro · flexiona → baja controlado</span></div><div class="cardbody"><h3 class="exname">Curl martillo con mancuernas</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 10–12</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De pie, una mancuerna en cada mano con las palmas mirándose (agarre neutro), codos pegados a las costillas, hombros atrás.</dd></div><div><dt>Movimiento</dt><dd>Alterna los brazos: sube una mancuerna en 2 s hasta ~145° de flexión del codo sin mover el codo, baja en 2 s hasta casi extender, y sigue con el otro brazo.</dd></div><div class="err"><dt>Error común</dt><dd>Balancear el torso; adelantar los codos; girar la muñeca durante la subida.</dd></div><div><dt>Trabaja</dt><dd>Braquial, braquiorradial y bíceps (da grosor al brazo).</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="facepull" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Face pull en polea (deltoide posterior)"></svg><span class="phase">Jala a la altura de la cara, codos arriba → regresa</span></div><div class="cardbody"><h3 class="exname">Face pull en polea (deltoide posterior)</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 15</span><span class="chip"><span class="lbl">Tempo</span> 2-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Polea a la altura de la cara con cuerda, pulgares hacia ti. Da un paso atrás, inclinación ligera hacia atrás (~6°) y brazos extendidos.</dd></div><div><dt>Movimiento</dt><dd>Jala en 2 s hacia la frente separando las manos hasta que queden junto a las orejas, codos altos y antebrazos casi verticales (~90° de codo); pausa 1 s apretando la espalda alta; regresa en 2 s.</dd></div><div class="err"><dt>Error común</dt><dd>Jalar con las manos bajas hacia el pecho (se vuelve remo); usar demasiado peso; encoger el cuello.</dd></div><div><dt>Trabaja</dt><dd>Deltoide posterior, manguito rotador (infraespinoso y redondo menor), trapecio medio e inferior.</dd></div></dl><p class="note">Nuevo en tu plan: refuerza deltoide posterior y manguito rotador. Úsalo con carga ligera (~40–50 % de lo que moverías en el sábado).</p></div></article><article class="card"><div class="pictile" data-ex="calf" data-tempo="1-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Elevación de pantorrillas"></svg><span class="phase">Sube en punta → baja estirando el talón</span></div><div class="cardbody"><h3 class="exname">Elevación de pantorrillas</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 20</span><span class="chip"><span class="lbl">Tempo</span> 1-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 45 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De pie en el borde de un escalón o disco con los talones al aire, mancuernas a los lados, rodillas casi extendidas.</dd></div><div><dt>Movimiento</dt><dd>Tempo 1-1-2: baja 1 s dejando que el talón pase por debajo del escalón, pausa 1 s en el estiramiento completo y sube en 2 s hasta quedar en puntas.</dd></div><div class="err"><dt>Error común</dt><dd>Rebotar en el estiramiento; doblar las rodillas para ayudarte; recorrido corto.</dd></div><div><dt>Trabaja</dt><dd>Gastrocnemio y sóleo.</dd></div></dl><p class="note">Nuevo en tu plan: +3 series de pantorrilla por semana (la frecuencia de 2×/semana la mejora).</p></div></article></section>
+<section class="day" id="viernes"><span class="daytag">Viernes</span><h2 class="dayname">Rutina C — Pierna completa</h2><p class="dayfocus">Cuádriceps · Isquiotibiales · Glúteo · Pantorrilla</p><div class="warm" id="cal-viernes"><div class="warmhead"><h3>Calentamiento de pierna</h3><span class="mins">≈ 10 min</span></div><p class="intro">Cadera, glúteo y estabilidad del tronco antes de cargar. El bird dog va aquí para proteger la espalda baja, que ya te avisó.</p><article class="card"><div class="pictile" data-ex="jj" data-tempo="1-0-1"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Jumping jacks"></svg><span class="phase">Abre y cierra brazos y piernas</span></div><div class="cardbody"><h3 class="exname">Jumping jacks</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 30 s</span></div><p><b>Cómo</b>Salta abriendo piernas y llevando los brazos por encima de la cabeza; cierra al aterrizar. Ritmo ligero, aterriza suave sobre la punta de los pies. Si el hombro molesta, sube los brazos solo hasta la altura de los hombros.</p><p><b>Para qué</b>Sube temperatura y frecuencia cardiaca antes de mover articulaciones.</p></div></article><article class="card"><div class="pictile" data-ex="hipswing" data-tempo="1-0-1"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Balanceo de pierna"></svg><span class="phase">Balancea adelante y atrás</span></div><div class="cardbody"><h3 class="exname">Balanceo de pierna</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 10 por pierna</span></div><p><b>Cómo</b>Apoyado en una pared o poste, balancea la pierna libre adelante y atrás, aumentando poco a poco la amplitud, con el torso erguido.</p><p><b>Para qué</b>Moviliza la cadera y calienta isquiotibiales y flexores de cadera.</p></div></article><article class="card"><div class="pictile" data-ex="glutebridge" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Puente de glúteo"></svg><span class="phase">Sube la cadera apretando glúteos</span></div><div class="cardbody"><h3 class="exname">Puente de glúteo</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 12</span></div><p><b>Cómo</b>Boca arriba, rodillas ~90° y pies planos. Sube la cadera hasta alinear hombros–rodillas apretando los glúteos; baja en 2 s.</p><p><b>Para qué</b>Despierta el glúteo para que la sentadilla no se haga con la lumbar.</p></div></article><article class="card"><div class="pictile" data-ex="birddog" data-tempo="2-2-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Bird dog"></svg><span class="phase">Extiende brazo y pierna contrarios</span></div><div class="cardbody"><h3 class="exname">Bird dog</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 6 por lado</span></div><p><b>Cómo</b>En cuatro apoyos, extiende un brazo y la pierna contraria hasta quedar horizontales sin girar la cadera; regresa y alterna. Movimiento lento.</p><p><b>Para qué</b>Activa glúteo, abdomen y músculos profundos de la espalda con muy poca carga lumbar.</p></div></article><article class="card"><div class="pictile" data-ex="hinge" data-tempo="3-1-1"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Bisagra de cadera"></svg><span class="phase">Cadera atrás, espalda neutra</span></div><div class="cardbody"><h3 class="exname">Bisagra de cadera</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 8</span></div><p><b>Cómo</b>Manos en la cadera. Lleva la cadera atrás con las rodillas casi rectas hasta sentir los isquios (torso ~60° inclinado), espalda neutra; regresa empujando la cadera.</p><p><b>Para qué</b>Ensaya el peso muerto rumano sin carga antes de poner la barra.</p></div></article><div class="ramp"><h4>Series de aproximación · Sentadilla goblet</h4><ol><li class=""><b>Mancuerna 8 kg</b><span>×10</span></li><li class=""><b>14 kg</b><span>×6</span></li><li class=""><b>20 kg</b><span>×3</span></li><li class="work"><b>Serie de trabajo</b><span>24 kg</span></li></ol><p>Descansa 45–60 s entre aproximaciones. En el peso muerto rumano usa 2 aproximaciones (barra vacía ×10 y 60 % ×5).</p></div></div><div class="worktitle">Trabajo principal</div><article class="card"><div class="pictile" data-ex="gobletheel" data-tempo="3-1-1"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Sentadilla goblet con talones elevados"></svg><span class="phase">Baja entre las piernas, torso erguido → sube</span></div><div class="cardbody"><h3 class="exname">Sentadilla goblet con talones elevados</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x 10–15</span><span class="chip"><span class="lbl">Tempo</span> 3-1-1</span><span class="chip rest"><span class="lbl">Descanso</span> 120 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Mancuerna vertical pegada al pecho, manos en copa bajo el disco de arriba y codos hacia abajo. Talones sobre un disco de 5–10 kg (2–3 cm de alto), pies al ancho de hombros con las puntas ~15–20° hacia afuera. Inhala y aprieta el abdomen antes de bajar.</dd></div><div><dt>Movimiento</dt><dd>Baja en 3 s entre las piernas con el torso casi vertical (~15–25° de inclinación) hasta que el muslo llegue a paralelo o un poco más abajo (el arco marca ~70° de rodilla en el fondo), sin que la lumbar se redondee. Pausa 1 s y sube en 1 s empujando con todo el pie. Que las rodillas pasen por delante de las puntas es normal con los talones elevados.</dd></div><div class="err"><dt>Error común</dt><dd>Separar la mancuerna del pecho (te jala hacia adelante y carga la lumbar); redondear la espalda al fondo; rodillas que se cierran; rebotar abajo.</dd></div><div><dt>Trabaja</dt><dd>Cuádriceps, glúteo mayor y aductores. La carga va al frente del cuerpo y no sobre la columna: la espalda baja trabaja mucho menos que con la barra en la espalda.</dd></div></dl><p class="note">Sustituye a la sentadilla trasera con barra por tu dolor lumbar. Para crecer, la carga ligera funciona si llegas cerca del fallo (1–2 repeticiones en reserva). Con la mancuerna de 24 kg, al completar 4×15 limpias: usa tempo 4-2-1, luego repeticiones de 1 y ½. Si la espalda está bien por 4–6 semanas, puedes probar la sentadilla frontal con barra.</p></div></article><article class="card"><div class="pictile" data-ex="rdl" data-tempo="3-0-1"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Peso muerto rumano con barra"></svg><span class="phase">Baja con cadera atrás → sube extendiendo cadera</span></div><div class="cardbody"><h3 class="exname">Peso muerto rumano con barra</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x 10–12</span><span class="chip"><span class="lbl">Tempo</span> 3-0-1</span><span class="chip rest"><span class="lbl">Descanso</span> 120 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De pie, barra frente a los muslos, pies al ancho de caderas, rodillas con ligera flexión (~15–20°), pecho arriba, omóplatos atrás.</dd></div><div><dt>Movimiento</dt><dd>Baja en 3 s llevando la cadera hacia atrás, con la barra pegada a muslos y espinillas, hasta sentir el estiramiento de los isquios (torso ~60–70° de inclinación). Sube en 1 s empujando la cadera hacia adelante.</dd></div><div class="err"><dt>Error común</dt><dd>Redondear la espalda; separar la barra del cuerpo; flexionar demasiado las rodillas (se vuelve sentadilla); hiperextender arriba.</dd></div><div><dt>Trabaja</dt><dd>Isquiotibiales, glúteo mayor y erectores espinales.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="split" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Sentadilla búlgara con mancuernas"></svg><span class="phase">Baja la rodilla trasera → sube con la pierna delantera</span></div><div class="cardbody"><h3 class="exname">Sentadilla búlgara con mancuernas</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 10–12 / pierna</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 90 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Pie trasero apoyado en un banco detrás de ti, pie delantero a ~60–70 cm, mancuernas a los lados, torso ligeramente inclinado.</dd></div><div><dt>Movimiento</dt><dd>Baja en 2 s en línea recta hasta que el muslo delantero quede paralelo (rodilla delantera ~90°). Sube en 2 s empujando con el pie delantero.</dd></div><div class="err"><dt>Error común</dt><dd>Rodilla delantera que se cierra; paso demasiado corto; empujar con el pie trasero.</dd></div><div><dt>Trabaja</dt><dd>Cuádriceps, glúteo mayor y aductores.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="lunge" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Zancadas con mancuernas"></svg><span class="phase">Da el paso y baja → empuja de regreso</span></div><div class="cardbody"><h3 class="exname">Zancadas con mancuernas</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 10–12 / pierna</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 75 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De pie con mancuernas a los lados, pies al ancho de caderas, torso erguido.</dd></div><div><dt>Movimiento</dt><dd>Da un paso largo (~80–90 cm) y baja en 2 s hasta que ambas rodillas formen ~90° (la trasera casi roza el piso). Empuja de regreso en 2 s con el pie delantero.</dd></div><div class="err"><dt>Error común</dt><dd>Paso corto; torso colapsado hacia adelante; rodilla hacia adentro; rebotar en el piso.</dd></div><div><dt>Trabaja</dt><dd>Glúteo mayor, cuádriceps e isquiotibiales.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="calf" data-tempo="1-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Elevación de pantorrillas"></svg><span class="phase">Sube en punta → baja estirando el talón</span></div><div class="cardbody"><h3 class="exname">Elevación de pantorrillas</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x 20–25</span><span class="chip"><span class="lbl">Tempo</span> 1-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 45 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De pie en el borde de un escalón o disco con los talones al aire, mancuernas a los lados, rodillas casi extendidas.</dd></div><div><dt>Movimiento</dt><dd>Tempo 1-1-2: baja 1 s dejando que el talón pase por debajo del escalón, pausa 1 s en el estiramiento completo y sube en 2 s hasta quedar en puntas.</dd></div><div class="err"><dt>Error común</dt><dd>Rebotar en el estiramiento; doblar las rodillas para ayudarte; recorrido corto.</dd></div><div><dt>Trabaja</dt><dd>Gastrocnemio y sóleo.</dd></div></dl></div></article></section>
+<section class="day" id="sabado"><span class="daytag">Sábado</span><h2 class="dayname">Rutina D — Hombro y Brazo</h2><p class="dayfocus">Deltoide (incluye posterior) · Bíceps · Tríceps</p><div class="warm" id="cal-sabado"><div class="warmhead"><h3>Calentamiento de hombro y brazo</h3><span class="mins">≈ 8 min</span></div><p class="intro">El mismo protocolo de hombro que el martes. Hoy trabajas el deltoide con el press y los laterales: no te lo saltes.</p><article class="card"><div class="pictile" data-ex="jj" data-tempo="1-0-1"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Jumping jacks"></svg><span class="phase">Abre y cierra brazos y piernas</span></div><div class="cardbody"><h3 class="exname">Jumping jacks</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 30 s</span></div><p><b>Cómo</b>Salta abriendo piernas y llevando los brazos por encima de la cabeza; cierra al aterrizar. Ritmo ligero, aterriza suave sobre la punta de los pies. Si el hombro molesta, sube los brazos solo hasta la altura de los hombros.</p><p><b>Para qué</b>Sube temperatura y frecuencia cardiaca antes de mover articulaciones.</p></div></article><article class="card"><div class="pictile" data-ex="armcircles" data-hold="20"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Círculos de brazo"></svg><span class="phase">Círculos grandes y controlados</span></div><div class="cardbody"><h3 class="exname">Círculos de brazo</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × (10 adelante + 10 atrás)</span></div><p><b>Cómo</b>Brazos extendidos, círculos de ~55 cm de radio desde el hombro. Empieza pequeños y agrándalos con cada vuelta; luego invierte el sentido.</p><p><b>Para qué</b>Lubrica el hombro y sube el flujo sanguíneo al manguito rotador y al deltoide.</p></div></article><article class="card"><div class="pictile" data-ex="wallslide" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Wall slide"></svg><span class="phase">De &quot;W&quot; a &quot;Y&quot; pegado a la pared</span></div><div class="cardbody"><h3 class="exname">Wall slide</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 10</span></div><p><b>Cómo</b>Frente a la pared, antebrazos y muñecas pegados formando una &quot;W&quot; (codos ~90°). Desliza hacia arriba hasta una &quot;Y&quot; sin despegar los antebrazos ni arquear la lumbar; baja a la &quot;W&quot;.</p><p><b>Para qué</b>Activa serrato anterior y trapecio inferior, que giran la escápula al elevar el brazo.</p></div></article><article class="card"><div class="pictile" data-ex="extrot" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Rotación externa en polea"></svg><span class="phase">Rota el antebrazo hacia afuera → regresa</span></div><div class="cardbody"><h3 class="exname">Rotación externa en polea</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 12–15 por lado, carga mínima</span></div><p><b>Cómo</b>Polea a la altura del codo, de lado. Codo pegado a la costilla con una toalla enrollada entre ambos, antebrazo a 90°. Rota el antebrazo hacia afuera ~45–55° y regresa en 2 s. Si no se mueve la toalla, vas bien.</p><p><b>Para qué</b>Activa infraespinoso y redondo menor, que mantienen la cabeza del húmero centrada durante los presses.</p></div></article><article class="card"><div class="pictile" data-ex="facepull" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Face pull ligero"></svg><span class="phase">Jala hacia la frente, codos altos</span></div><div class="cardbody"><h3 class="exname">Face pull ligero</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 1 × 15 con carga muy ligera</span></div><p><b>Cómo</b>Cuerda a la altura de la cara, carga mínima. Jala separando las manos hasta las orejas con los codos altos; pausa 1 s; regresa en 2 s.</p><p><b>Para qué</b>Calienta deltoide posterior y manguito rotador con carga baja.</p></div></article><div class="ramp"><h4>Aproximación · Press militar</h4><ol><li class=""><b>Mancuernas ~40 %</b><span>×10</span></li><li class=""><b>~60 %</b><span>×6</span></li><li class=""><b>~80 %</b><span>×3</span></li><li class="work"><b>Serie de trabajo</b></li></ol><p>Primero las del press; en los laterales y el face pull basta con la primera serie ligera.</p></div></div><div class="worktitle">Trabajo principal</div><article class="card"><div class="pictile" data-ex="ohp" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Press militar de pie con mancuernas"></svg><span class="phase">Empuja arriba → baja controlado a los hombros</span></div><div class="cardbody"><h3 class="exname">Press militar de pie con mancuernas</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x 8–10</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 90 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De pie, pies al ancho de caderas, glúteos y abdomen apretados. Mancuernas a la altura de los hombros, antebrazos verticales y codos un poco por delante del cuerpo (~30°).</dd></div><div><dt>Movimiento</dt><dd>Empuja en 2 s hasta casi extender los codos (sin bloquear); las mancuernas se juntan sobre la cabeza, ligeramente por detrás de las orejas. Baja en 2 s hasta que el codo quede a ~90°.</dd></div><div class="err"><dt>Error común</dt><dd>Arquear la zona lumbar y sacar las costillas; empujar hacia adelante en vez de hacia arriba; bloquear los codos; ayudarte con las piernas.</dd></div><div><dt>Trabaja</dt><dd>Deltoide anterior y medio, tríceps, trapecio superior. El abdomen estabiliza.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="lateral" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Elevación lateral en polea baja (cable por detrás de las piernas)"></svg><span class="phase">Eleva el brazo hasta la altura del hombro → baja con control</span></div><div class="cardbody"><h3 class="exname">Elevación lateral en polea baja (cable por detrás de las piernas)</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 5 x 12–15</span><span class="chip"><span class="lbl">Tempo</span> 2-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 45–60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Polea en la posición más baja, de lado a la torre. Toma la agarradera con la mano más lejana a la polea y pasa el cable por detrás de tus piernas. Pies firmes, torso casi recto (~5°), codo con flexión suave (~15°).</dd></div><div><dt>Movimiento</dt><dd>Lidera con el codo: sube en 2 s hasta la altura del hombro (≈90°), un poco por delante del plano del cuerpo; pausa 1 s; baja en 2 s sin dejar que el cable te jale. Todas las series de un brazo y cambia de lado.</dd></div><div class="err"><dt>Error común</dt><dd>Subir más de 90° (entra el trapecio y se pellizca el hombro); balancear el torso para generar impulso; subir la muñeca antes que el codo.</dd></div><div><dt>Trabaja</dt><dd>Deltoide medio.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="facepull" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Face pull en polea (deltoide posterior)"></svg><span class="phase">Jala a la altura de la cara, codos arriba → regresa</span></div><div class="cardbody"><h3 class="exname">Face pull en polea (deltoide posterior)</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x 12–15</span><span class="chip"><span class="lbl">Tempo</span> 2-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Polea a la altura de la cara con cuerda, pulgares hacia ti. Da un paso atrás, inclinación ligera hacia atrás (~6°) y brazos extendidos.</dd></div><div><dt>Movimiento</dt><dd>Jala en 2 s hacia la frente separando las manos hasta que queden junto a las orejas, codos altos y antebrazos casi verticales (~90° de codo); pausa 1 s apretando la espalda alta; regresa en 2 s.</dd></div><div class="err"><dt>Error común</dt><dd>Jalar con las manos bajas hacia el pecho (se vuelve remo); usar demasiado peso; encoger el cuello.</dd></div><div><dt>Trabaja</dt><dd>Deltoide posterior, manguito rotador (infraespinoso y redondo menor), trapecio medio e inferior.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="curlcable" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Curl de bíceps en polea"></svg><span class="phase">Flexiona el codo → baja controlado</span></div><div class="cardbody"><h3 class="exname">Curl de bíceps en polea</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 10–12</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Polea baja con barra recta o Z. De pie a ~30–40 cm de la torre, codos pegados a las costillas, hombros atrás.</dd></div><div><dt>Movimiento</dt><dd>Sube en 2 s hasta ~145° de flexión del codo sin mover los codos; baja en 2 s hasta casi extender manteniendo la tensión del cable.</dd></div><div class="err"><dt>Error común</dt><dd>Balancear el torso; adelantar los codos; soltar la bajada.</dd></div><div><dt>Trabaja</dt><dd>Bíceps braquial y braquial.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="tricable" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Extensión de tríceps sobre cabeza en polea baja (cuerda)"></svg><span class="phase">Estira los brazos hacia arriba → baja la cuerda detrás de la cabeza</span></div><div class="cardbody"><h3 class="exname">Extensión de tríceps sobre cabeza en polea baja (cuerda)</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x 10–12</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De espaldas a la polea baja con cuerda. Un paso adelante en postura escalonada, torso inclinado ~20° hacia adelante, codos apuntando al techo junto a las orejas, antebrazos detrás de la cabeza.</dd></div><div><dt>Movimiento</dt><dd>Extiende en 2 s hasta que los brazos queden casi rectos (~170°, sin bloquear). Baja en 2 s hasta ~90° de codo, sintiendo el estiramiento largo del tríceps. El codo no se abre.</dd></div><div class="err"><dt>Error común</dt><dd>Abrir los codos; arquear la lumbar; rebotar abajo. Si el estiramiento incomoda el hombro, baja menos y reduce el peso.</dd></div><div><dt>Trabaja</dt><dd>Tríceps, sobre todo la cabeza larga. Es la posición con más crecimiento en los estudios (Maeo 2022).</dd></div></dl><p class="note">Ajuste del plan: 3 → 4 series.</p></div></article><article class="card"><div class="pictile" data-ex="trioverhead" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Variante B: extensión de tríceps sobre cabeza con mancuerna"></svg><span class="phase">Extiende el codo arriba → baja controlado detrás de la cabeza</span></div><div class="cardbody"><h3 class="exname">Variante B: extensión de tríceps sobre cabeza con mancuerna</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 4 x 10–12</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De pie o sentado con la espalda apoyada, una mancuerna sujeta con ambas manos en forma de copa, brazos verticales y codos junto a las orejas.</dd></div><div><dt>Movimiento</dt><dd>Baja la mancuerna en 2 s detrás de la cabeza hasta ~90° de codo; sube en 2 s hasta casi extender.</dd></div><div class="err"><dt>Error común</dt><dd>Abrir los codos; arquear la lumbar; usar demasiado peso. Elige esta variante o la de polea, no ambas el mismo día.</dd></div><div><dt>Trabaja</dt><dd>Tríceps (cabeza larga).</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="hammer" data-tempo="2-0-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Curl martillo con mancuernas"></svg><span class="phase">Agarre neutro · flexiona → baja controlado</span></div><div class="cardbody"><h3 class="exname">Curl martillo con mancuernas</h3><div class="specs"><span class="chip sets"><span class="lbl">Series</span> 3 x 10–12</span><span class="chip"><span class="lbl">Tempo</span> 2-0-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De pie, una mancuerna en cada mano con las palmas mirándose (agarre neutro), codos pegados a las costillas, hombros atrás.</dd></div><div><dt>Movimiento</dt><dd>Alterna los brazos: sube una mancuerna en 2 s hasta ~145° de flexión del codo sin mover el codo, baja en 2 s hasta casi extender, y sigue con el otro brazo.</dd></div><div class="err"><dt>Error común</dt><dd>Balancear el torso; adelantar los codos; girar la muñeca durante la subida.</dd></div><div><dt>Trabaja</dt><dd>Braquial, braquiorradial y bíceps (da grosor al brazo).</dd></div></dl></div></article></section>
+<section class="day" id="abdomen"><span class="daytag">Abdomen</span><h2 class="dayname">Abdomen — Lunes · Miércoles · Viernes · Domingo</h2><p class="dayfocus">Sesiones cortas de noche, independientes de las pesas — alternan Sesión 1 y Sesión 2</p><div class="warm" id="cal-abdomen"><div class="warmhead"><h3>Calentamiento de abdomen</h3><span class="mins">≈ 2 min</span></div><p class="intro">Es una sesión corta de noche, pero la espalda baja agradece moverse antes.</p><article class="card"><div class="pictile" data-ex="catcow" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Gato–vaca"></svg><span class="phase">Redondea → arquea</span></div><div class="cardbody"><h3 class="exname">Gato–vaca</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 8–10 repeticiones lentas</span></div><p><b>Cómo</b>En cuatro apoyos, manos bajo los hombros y rodillas bajo la cadera. Redondea toda la espalda (2 s), luego arquea mirando al frente (2 s). Mueve sobre todo la parte alta de la espalda.</p><p><b>Para qué</b>Movilidad de la columna torácica: si no se mueve, el hombro compensa en cada press.</p></div></article><article class="card"><div class="pictile" data-ex="birddog" data-tempo="2-2-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Bird dog"></svg><span class="phase">Extiende brazo y pierna contrarios</span></div><div class="cardbody"><h3 class="exname">Bird dog</h3><div class="specs"><span class="chip dose"><span class="lbl">Dosis</span> 2 × 6 por lado</span></div><p><b>Cómo</b>En cuatro apoyos, extiende un brazo y la pierna contraria hasta quedar horizontales sin girar la cadera; regresa y alterna. Movimiento lento.</p><p><b>Para qué</b>Activa glúteo, abdomen y músculos profundos de la espalda con muy poca carga lumbar.</p></div></article></div><div class="worktitle">Trabajo principal</div><article class="card"><div class="pictile" data-ex="plank" data-hold="45"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Plancha (plank)"></svg><span class="phase">Mantén línea recta de cabeza a talón</span></div><div class="cardbody"><h3 class="exname">Plancha (plank)</h3><div class="specs"><span class="chip sets"><span class="lbl">Días</span> Lun · Vie — Sesión 1</span><span class="chip sets"><span class="lbl">Series</span> 3 x 30–45 seg</span><span class="chip rest"><span class="lbl">Descanso</span> 45 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Antebrazos en el piso, codos bajo los hombros, cuerpo en línea de cabeza a talones, glúteos y abdomen apretados, mirada al piso.</dd></div><div><dt>Movimiento</dt><dd>Mantén 30–45 s respirando con calma. Empuja el piso con los antebrazos y &quot;arrastra&quot; los codos hacia los pies sin moverlos: activa más abdomen.</dd></div><div class="err"><dt>Error común</dt><dd>Cadera caída (carga la lumbar) o demasiado alta; cuello estirado; aguantar la respiración.</dd></div><div><dt>Trabaja</dt><dd>Recto abdominal, transverso, oblicuos y glúteo.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="legraise" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Elevación de piernas en power tower"></svg><span class="phase">Eleva las piernas controlado → baja sin balanceo</span></div><div class="cardbody"><h3 class="exname">Elevación de piernas en power tower</h3><div class="specs"><span class="chip sets"><span class="lbl">Días</span> Lun · Vie — Sesión 1</span><span class="chip sets"><span class="lbl">Series</span> 3 x 12–15</span><span class="chip"><span class="lbl">Tempo</span> 2-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 60 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>En la torre, apoyado en los antebrazos o colgado, espalda pegada al respaldo si lo hay, hombros hacia abajo.</dd></div><div><dt>Movimiento</dt><dd>Inclina la pelvis hacia atrás (enróllala) y sube las piernas en 2 s hasta que los muslos queden ~90° respecto al torso; pausa 1 s; baja en 2 s sin balancear.</dd></div><div class="err"><dt>Error común</dt><dd>Balancearse; mover solo las piernas sin inclinar la pelvis (trabaja el psoas y carga la lumbar); soltar la bajada.</dd></div><div><dt>Trabaja</dt><dd>Abdomen inferior y flexores de cadera.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="deadbug" data-tempo="2-1-2"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Dead bug"></svg><span class="phase">Extiende brazo y pierna opuestos → regresa al centro</span></div><div class="cardbody"><h3 class="exname">Dead bug</h3><div class="specs"><span class="chip sets"><span class="lbl">Días</span> Mié · Dom — Sesión 2</span><span class="chip sets"><span class="lbl">Series</span> 3 x 10–12 / lado</span><span class="chip"><span class="lbl">Tempo</span> 2-1-2</span><span class="chip rest"><span class="lbl">Descanso</span> 45 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>Boca arriba, brazos al techo y caderas y rodillas a 90°. Zona lumbar pegada al piso.</dd></div><div><dt>Movimiento</dt><dd>Extiende brazo y pierna opuestos a la vez en 2 s, pausa 1 s sin que la lumbar se despegue; regresa en 2 s y cambia de lado.</dd></div><div class="err"><dt>Error común</dt><dd>Lumbar que se despega: reduce el rango. Ir con prisa; contener la respiración. Es la alternativa segura al rodillo abdominal si te dio dolor de espalda.</dd></div><div><dt>Trabaja</dt><dd>Transverso del abdomen y recto abdominal.</dd></div></dl></div></article><article class="card"><div class="pictile" data-ex="sideplank" data-hold="30"><svg class="stage" viewBox="0 0 260 240" role="img" aria-label="Animación 3D: Plancha lateral"></svg><span class="phase">Mantén cadera elevada en línea recta</span></div><div class="cardbody"><h3 class="exname">Plancha lateral</h3><div class="specs"><span class="chip sets"><span class="lbl">Días</span> Mié · Dom — Sesión 2</span><span class="chip sets"><span class="lbl">Series</span> 3 x 20–30 seg / lado</span><span class="chip rest"><span class="lbl">Descanso</span> 45 seg</span></div><dl class="steps"><div><dt>Posición</dt><dd>De lado, codo bajo el hombro, pies apilados, cuerpo en línea recta de cabeza a pies.</dd></div><div><dt>Movimiento</dt><dd>Eleva la cadera y mantén 20–30 s respirando; la mano libre en la cadera o extendida al techo. Repite del otro lado.</dd></div><div class="err"><dt>Error común</dt><dd>Cadera que cae al piso; rotar el torso; hombro encogido.</dd></div><div><dt>Trabaja</dt><dd>Oblicuos, cuadrado lumbar, glúteo medio.</dd></div></dl></div></article></section>
+
+<footer>
+  <p>Progresión: sube peso o repeticiones cuando completes el máximo de todas las series de un ejercicio en dos sesiones seguidas. Si un ejercicio provoca dolor articular agudo (no la fatiga muscular normal), detente y revisa la técnica antes de seguir. Esta guía no sustituye la valoración de un profesional de la salud.</p>
+</footer>
+</div>
+<script>
+/* Motor de animación 3D: esqueleto con longitudes fijas + IK de brazos/piernas + cámara ortográfica.
+   Unidades: cm. x = lateral, y = arriba, z = hacia donde mira la persona. */
+var GX = (function(){
+'use strict';
+var R = Math.PI/180;
+var TL=50, UA=29, FA=27, TH=42, SHN=43, HEADR=10, SHW=19, HIPW=9;
+var EX = {};
+
+/* ---------- vectores ---------- */
+function add(a,b){return [a[0]+b[0],a[1]+b[1],a[2]+b[2]]}
+function sub(a,b){return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]}
+function mul(a,k){return [a[0]*k,a[1]*k,a[2]*k]}
+function dot(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]}
+function len(a){return Math.sqrt(dot(a,a))}
+function nrm(a){var l=len(a)||1;return [a[0]/l,a[1]/l,a[2]/l]}
+function mix(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+function lerp(a,b,t){return a+(b-a)*t}
+function nlerp(a,b,t){return nrm(mix(a,b,t))}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function sm(x){x=clamp(x,0,1);return x*x*(3-2*x)}
+function rotY(v,deg){var c=Math.cos(deg*R),s=Math.sin(deg*R);return [v[0]*c+v[2]*s,v[1],-v[0]*s+v[2]*c]}
+
+/* ---------- IK de dos segmentos ---------- */
+var ikErr = 0;
+function ik(a,t,l1,l2,pole){
+  var d=sub(t,a), D=len(d), mx=l1+l2-0.05, mn=Math.abs(l1-l2)+0.05;
+  if(D-mx>ikErr) ikErr=D-mx;
+  var Dc=clamp(D,mn,mx), u=mul(d,1/(D||1));
+  var aa=(l1*l1-l2*l2+Dc*Dc)/(2*Dc), h=Math.sqrt(Math.max(0,l1*l1-aa*aa));
+  var pp=sub(pole,mul(u,dot(pole,u))), pl=len(pp);
+  pp = pl<1e-6 ? [0,0,1] : mul(pp,1/pl);
+  return [add(add(a,mul(u,aa)),mul(pp,h)), add(a,mul(u,Dc))];
+}
+
+/* ---------- esqueleto ---------- */
+/* o: P (pelvis), lean, roll, yaw, nk (flexión de cuello), arm[2], leg[2]; lado 0 = x- (lado cercano en vista lateral), 1 = x+ */
+function rig(o){
+  var t=(o.lean||0)*R, ro=(o.roll||0)*R;
+  var r=[1,0,0], u=[0,Math.cos(t),Math.sin(t)], f=[0,-Math.sin(t),Math.cos(t)];
+  if(ro){var c=Math.cos(ro),s=Math.sin(ro);var f2=add(mul(f,c),mul(r,s)),r2=sub(mul(r,c),mul(f,s));f=f2;r=r2}
+  var ya=o.yaw||0; if(ya){r=rotY(r,ya);u=rotY(u,ya);f=rotY(f,ya)}
+  var P=o.P, N=add(P,mul(u,TL)), nk=(o.nk||0)*R;
+  var hd=nrm(add(mul(u,Math.cos(nk)),mul(f,Math.sin(nk))));
+  var sk={noTorso:!!o.noTorso,P:P,N:N,H:add(N,mul(hd,21)),u:u,f:f,r:r,sh:[],el:[],wr:[],hp:[],kn:[],an:[],toe:[]};
+  var fwd=rotY([0,0,1],ya);
+  for(var i=0;i<2;i++){
+    var sg=i?1:-1;
+    var sh=add(N,mul(r,SHW*sg)), hp=add(P,mul(r,HIPW*sg));
+    sk.sh[i]=sh; sk.hp[i]=hp;
+    var A=(o.arm&&o.arm[i])||{};
+    if(A.rel){sk.el[i]=add(sh,A.rel[0]);sk.wr[i]=add(sh,A.rel[1])}
+    else if(A.el){sk.el[i]=A.el;sk.wr[i]=A.wr}
+    else{
+      var tg=A.wr||add(sh,[sg*5,-52,3]);
+      var e=ik(sh,tg,UA,FA,A.pole||[sg*0.2,-0.3,-1]);
+      sk.el[i]=e[0];sk.wr[i]=e[1];
+    }
+    var L=(o.leg&&o.leg[i])||{};
+    var an=L.back?sub(hp,mul(u,L.back)):(L.an||[sg*10,8,0]);
+    if(L.kn){sk.kn[i]=L.kn;sk.an[i]=L.an}
+    else{var k=ik(hp,an,TH,SHN,L.pole||[sg*0.1,0,1]);sk.kn[i]=k[0];sk.an[i]=k[1]}
+    sk.toe[i]=L.toe||(L.toeRel?add(sk.an[i],L.toeRel):add(sk.an[i],add(mul(L.dir||fwd,14),[0,-6,0])));
+  }
+  return sk;
+}
+
+/* ---------- primitivas ---------- */
+function S(a,b,w,c){return {k:'s',a:a,b:b,w:w,c:c||'e'}}
+function Pl(pts,c){return {k:'p',pts:pts,c:c||'pad'}}
+function Dt(p,r,c){return {k:'d',p:p,r:r,c:c||'e'}}
+function disc(p,axis,Rad,c){
+  var ax=nrm(axis), t=Math.abs(ax[1])<0.9?[0,1,0]:[1,0,0];
+  var e1=nrm(sub(t,mul(ax,dot(t,ax)))), e2=[ax[1]*e1[2]-ax[2]*e1[1],ax[2]*e1[0]-ax[0]*e1[2],ax[0]*e1[1]-ax[1]*e1[0]];
+  var pts=[];for(var i=0;i<18;i++){var a=i/18*6.2832;pts.push(add(p,add(mul(e1,Math.cos(a)*Rad),mul(e2,Math.sin(a)*Rad))))}
+  return Pl(pts,c||'plate');
+}
+function barbell(c,half,plateR,pos,axis){
+  axis=axis||[1,0,0];var o=[S(add(c,mul(axis,-half)),add(c,mul(axis,half)),2.6,'bar')];
+  for(var s=-1;s<=1;s+=2)pos.forEach(function(q){o.push(disc(add(c,mul(axis,s*q)),axis,plateR,'plate'))});
+  return o;
+}
+function dumbbell(c,axis,hl,Rad){
+  axis=axis||[0,0,1];hl=hl||7;Rad=Rad||6.5;
+  return [S(add(c,mul(axis,-hl)),add(c,mul(axis,hl)),2.4,'bar'),disc(add(c,mul(axis,-hl)),axis,Rad,'plate'),disc(add(c,mul(axis,hl)),axis,Rad,'plate')];
+}
+
+/* ---------- cámara ---------- */
+var VIEWS={lat:{yaw:90,pitch:6},fro:{yaw:0,pitch:6},tri:{yaw:48,pitch:10}};
+function cam(view,cfg){
+  var v=VIEWS[view],cy=Math.cos(v.yaw*R),sy=Math.sin(v.yaw*R),cp=Math.cos(v.pitch*R),sp=Math.sin(v.pitch*R);
+  var c=cfg.c,s=cfg.s;
+  return function(p){
+    var x=p[0]-c[0],y=p[1]-c[1],z=p[2]-c[2];
+    var sx=x*cy+z*sy, d=-x*sy+z*cy;
+    return [130+sx*s, 128+(-(y*cp)+d*sp)*s, d];
+  };
+}
+
+/* ---------- dibujo ---------- */
+var FW={thigh:12,shin:9,uarm:8,farm:7,neck:7,torso:17,foot:5};
+function f1(n){return n.toFixed(1)}
+function bodyPrims(sk,hot,ghost){
+  var o=[],H=function(ch){return hot.indexOf(ch)>=0?'h':'b'};
+  function seg(a,b,w,c){o.push(S(a,b,w,ghost?'g':c))}
+  for(var i=0;i<2;i++){
+    seg(sk.hp[i],sk.kn[i],FW.thigh,H('l'));seg(sk.kn[i],sk.an[i],FW.shin,H('l')==='h'?'h':H('k'));
+    seg(sk.an[i],sk.toe[i],FW.foot,H('k'));
+    seg(sk.sh[i],sk.el[i],FW.uarm,H('a')==='h'?'h':H('u'));seg(sk.el[i],sk.wr[i],FW.farm,H('a'));
+  }
+  if(!sk.noTorso)seg(sk.P,sk.N,FW.torso,H('t'));
+  seg(sk.N,add(sk.N,mul(nrm(sub(sk.H,sk.N)),9)),FW.neck,'b');
+  if(!ghost){
+    if(!sk.noTorso)o.push(Pl([sk.sh[0],sk.sh[1],sk.hp[1],sk.hp[0]],hot.indexOf('t')>=0?'torsoh':'torso'));
+    o.push({k:'d',p:sk.H,r:HEADR,c:'head'});
+    for(var j=0;j<2;j++){o.push(Dt(sk.el[j],2.4,'jt'));o.push(Dt(sk.kn[j],2.6,'jt'));o.push(Dt(sk.sh[j],3,'jt'))}
+  }
+  return o;
+}
+function floorPrims(){
+  var o=[],i;
+  for(i=-3;i<=3;i++){o.push(S([-90,0,i*30],[90,0,i*30],0.5,'f'));o.push(S([i*30,0,-90],[i*30,0,90],0.5,'f'))}
+  return o;
+}
+function render(pr,cm,s,svgOpts){
+  var items=[],i,p;
+  pr.forEach(function(q){
+    if(q.k==='s'){var A=cm(q.a),B=cm(q.b);items.push({d:(A[2]+B[2])/2,t:'<line x1="'+f1(A[0])+'" y1="'+f1(A[1])+'" x2="'+f1(B[0])+'" y2="'+f1(B[1])+'" class="'+q.c+'" stroke-width="'+f1(q.w*s*0.6)+'"/>',o:q.c})}
+    else if(q.k==='p'){var pts=q.pts.map(cm),dd=0;pts.forEach(function(z){dd+=z[2]});items.push({d:dd/pts.length+(q.c==='torso'||q.c==='torsoh'?0:0),t:'<polygon points="'+pts.map(function(z){return f1(z[0])+','+f1(z[1])}).join(' ')+'" class="'+q.c+'"/>',o:q.c})}
+    else if(q.k==='d'){var C=cm(q.p);items.push({d:C[2]+(q.c==='head'?2:3),t:'<circle cx="'+f1(C[0])+'" cy="'+f1(C[1])+'" r="'+f1(q.r*s)+'" class="'+q.c+'"/>',o:q.c})}
+    else if(q.k==='a'){items.push({d:99,t:q.t,o:'m'})}
+  });
+  items.sort(function(a,b){return a.d-b.d});
+  return items.map(function(x){return x.t}).join('');
+}
+function arcFor(a,b,c,cm,s){
+  var u1=nrm(sub(a,b)),u2=nrm(sub(c,b)),n=[];
+  var ang=Math.acos(clamp(dot(u1,u2),-1,1)),pts=[];
+  for(var i=0;i<=10;i++){var q=nrm(mix(u1,u2,i/10));pts.push(cm(add(b,mul(q,12))))}
+  return {k:'a',t:'<polyline points="'+pts.map(function(z){return f1(z[0])+','+f1(z[1])}).join(' ')+'" class="arc"/>',deg:ang/R};
+}
+var J={
+  el:function(sk,i){return [sk.sh[i],sk.el[i],sk.wr[i]]},
+  kn:function(sk,i){return [sk.hp[i],sk.kn[i],sk.an[i]]},
+  hp:function(sk,i){return [sk.N,sk.hp[i],sk.kn[i]]},
+  sh:function(sk,i){return [sub(sk.sh[i],mul(sk.u,50)),sk.sh[i],sk.el[i]]}
+};
+
+return {EX:EX,R:R,add:add,sub:sub,mul:mul,dot:dot,len:len,nrm:nrm,mix:mix,lerp:lerp,nlerp:nlerp,clamp:clamp,sm:sm,rotY:rotY,
+  ik:ik,rig:rig,S:S,Pl:Pl,Dt:Dt,disc:disc,barbell:barbell,dumbbell:dumbbell,cam:cam,VIEWS:VIEWS,
+  bodyPrims:bodyPrims,floorPrims:floorPrims,render:render,arcFor:arcFor,J:J,
+  ikErr:function(){var e=ikErr;ikErr=0;return e}};
+})();
+
+/* Runner: tempo -> fases (baja / pausa / sube), cámara, ghosts del rango, medidor de ángulo, controles */
+(function(G){
+'use strict';
+var tiles=[], reduce=false, slowAll=false;
+try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+function ease(x){return 0.5-0.5*Math.cos(Math.PI*clamp(x,0,1))}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+var VN={lat:'Lado',fro:'Frente',tri:'3/4'};
+
+function Tile(el){
+  var key=el.getAttribute('data-ex'); this.el=el; this.def=G.EX[key]; if(!this.def) return;
+  var tp=(el.getAttribute('data-tempo')||'').split('-').map(Number);if(tp.length!==3||tp.some(isNaN))tp=this.def.tempo||[2,0,2];
+  this.tempo=tp; this.hold=+el.getAttribute('data-hold')||0;
+  this.view=this.def.view||'lat'; this.t=0; this.paused=reduce; this.vis=false; this.last=0; this.slow=false;
+  this.svg=el.querySelector('svg.stage'); this.build(); this.draw(0,0,0);
+}
+Tile.prototype.build=function(){
+  var me=this,el=this.el,h='<div class="live"><b class="ph">&nbsp;</b><span class="tm"></span><span class="ang"></span></div><div class="ctl">';
+  ['lat','fro','tri'].forEach(function(v){h+='<button type="button" data-v="'+v+'">'+VN[v]+'</button>'});
+  h+='<button type="button" data-a="pp" aria-label="Pausar o reproducir">'+(this.paused?'▶':'❚❚')+'</button><button type="button" data-a="slow" aria-label="Cámara lenta">×½</button></div>';
+  var box=document.createElement('div');box.className='livebox';box.innerHTML=h;
+  el.insertBefore(box,el.querySelector('.phase'));
+  this.ph=box.querySelector('.ph');this.tm=box.querySelector('.tm');this.ang=box.querySelector('.ang');
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    if(b.getAttribute('data-v')){me.view=b.getAttribute('data-v');me.sync();me.redraw()}
+    else if(b.getAttribute('data-a')==='pp'){me.paused=!me.paused;me.sync()}
+    else{me.slow=!me.slow;me.sync()}
+  });
+  this.box=box;this.sync();
+};
+Tile.prototype.sync=function(){
+  var me=this;[].forEach.call(this.box.querySelectorAll('button'),function(b){
+    var v=b.getAttribute('data-v'),a=b.getAttribute('data-a');
+    if(v)b.setAttribute('aria-pressed',String(v===me.view));
+    if(a==='pp'){b.textContent=me.paused?'▶':'❚❚'}
+    if(a==='slow')b.setAttribute('aria-pressed',String(me.slow));
+  });
+};
+Tile.prototype.cycle=function(){
+  var e=this.tempo[0],h=this.tempo[1],c=this.tempo[2];
+  var d1=this.def.ecc?e:c, d3=this.def.ecc?c:e;
+  return {dw:0.5,d1:d1,d2:h,d3:d3,total:0.5+d1+h+d3};
+};
+Tile.prototype.state=function(){
+  var d=this.def;
+  if(d.iso){var hs=this.hold||30,k=this.t%hs;return {p:1,rep:Math.floor(this.t/hs),ph:d.phLabel||'MANTÉN',tm:Math.floor(k)+' / '+hs+' s',time:this.t}}
+  var C=this.cycle(),rep=Math.floor(this.t/C.total),c=this.t-rep*C.total,p,ph,rem,L=d.lab||['BAJA','SUBE'];
+  if(c<C.dw){p=0;ph='LISTO';rem=C.dw-c}
+  else if(c<C.dw+C.d1){var x=(c-C.dw)/C.d1;p=ease(x);ph=L[0];rem=C.d1*(1-x)}
+  else if(c<C.dw+C.d1+C.d2){p=1;ph='PAUSA';rem=C.dw+C.d1+C.d2-c}
+  else{var y=(c-C.dw-C.d1-C.d2)/C.d3;p=1-ease(y);ph=L[1];rem=C.d3*(1-y)}
+  return {p:p,rep:rep,ph:ph,tm:rem.toFixed(1)+' s',time:this.t};
+};
+Tile.prototype.redraw=function(){var s=this.state();this.draw(s.p,s.rep,s.time,s)};
+Tile.prototype.draw=function(p,rep,time,st){
+  var d=this.def,cfg=d.cam,cm=G.cam(this.view,cfg),s=cfg.s;
+  var P=d.pose(p,rep,time),sk=G.rig(P.o),hot=d.hot||'';
+  var ghosts='';
+  [0,1].forEach(function(q){var gp=d.pose(q,rep,0),gs=G.rig(gp.o);ghosts+=G.render(G.bodyPrims(gs,'',true),cm,s)});
+  var pr=G.floorPrims().concat(P.eq||[]).concat(G.bodyPrims(sk,hot,false));
+  var meas='';
+  if(P.m){var tr=G.J[P.m[0]](sk,P.m[1]),ar=G.arcFor(tr[0],tr[1],tr[2],cm,s);pr.push(ar);this.deg=ar.deg;this.mlab=P.m[2]}
+  this.svg.innerHTML='<g class="ghostg">'+ghosts+'</g>'+G.render(pr,cm,s);
+  if(st){this.ph.textContent=(st.ph==='LISTO'?'':st.ph)||'INICIO';this.ph.className='ph '+st.ph.toLowerCase();
+    this.tm.textContent=d.iso?st.tm:(st.ph==='LISTO'?'Rep '+(st.rep+1):st.tm+' · Rep '+(st.rep+1));
+    this.ang.textContent=this.mlab?this.mlab+' '+Math.round(this.deg)+'°':''}
+};
+Tile.prototype.tick=function(now){
+  if(!this.vis||this.paused){this.last=now;return}
+  var dt=Math.min(0.1,(now-this.last)/1000);this.last=now;
+  this.t+=dt*(this.slow?0.5:1);this.redraw();
+};
+
+function loop(now){
+  if(!document.hidden)for(var i=0;i<tiles.length;i++)tiles[i].tick(now);
+  requestAnimationFrame(loop);
+}
+G.init=function(){
+  [].forEach.call(document.querySelectorAll('.pictile[data-ex]'),function(el){var t=new Tile(el);if(t.def)tiles.push(t)});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      for(var i=0;i<tiles.length;i++)if(tiles[i].el===e.target){tiles[i].vis=e.isIntersecting;tiles[i].last=performance.now()}
+    })},{threshold:0.25});
+    tiles.forEach(function(t){io.observe(t.el)});
+  }else tiles.forEach(function(t){t.vis=true});
+  requestAnimationFrame(loop);
+  return tiles;
+};
+G.tiles=tiles;
+})(GX);
+
+/* Ejercicios de empuje: banca, press militar, aperturas, fondos, tríceps */
+(function(G){
+var EX=G.EX,add=G.add,mul=G.mul,mix=G.mix,lerp=G.lerp,nrm=G.nrm,nlerp=G.nlerp,S=G.S,Dt=G.Dt,Pl=G.Pl,sub=G.sub;
+function sgn(i){return i?1:-1}
+function stand(extra){var o={P:[0,92.3,0],lean:0,leg:[{an:[-12,8,0]},{an:[12,8,0]}]};for(var k in extra)o[k]=extra[k];return o}
+
+/* ---- Press de banca con barra ---- */
+EX.bench={view:'lat',ecc:true,hot:'a',lab:['BAJA','SUBE'],cam:{c:[0,66,-14],s:1.5},
+pose:function(p){
+  var y=lerp(109.5,68,p),z=lerp(-44,-20,p),arm=[],leg=[];
+  for(var i=0;i<2;i++){var g=sgn(i);arm.push({wr:[g*30,y,z],pole:[g,-0.7,0]});leg.push({an:[g*24,8,24],pole:[0,1,0]})}
+  var eq=[S([0,39,-90],[0,39,36],15,'pad'),S([0,0,-72],[0,39,-72],4,'e'),S([0,0,24],[0,39,24],4,'e')];
+  [-1,1].forEach(function(g){eq.push(S([g*56,0,-60],[g*56,128,-60],4,'e'));eq.push(S([g*56,112,-60],[g*56,112,-48],3,'e'))});
+  eq=eq.concat(G.barbell([0,y,z],92,11,[47,51]));
+  return {o:{P:[0,55,0],lean:-90,arm:arm,leg:leg},eq:eq,m:['el',0,'Codo']};
+}};
+
+/* ---- Press militar de pie con mancuernas ---- */
+EX.ohp={view:'tri',ecc:true,hot:'a',lab:['BAJA','SUBE'],cam:{c:[0,92,0],s:1.1},
+pose:function(p){
+  var arm=[],eq=[];
+  for(var i=0;i<2;i++){var g=sgn(i),wr=[g*lerp(19,30,p),lerp(195,150,p),lerp(4,14,p)+7*Math.sin(Math.PI*p)];
+    arm.push({wr:wr,pole:[g*lerp(0.8,0.45,p),lerp(-0.3,-1,p),lerp(0,0.4,p)]});
+    eq=eq.concat(G.dumbbell(wr,[1,0,0],8,7));}
+  return {o:stand({lean:lerp(-3,0,p),arm:arm}),eq:eq,m:['el',0,'Codo']};
+}};
+
+/* ---- Aperturas en polea cruzada (arco con codo fijo) ---- */
+EX.fly={view:'fro',ecc:false,hot:'t',lab:['JUNTA','ABRE'],cam:{c:[0,104,0],s:1.0},
+pose:function(p){
+  var arm=[],eq=[],o=stand({P:[0,90,0],lean:12,leg:[{an:[-13,8,16]},{an:[13,8,-14]}]});
+  var N=[0,90+50*Math.cos(12*G.R),50*Math.sin(12*G.R)];
+  for(var i=0;i<2;i++){var g=sgn(i),sh=add(N,[g*19,0,0]);
+    var d=nlerp(nrm([g,-0.1,0.12]),nrm([-g*16,-31,36]),p),wr=add(sh,mul(d,52));
+    arm.push({wr:wr,pole:[g*1,-0.3,0]});
+    eq.push(S([g*102,0,0],[g*102,205,0],6,'e'));eq.push(S([g*102,200,0],[g*96,200,0],3,'e'));eq.push(S([g*96,196,0],wr,1.4,'k'));}
+  o.arm=arm;return {o:o,eq:eq,m:['el',0,'Codo']};
+}};
+
+/* ---- Fondos en power tower ---- */
+EX.dip={view:'lat',ecc:true,hot:'a',lab:['BAJA','SUBE'],cam:{c:[0,100,6],s:1.1},
+pose:function(p){
+  var lean=lerp(8,20,p),l=lean*G.R,Ny=lerp(172,145,p),Nz=lerp(-2,-5,p);
+  var P=[0,Ny-50*Math.cos(l),Nz-50*Math.sin(l)],arm=[],leg=[],eq=[];
+  for(var i=0;i<2;i++){var g=sgn(i);
+    arm.push({wr:[g*28,118,0],pole:[g*0.3,-0.3,-1]});
+    leg.push({an:add(P,[g*5,-62,-26]),pole:[0,-0.2,1],dir:[0,0,-1]});
+    eq.push(S([g*28,118,-18],[g*28,118,38],4.5,'e'));eq.push(S([g*28,0,-18],[g*28,118,-18],5,'e'));}
+  eq.push(S([-28,0,-18],[28,0,-18],5,'e'));
+  return {o:{P:P,lean:lean,arm:arm,leg:leg},eq:eq,m:['el',0,'Codo']};
+}};
+
+/* ---- Extensión de tríceps en polea (empujar hacia abajo) ---- */
+EX.pushdown={view:'lat',ecc:false,hot:'a',lab:['EMPUJA','SUBE'],cam:{c:[0,112,18],s:0.98},
+pose:function(p){
+  var o=stand({lean:8}),N=[0,92.3+50*Math.cos(8*G.R),50*Math.sin(8*G.R)],arm=[],wrs=[];
+  for(var i=0;i<2;i++){var g=sgn(i),sh=add(N,[g*19,0,0]),el=add(sh,mul(nrm([-g*0.1,-1,0.12]),29));
+    var fd=nlerp(nrm([-g*0.25,0.1,1]),nrm([-g*0.15,-1,0.2]),p),wr=add(el,mul(fd,27));
+    arm.push({el:el,wr:wr});wrs.push(wr);}
+  var mid=mix(wrs[0],wrs[1],0.5),eq=[S(wrs[0],wrs[1],2.4,'bar'),S([0,0,48],[0,232,48],6,'e'),S([0,228,48],[0,228,30],4,'e'),S([0,224,30],mid,1.4,'k')];
+  o.arm=arm;return {o:o,eq:eq,m:['el',0,'Codo']};
+}};
+
+/* ---- Elevación lateral en polea baja: el cable cruza por detrás de las piernas ---- */
+EX.lateral={view:'fro',ecc:false,hot:'a',lab:['SUBE','BAJA'],cam:{c:[0,92,0],s:1.1},
+pose:function(p){
+  var o=stand(),N=[0,142.3,0],th=lerp(4,88,p)*G.R,sh=add(N,[19,0,0]);
+  var d=nrm([Math.sin(th),-Math.cos(th),-0.16*Math.cos(th)-0.04]),wr=add(sh,mul(d,55.4));
+  o.arm=[{wr:add(N,[-19,-30,12]),pole:[-0.6,-0.3,-1]},{wr:wr,pole:[0.2,-0.4,-1]}];
+  var pul=[-72,14,-34];
+  var eq=[S([-72,0,-34],[-72,150,-34],6,'e'),Dt(pul,3.2,'jt'),S(pul,wr,1.4,'k'),S(add(wr,[-3,0,0]),add(wr,[3,0,0]),2.6,'bar')];
+  return {o:o,eq:eq,m:['sh',1,'Hombro']};
+}};
+
+/* ---- Extensión de tríceps sobre la cabeza (mancuerna) ---- */
+EX.trioverhead={view:'lat',ecc:true,hot:'a',lab:['BAJA','SUBE'],cam:{c:[0,95,0],s:1.1},
+pose:function(p){
+  var o=stand(),N=[0,142.3,0],arm=[],eq=[],fds=[],wrs=[];
+  for(var i=0;i<2;i++){var g=sgn(i),sh=add(N,[g*19,0,0]),el=add(sh,mul(nrm([-g*0.35,1,0.1]),29));
+    var fd=nlerp(nrm([-g*0.33,1,0.0]),nrm([-g*0.33,-0.5,-0.85]),p),wr=add(el,mul(fd,27));
+    arm.push({el:el,wr:wr});fds.push(fd);wrs.push(wr);}
+  var mid=mix(wrs[0],wrs[1],0.5);
+  eq=G.dumbbell(add(mid,mul(fds[0],9)),fds[0],8,7);
+  o.arm=arm;return {o:o,eq:eq,m:['el',0,'Codo']};
+}};
+
+/* ---- Extensión de tríceps sobre la cabeza en polea baja (de espaldas a la torre, cuerda) ---- */
+EX.tricable={view:'lat',ecc:true,hot:'a',lab:['BAJA','SUBE'],cam:{c:[0,100,-10],s:1.0},
+pose:function(p){
+  var lean=20,u=[0,Math.cos(lean*G.R),Math.sin(lean*G.R)],P=[0,80,0],N=add(P,mul(u,50)),arm=[],wrs=[];
+  for(var i=0;i<2;i++){var g=i?1:-1,sh=add(N,[g*19,0,0]),ud=nrm([-g*0.15,1,0.33]),el=add(sh,mul(ud,29));
+    var fd=nlerp(nrm([-g*0.1,-0.5,-0.86]),ud,p),wr=add(el,mul(fd,27));arm.push({el:el,wr:wr});wrs.push(wr);}
+  var mid=mix(wrs[0],wrs[1],0.5),pul=[0,22,-74];
+  var eq=[S([0,0,-80],[0,200,-80],6,'e'),S(pul,mid,1.4,'k'),S(mid,wrs[0],1.8,'bar'),S(mid,wrs[1],1.8,'bar'),Dt(pul,3.2,'jt')];
+  var o={P:P,lean:lean,arm:arm,leg:[{an:[-12,8,26],pole:[-0.05,0,1]},{an:[12,8,-22],pole:[0.05,0,1]}]};
+  return {o:o,eq:eq,m:['el',0,'Codo']};
+}};
+})(GX);
+
+/* Ejercicios de tirón: dominadas, jalón, remo, curls, face pull */
+(function(G){
+var EX=G.EX,add=G.add,mul=G.mul,mix=G.mix,lerp=G.lerp,nrm=G.nrm,nlerp=G.nlerp,S=G.S,sub=G.sub,R=G.R;
+function sgn(i){return i?1:-1}
+function stand(extra){var o={P:[0,92.3,0],lean:0,leg:[{an:[-12,8,0]},{an:[12,8,0]}]};for(var k in extra)o[k]=extra[k];return o}
+function uv(l){var a=l*R;return [0,Math.cos(a),Math.sin(a)]}
+
+/* ---- Dominadas (agarre cerrado = lateral, agarre abierto = frontal) ---- */
+function pullup(wide){return {view:wide?'fro':'lat',ecc:false,hot:'ta',lab:['JALA','BAJA'],cam:{c:[0,126,0],s:1.0},
+pose:function(p){
+  var gx=wide?34:12,Ny=lerp(wide?161.5:160.3,204,p),lean=lerp(0,-12,p),u=uv(lean),Nz=lerp(-2,-1,p);
+  var P=[0,Ny-50*u[1],Nz-50*u[2]],arm=[],leg=[],eq=[];
+  for(var i=0;i<2;i++){var g=sgn(i);
+    arm.push({wr:[g*gx,215,4],pole:wide?[g,-1,0]:[g*0.2,-1,0.15]});
+    leg.push({an:add(P,[g*5,-66,-22]),pole:[0,-0.2,1],dir:[0,-0.6,-0.4]});
+    eq.push(S([g*64,0,-22],[g*64,218,-22],5,'e'));eq.push(S([g*64,216,-22],[g*56,215,4],4,'e'));}
+  eq.push(S([-64,218,-22],[64,218,-22],5,'e'));eq.push(S([-56,215,4],[56,215,4],3.4,'bar'));
+  return {o:{P:P,lean:lean,nk:lerp(0,22,p),arm:arm,leg:leg},eq:eq,m:['el',0,'Codo']};
+}}}
+EX.pullup_close=pullup(false);EX.pullup_wide=pullup(true);
+
+/* ---- Jalón al pecho ---- */
+EX.pulldown={view:'lat',ecc:false,hot:'ta',lab:['JALA','REGRESA'],cam:{c:[0,125,0],s:0.98},
+pose:function(p){
+  var lean=lerp(-6,-20,p),u=uv(lean),P=[0,52,0],N=add(P,mul(u,50)),arm=[],leg=[],wrs=[];
+  for(var i=0;i<2;i++){var g=sgn(i),rel=mix([g*21,50,8],[g*21,-4,14],p);
+    var wr=add(add(N,[g*19,0,0]),rel);wrs.push(wr);
+    arm.push({wr:wr,pole:[g,-1,-0.2]});leg.push({an:[g*18,8,40],pole:[0,1,0.15]});}
+  var a=add(wrs[0],mul(sub(wrs[0],wrs[1]),0.15)),b=add(wrs[1],mul(sub(wrs[1],wrs[0]),0.15));
+  var eq=[S(a,b,2.6,'bar'),S([0,44,-24],[0,44,14],14,'pad'),S([-20,70,32],[20,70,32],9,'e'),S([0,0,-36],[0,240,-36],6,'e'),S([0,240,-36],[0,240,16],5,'e'),S([0,236,16],mix(wrs[0],wrs[1],0.5),1.4,'k'),S([0,0,-24],[0,44,-24],5,'e')];
+  return {o:{P:P,lean:lean,arm:arm,leg:leg},eq:eq,m:['el',0,'Codo']};
+}};
+
+/* ---- Remo sentado en polea baja ---- */
+EX.row={view:'lat',ecc:false,hot:'ta',lab:['JALA','EXTIENDE'],cam:{c:[0,72,22],s:1.28},
+pose:function(p){
+  var lean=lerp(18,-6,p),u=uv(lean),P=[0,36,-40],N=add(P,mul(u,50)),arm=[],leg=[],wrs=[];
+  for(var i=0;i<2;i++){var g=sgn(i),wr=mix([g*10,N[1]-8,N[2]+50],[g*10,68,-26],p);
+    wrs.push(wr);arm.push({wr:wr,pole:[g*0.5,0,-1]});leg.push({an:[g*12,38,40],pole:[0,1,0]});}
+  var mid=mix(wrs[0],wrs[1],0.5);
+  var eq=[S(wrs[0],wrs[1],2.4,'bar'),S([0,28,-58],[0,28,-24],14,'pad'),S([0,4,52],[0,48,52],20,'pad'),S([0,0,118],[0,60,118],6,'e'),S([0,38,116],mid,1.4,'k'),S([0,0,-50],[0,28,-50],4,'e')];
+  return {o:{P:P,lean:lean,arm:arm,leg:leg},eq:eq,m:['el',0,'Codo']};
+}};
+
+/* ---- Curl con barra Z / en polea (codos fijos) ---- */
+function curl(cable){return {view:'tri',ecc:false,hot:'a',lab:['SUBE','BAJA'],cam:{c:[0,92,10],s:1.1},
+pose:function(p){
+  var o=stand(),N=[0,142.3,0],arm=[],wrs=[],fi=lerp(8,148,p)*R;
+  for(var i=0;i<2;i++){var g=sgn(i),sh=add(N,[g*19,0,0]),el=add(sh,mul(nrm([-g*0.05,-1,lerp(0.05,0.28,p)]),29));
+    var fd=nrm([-g*0.25,-Math.cos(fi),Math.sin(fi)]),wr=add(el,mul(fd,27));arm.push({el:el,wr:wr});wrs.push(wr);}
+  var mid=mix(wrs[0],wrs[1],0.5),eq;
+  if(cable)eq=[S(wrs[0],wrs[1],2.4,'bar'),S([0,0,78],[0,40,78],6,'e'),S([0,34,76],mid,1.4,'k')];
+  else eq=G.barbell(mid,45,9,[34,38]);
+  o.arm=arm;return {o:o,eq:eq,m:['el',0,'Codo']};
+}}}
+EX.curl=curl(false);EX.curlcable=curl(true);
+
+/* ---- Curl martillo alternado ---- */
+EX.hammer={view:'tri',ecc:false,hot:'a',lab:['SUBE','BAJA'],cam:{c:[0,92,10],s:1.1},
+pose:function(p,rep){
+  var o=stand(),N=[0,142.3,0],arm=[],eq=[],act=rep%2;
+  for(var i=0;i<2;i++){var g=sgn(i),sh=add(N,[g*19,0,0]),q=(i===act)?p:0,fi=lerp(6,148,q)*R;
+    var el=add(sh,mul(nrm([-g*0.05,-1,lerp(0.05,0.28,q)]),29)),fd=nrm([0,-Math.cos(fi),Math.sin(fi)]),wr=add(el,mul(fd,27));
+    arm.push({el:el,wr:wr});eq=eq.concat(G.dumbbell(add(wr,mul(fd,3)),[0,0,1],6,6.5));}
+  o.arm=arm;return {o:o,eq:eq,m:['el',act,'Codo']};
+}};
+
+/* ---- Face pull con cuerda ---- */
+EX.facepull={view:'tri',ecc:false,hot:'ut',lab:['JALA','REGRESA'],cam:{c:[0,104,38],s:1.0},
+pose:function(p){
+  var o=stand({P:[0,90,0],lean:-6}),u=uv(-6),N=add([0,90,0],mul(u,50)),arm=[],wrs=[];
+  for(var i=0;i<2;i++){var g=sgn(i),sh=add(N,[g*19,0,0]);
+    var el=add(sh,mul(nlerp(nrm([-g*0.1,0.05,1]),nrm([g*0.8,0.05,-0.3]),p),29));
+    var wr=add(el,mul(nlerp(nrm([-g*0.1,0.08,1]),nrm([-g*0.45,0.85,0.25]),p),27));
+    arm.push({el:el,wr:wr});wrs.push(wr);}
+  var mid=mix(wrs[0],wrs[1],0.5),pul=[0,160,132];
+  var eq=[S(pul,mid,1.4,'k'),S(mid,wrs[0],1.8,'bar'),S(mid,wrs[1],1.8,'bar'),S([0,0,138],[0,185,138],6,'e'),S([0,170,138],pul,4,'e')];
+  o.arm=arm;return {o:o,eq:eq,m:['el',0,'Codo']};
+}};
+})(GX);
+
+/* Piernas: sentadilla, peso muerto rumano, búlgara, zancada, pantorrillas */
+(function(G){
+var EX=G.EX,add=G.add,mul=G.mul,mix=G.mix,lerp=G.lerp,nrm=G.nrm,S=G.S,Pl=G.Pl,sub=G.sub,R=G.R,sm=G.sm;
+function sgn(i){return i?1:-1}
+function uv(l){var a=l*R;return [0,Math.cos(a),Math.sin(a)]}
+function fv(l){var a=l*R;return [0,-Math.sin(a),Math.cos(a)]}
+
+/* ---- Sentadilla trasera con barra (barra sobre la línea media del pie) ---- */
+EX.squat={view:'lat',ecc:true,hot:'l',lab:['BAJA','SUBE'],cam:{c:[0,92,-4],s:1.12},
+pose:function(p){
+  var P=[0,lerp(92.3,52,p),lerp(-3,-28,p)],lean=lerp(5,38,p),u=uv(lean),f=fv(lean),N=add(P,mul(u,50));
+  var bar=add(add(N,mul(u,4)),mul(f,-8)),arm=[],leg=[],eq=[];
+  for(var i=0;i<2;i++){var g=sgn(i);
+    arm.push({wr:[g*28,bar[1],bar[2]],pole:[g*0.3,-1,-0.7]});
+    leg.push({an:[g*17,8,0],pole:[g*0.15,0,1]});
+    eq.push(S([g*58,0,-44],[g*58,152,-44],4,'e'));eq.push(S([g*58,50,-44],[g*58,50,8],3,'e'));}
+  eq=eq.concat(G.barbell(bar,92,11,[47,50]));
+  return {o:{P:P,lean:lean,nk:-lerp(3,22,p),arm:arm,leg:leg},eq:eq,m:['kn',0,'Rodilla']};
+}};
+
+/* ---- Peso muerto rumano: bisagra de cadera, espalda neutra ---- */
+EX.rdl={view:'lat',ecc:true,hot:'lt',lab:['BAJA','SUBE'],cam:{c:[0,82,-4],s:1.3},
+pose:function(p){
+  var P=[0,lerp(92.3,83,p),lerp(-2,-34,p)],lean=lerp(3,68,p),u=uv(lean),N=add(P,mul(u,50)),arm=[],leg=[],wrs=[];
+  for(var i=0;i<2;i++){var g=sgn(i),wr=[g*22,N[1]-54,N[2]+3];wrs.push(wr);
+    arm.push({wr:wr,pole:[g*0.1,0,-1]});leg.push({an:[g*12,8,0],pole:[g*0.1,0,1]});}
+  var eq=G.barbell(mix(wrs[0],wrs[1],0.5),92,11,[47,51]);
+  return {o:{P:P,lean:lean,nk:-lerp(0,12,p),arm:arm,leg:leg},eq:eq,m:['hp',0,'Cadera']};
+}};
+
+/* ---- Sentadilla búlgara con mancuernas (pie trasero en step) ---- */
+EX.split={view:'lat',ecc:true,hot:'l',lab:['BAJA','SUBE'],cam:{c:[0,72,-16],s:1.25},
+pose:function(p){
+  var P=[0,lerp(82,50,p),lerp(-4,-6,p)],lean=lerp(6,12,p),u=uv(lean),N=add(P,mul(u,50)),arm=[],eq=[];
+  var leg=[{an:[-12,8,28],pole:[-0.05,0,1]},{an:[12,52,-62],toe:[12,48,-73],pole:[0.1,-1,0]}];
+  for(var i=0;i<2;i++){var g=sgn(i),wr=[g*25,N[1]-52,N[2]];arm.push({wr:wr,pole:[g*0.2,0,-1]});eq=eq.concat(G.dumbbell(wr,[0,0,1],6,6.5));}
+  eq.push(S([0,40,-84],[0,40,-50],12,'pad'));
+  return {o:{P:P,lean:lean,arm:arm,leg:leg},eq:eq,m:['kn',0,'Rodilla']};
+}};
+
+/* ---- Zancada: paso al frente, bajar y regresar ---- */
+EX.lunge={view:'lat',ecc:true,hot:'l',lab:['BAJA','SUBE'],cam:{c:[0,72,24],s:1.2},
+pose:function(p){
+  var q=sm(p/0.55),P=[0,lerp(92.3,54,p),lerp(0,22,p)],lean=lerp(2,6,p),u=uv(lean),N=add(P,mul(u,50)),arm=[],eq=[];
+  var leg=[{an:[-12,8+9*Math.sin(Math.PI*q)*(p<0.55?1:0),lerp(0,62,q)],pole:[-0.05,0,1]},{an:[12,lerp(8,20,p),0],toe:[12,3,13],pole:[0.1,-1,0]}];
+  for(var i=0;i<2;i++){var g=sgn(i),wr=[g*25,N[1]-52,N[2]];arm.push({wr:wr,pole:[g*0.2,0,-1]});eq=eq.concat(G.dumbbell(wr,[0,0,1],6,6.5));}
+  return {o:{P:P,lean:lean,arm:arm,leg:leg},eq:eq,m:['kn',0,'Rodilla']};
+}};
+
+/* ---- Elevación de pantorrillas en el borde de un step ---- */
+EX.calf={view:'lat',ecc:true,hot:'k',lab:['BAJA','SUBE'],cam:{c:[0,86,8],s:1.1},
+pose:function(p){
+  var th=(lerp(58,-18,p)+25)*R,ball=[0,8,8],ank=[0,8+16*Math.sin(th),8-16*Math.cos(th)],leg=[],arm=[];
+  var P=[0,ank[1]+84.3,ank[2]+2];
+  for(var i=0;i<2;i++){var g=sgn(i);leg.push({an:[g*10,ank[1],ank[2]],toe:[g*10,8,8],pole:[0,0,1]})}
+  var eq=[S([0,4,-6],[0,4,32],8,'pad'),S([-30,4,16],[30,4,16],8,'pad')];
+  return {o:{P:P,lean:0,leg:leg},eq:eq};
+}};
+})(GX);
+
+/* Core: plancha, elevación de piernas, dead bug, plancha lateral */
+(function(G){
+var EX=G.EX,add=G.add,mul=G.mul,mix=G.mix,lerp=G.lerp,nrm=G.nrm,nlerp=G.nlerp,S=G.S,Pl=G.Pl,sub=G.sub,R=G.R;
+function sgn(i){return i?1:-1}
+function uv(l){var a=l*R;return [0,Math.cos(a),Math.sin(a)]}
+function mat(x0,x1,z0,z1){return Pl([[x0,0.4,z0],[x1,0.4,z0],[x1,0.4,z1],[x0,0.4,z1]],'pad')}
+
+/* ---- Plancha sobre antebrazos: isométrico, línea recta cabeza-talones ---- */
+EX.plank={view:'lat',iso:true,hot:'t',lab:['',''],cam:{c:[0,22,-42],s:1.28},
+pose:function(p,rep,t){
+  var br=0.5*Math.sin((t||0)*2.2),arm=[],leg=[];
+  for(var i=0;i<2;i++){var g=sgn(i);
+    arm.push({rel:[[0,-29,-2],[-g*2,-29,25]]});
+    leg.push({back:84.5,toeRel:[0,-14,5],pole:[0,1,0]});}
+  var P=[0,26.9+br,-29.7];
+  return {o:{P:P,lean:83,arm:arm,leg:leg},eq:[mat(-40,40,-135,62)],m:['hp',0,'Cadera']};
+}};
+
+/* ---- Elevación de piernas en power tower (silla romana): rodillas al pecho ---- */
+EX.legraise={view:'lat',ecc:false,hot:'t',tempo:[2,1,2],lab:['SUBE','BAJA'],cam:{c:[0,92,26],s:1.2},
+pose:function(p){
+  var th=lerp(2,105,p)*R,be=th-lerp(6,115,p)*R,arm=[],leg=[],eq=[];
+  for(var i=0;i<2;i++){var g=sgn(i),hp=[g*9,98,0];
+    arm.push({rel:[[0,-29,2],[-g*2,-29,29]]});
+    var kn=add(hp,mul([0,-Math.cos(th),Math.sin(th)],42)),an=add(kn,mul([0,-Math.cos(be),Math.sin(be)],43));
+    leg.push({kn:kn,an:an,toe:add(an,[0,-6,5])});
+    eq.push(S([g*19,115,-2],[g*19,115,34],9,'pad'));eq.push(S([g*30,0,-20],[g*30,162,-20],5,'e'));eq.push(S([g*30,115,-20],[g*19,115,-2],4,'e'));}
+  eq.push(S([0,72,-14],[0,156,-14],18,'pad'));
+  return {o:{P:[0,98,0],lean:lerp(0,-4,p),arm:arm,leg:leg},eq:eq,m:['hp',0,'Cadera']};
+}};
+
+/* ---- Dead bug: brazo y pierna opuestos, zona lumbar pegada al piso ---- */
+EX.deadbug={view:'tri',ecc:false,tempo:[2,1,2],hot:'t',lab:['EXTIENDE','REGRESA'],cam:{c:[0,22,-4],s:1.38},
+pose:function(p,rep){
+  var act=rep%2,la=1-act,arm=[],leg=[],up=[0,1,0],ov=nrm([0,0.17,-1]);
+  for(var i=0;i<2;i++){var g=sgn(i);
+    var d=(i===act)?nlerp(up,ov,p):up;
+    arm.push({rel:[mul(d,UA),mul(d,UA+FA)]});
+    var q=(i===la)?p:0,al=lerp(0,84,q)*R,be=lerp(90,84,q)*R,hp=[g*9,11,0],kn=add(hp,mul([0,Math.cos(al),Math.sin(al)],42)),an=add(kn,mul([0,Math.cos(be),Math.sin(be)],43));
+    leg.push({kn:kn,an:an,toe:add(an,[0,9,2])});}
+  return {o:{P:[0,11,0],lean:-90,arm:arm,leg:leg},eq:[mat(-45,45,-110,100)],m:['kn',la,'Rodilla']};
+}};
+var UA=29,FA=27;
+
+/* ---- Plancha lateral (cuerpo alineado, cadera arriba) ---- */
+EX.sideplank={view:'fro',iso:true,hot:'t',lab:['',''],cam:{c:[-30,30,0],s:1.25},
+pose:function(p,rep,t){
+  var br=0.5*Math.sin((t||0)*2.2),arm=[{rel:[[0,29,0],[0,56,0]]},{rel:[[0,-29,0],[0,-29,27]]}],leg=[];
+  for(var i=0;i<2;i++)leg.push({back:84.5,toeRel:[0,-3,0],pole:[0,0,1]});
+  return {o:{P:[-40,40+br,0],lean:76,roll:-90,yaw:90,arm:arm,leg:leg},eq:[Pl([[-140,0.4,-30],[60,0.4,-30],[60,0.4,40],[-140,0.4,40]],'pad')],m:['hp',1,'Cadera']};
+}};
+})(GX);
+
+/* Calentamiento: jumping jacks, círculos de brazo, rotación externa, wall slide, gato-vaca, bird dog,
+   balanceo de piernas, puente de glúteo, sentadilla goblet, bisagra de cadera, colgado */
+(function(G){
+var EX=G.EX,add=G.add,sub=G.sub,mul=G.mul,mix=G.mix,lerp=G.lerp,nrm=G.nrm,nlerp=G.nlerp,S=G.S,Dt=G.Dt,Pl=G.Pl,R=G.R,sm=G.sm,clamp=G.clamp;
+function sgn(i){return i?1:-1}
+function stand(extra){var o={P:[0,92.3,0],lean:0,leg:[{an:[-12,8,0]},{an:[12,8,0]}]};for(var k in extra)o[k]=extra[k];return o}
+function matXZ(x0,x1,z0,z1){return Pl([[x0,0.4,z0],[x1,0.4,z0],[x1,0.4,z1],[x0,0.4,z1]],'pad')}
+
+/* ---- Jumping jacks ---- */
+EX.jj={view:'fro',ecc:false,hot:'l',tempo:[1,0,1],lab:['ABRE','CIERRA'],cam:{c:[0,92,0],s:1.1},
+pose:function(p){
+  var o=stand({P:[0,lerp(92.3,88.6,p),0]}),N=add(o.P,[0,50,0]),arm=[],leg=[];
+  for(var i=0;i<2;i++){var g=sgn(i),sh=add(N,[g*19,0,0]),th=lerp(6,172,p),t=th*R;
+    var wx=19+54*Math.sin(t)-20*clamp((th-90)/80,0,1);
+    arm.push({wr:[g*wx,sh[1]-54*Math.cos(t),0],pole:[0,-0.2,-1]});
+    leg.push({an:[g*lerp(11,32,p),8+4*Math.sin(Math.PI*p),0],pole:[g*0.1,0,1]});}
+  o.arm=arm;o.leg=leg;return {o:o,eq:[matXZ(-60,60,-30,30)]};
+}};
+
+/* ---- Círculos de brazo (continuo) ---- */
+EX.armcircles={view:'lat',iso:true,phLabel:'GIRA',hot:'a',cam:{c:[0,100,0],s:1.1},
+pose:function(p,rep,t){
+  var f=(t||0)*Math.PI,o=stand(),N=[0,142.3,0],arm=[];
+  for(var i=0;i<2;i++){var g=sgn(i),sh=add(N,[g*19,0,0]),d=nrm([g*0.12,-Math.cos(f),Math.sin(f)]);
+    arm.push({wr:add(sh,mul(d,55)),pole:[g,0,0]});}
+  o.arm=arm;return {o:o,eq:[matXZ(-60,60,-40,60)]};
+}};
+
+/* ---- Rotación externa en polea (codo pegado a la costilla, 90°) ---- */
+EX.extrot={view:'tri',ecc:false,hot:'a',tempo:[2,1,2],lab:['ROTA AFUERA','REGRESA'],cam:{c:[0,112,12],s:1.2},
+pose:function(p){
+  var o=stand(),N=[0,142.3,0],sh=add(N,[19,0,0]),el=add(sh,[2,-29,4]),psi=lerp(-50,55,p)*R;
+  var wr=add(el,mul([Math.sin(psi),0,Math.cos(psi)],27)),pul=[-78,113,12];
+  o.arm=[{wr:add(N,[-24,-36,9]),pole:[-1,-0.3,-1]},{el:el,wr:wr}];
+  var eq=[S([-78,0,12],[-78,170,12],6,'e'),Dt(pul,3.2,'jt'),S(pul,wr,1.4,'k'),S(add(wr,[-2,0,0]),add(wr,[2,0,0]),2.6,'bar'),matXZ(-60,60,-40,60)];
+  return {o:o,eq:eq};
+}};
+
+/* ---- Wall slide: de W a Y con antebrazos pegados a la pared ---- */
+EX.wallslide={view:'fro',ecc:false,hot:'t',tempo:[2,1,2],lab:['SUBE','BAJA'],cam:{c:[0,100,0],s:1.0},
+pose:function(p){
+  var o=stand(),N=[0,142.3,0],arm=[];
+  for(var i=0;i<2;i++){var g=sgn(i),sh=add(N,[g*19,0,0]),u1=nrm([g*0.55,0.83,0]),ud=nlerp(nrm([g*0.8,-0.5,0]),u1,p),el=add(sh,mul(ud,29));
+    var fd=nlerp(nrm([g*0.15,1,0]),u1,p);arm.push({el:el,wr:add(el,mul(fd,27))});}
+  o.arm=arm;return {o:o,eq:[Pl([[-70,0,-18],[70,0,-18],[70,225,-18],[-70,225,-18]],'pad')]};
+}};
+
+/* ---- Cuadrupedia: base común ---- */
+function quad(P,lean){
+  var u=[0,Math.cos(lean*R),Math.sin(lean*R)],N=add(P,mul(u,50)),leg=[],arm=[];
+  for(var i=0;i<2;i++){var g=sgn(i),hp=[g*9,P[1],P[2]];
+    leg.push({kn:[g*9,4,P[2]],an:[g*9,4,P[2]-43],toe:[g*9,4,P[2]-52]});
+    arm.push({wr:[g*19,4,N[2]],pole:[0,0,-1]});}
+  return {u:u,N:N,leg:leg,arm:arm};
+}
+/* ---- Gato-vaca ---- */
+EX.catcow={view:'lat',ecc:false,hot:'t',tempo:[2,1,2],lab:['REDONDEA','ARQUEA'],cam:{c:[0,38,0],s:1.5},
+pose:function(p){
+  var P=[0,45,-8],q=quad(P,74),A=lerp(-6,11,p),perp=[0,0.961,-0.276],pts=[],eq=[matXZ(-50,50,-90,90)];
+  for(var k=0;k<=10;k++){var s=k/10;pts.push(add(add(P,mul(q.u,50*s)),mul(perp,A*Math.sin(Math.PI*s))))}
+  for(k=0;k<10;k++)eq.push(S(pts[k],pts[k+1],17,'b'));
+  return {o:{P:P,lean:74,noTorso:true,nk:lerp(-32,42,p),arm:q.arm,leg:q.leg},eq:eq};
+}};
+/* ---- Bird dog ---- */
+EX.birddog={view:'lat',ecc:false,hot:'t',tempo:[2,2,2],lab:['EXTIENDE','REGRESA'],cam:{c:[0,38,0],s:1.35},
+pose:function(p,rep){
+  var P=[0,45,-8],q=quad(P,74),act=rep%2,la=1-act,sh=add(q.N,[sgn(act)*19,0,0]);
+  q.arm[act]={wr:mix([sgn(act)*19,4,q.N[2]],add(sh,[0,3,55]),p),pole:[0,1,0.2]};
+  var g=sgn(la),hp=[g*9,45,-8],al=lerp(0,90,p)*R,kn=add(hp,mul([0,-Math.cos(al),-Math.sin(al)],42));
+  q.leg[la]={kn:kn,an:add(kn,[0,0,-43]),toe:add(kn,[0,-5,-52])};
+  return {o:{P:P,lean:74,arm:q.arm,leg:q.leg},eq:[matXZ(-50,50,-90,90)],m:null};
+}};
+
+/* ---- Balanceo de pierna (adelante-atrás) ---- */
+EX.hipswing={view:'lat',ecc:false,hot:'l',tempo:[1,0,1],lab:['ADELANTE','ATRÁS'],cam:{c:[0,92,18],s:1.1},
+pose:function(p){
+  var th=lerp(-22,68,p)*R,o=stand();
+  o.leg=[{an:[-12,8,0],pole:[0,0,1]},{an:[12,92.3-83*Math.cos(th),83*Math.sin(th)],pole:[0,0,1],toeRel:[0,-3,10]}];
+  o.arm=[{wr:[-10,127,42],pole:[-0.3,-1,0]},{wr:[19+5,142.3-52,6],pole:[1,0,-0.3]}];
+  return {o:o,eq:[S([-10,0,46],[-10,185,46],6,'e'),matXZ(-60,60,-40,80)],m:['hp',1,'Cadera']};
+}};
+
+/* ---- Puente de glúteo ---- */
+EX.glutebridge={view:'lat',ecc:true,hot:'l',tempo:[2,1,2],lab:['BAJA','SUBE'],cam:{c:[0,25,-14],s:1.6},
+pose:function(p){
+  var tilt=lerp(1,30,p),t=tilt*R,Nn=[0,11,-62],u=[0,-Math.sin(t),-Math.cos(t)],P=sub(Nn,mul(u,50)),arm=[],leg=[];
+  for(var i=0;i<2;i++){var g=sgn(i);arm.push({wr:[g*24,6,Nn[2]+46],pole:[0,1,0]});leg.push({an:[g*10,4,22],pole:[0,1,0],toeRel:[0,-2,10]});}
+  return {o:{P:P,lean:-90-tilt,nk:lerp(0,35,p),arm:arm,leg:leg},eq:[matXZ(-50,50,-110,70)],m:['hp',0,'Cadera']};
+}};
+
+/* ---- Sentadilla goblet (mancuerna al pecho) ---- */
+EX.goblet={view:'lat',ecc:true,hot:'l',tempo:[3,1,1],lab:['BAJA','SUBE'],cam:{c:[0,84,-6],s:1.1},
+pose:function(p){
+  var P=[0,lerp(92.3,50,p),lerp(-1,-22,p)],lean=lerp(3,26,p),u=[0,Math.cos(lean*R),Math.sin(lean*R)],N=add(P,mul(u,50)),arm=[];
+  var c=add(N,[0,-13,17]);
+  for(var i=0;i<2;i++){var g=sgn(i);arm.push({wr:[g*5,c[1]+1,c[2]],pole:[g*0.6,-1,-0.2]});}
+  var leg=[{an:[-17,8,0],pole:[-0.1,0,1]},{an:[17,8,0],pole:[0.1,0,1]}];
+  return {o:{P:P,lean:lean,nk:-lerp(0,10,p),arm:arm,leg:leg},eq:G.dumbbell(c,[0,1,0],8,5.5).concat([matXZ(-40,40,-60,60)]),m:['kn',0,'Rodilla']};
+}};
+
+/* ---- Bisagra de cadera sin peso (manos en la cadera) ---- */
+EX.hinge={view:'lat',ecc:true,hot:'lt',tempo:[3,1,1],lab:['BAJA','SUBE'],cam:{c:[0,80,-8],s:1.25},
+pose:function(p){
+  var P=[0,lerp(92.3,86,p),lerp(-2,-28,p)],lean=lerp(3,62,p),u=[0,Math.cos(lean*R),Math.sin(lean*R)],arm=[],leg=[];
+  for(var i=0;i<2;i++){var g=sgn(i);arm.push({wr:[g*24,P[1]+2,P[2]-4],pole:[g,0,-1]});leg.push({an:[g*12,8,0],pole:[g*0.1,0,1]});}
+  return {o:{P:P,lean:lean,nk:-lerp(0,12,p),arm:arm,leg:leg},eq:[matXZ(-40,40,-60,60)],m:['hp',0,'Cadera']};
+}};
+
+/* ---- Colgado pasivo en la barra (isométrico) ---- */
+EX.deadhang={view:'lat',iso:true,hot:'ta',cam:{c:[0,126,0],s:1.0},
+pose:function(p,rep,t){return EX.pullup_close.pose(0)}};
+})(GX);
+
+/* ---- Sentadilla goblet con talones elevados (principal del viernes) ---- */
+(function(G){
+var EX=G.EX,S=G.S;
+EX.gobletheel={view:'lat',ecc:true,hot:'l',tempo:[3,1,1],lab:['BAJA','SUBE'],cam:{c:[0,84,-6],s:1.1},
+pose:function(p,rep,t){
+  var r=EX.goblet.pose(p,rep,t),o=r.o;
+  o.P=[o.P[0],o.P[1]+2.2,o.P[2]];
+  o.leg=[{an:[-17,10.6,0],pole:[-0.1,0,1],toeRel:[0,-4,9.5]},{an:[17,10.6,0],pole:[0.1,0,1],toeRel:[0,-4,9.5]}];
+  r.eq=r.eq.concat([G.Pl([[-24,0.5,-9],[24,0.5,-9],[24,3.2,-9],[-24,3.2,-9]],'pad'),G.Pl([[-24,3.2,-9],[24,3.2,-9],[24,3.2,3],[-24,3.2,3]],'pad'),G.Pl([[-24,0.5,3],[24,0.5,3],[24,3.2,3],[-24,3.2,3]],'pad')]);
+  return r;
+}};
+})(GX);
+
+
+(function(){try{GX.init()}catch(e){if(window.console)console.error(e)}})();
+</script>
+<script>
+(function(){
+  try{
+    var links=[].slice.call(document.querySelectorAll('nav.dayindex a'));
+    var sections=links.map(function(a){return document.querySelector(a.getAttribute('href'))}).filter(Boolean);
+    if(!('IntersectionObserver' in window) || !sections.length) return;
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var id='#'+e.target.id;
+          links.forEach(function(a){a.classList.toggle('active', a.getAttribute('href')===id)});
+        }
+      });
+    },{rootMargin:'-20% 0px -70% 0px', threshold:0});
+    sections.forEach(function(s){io.observe(s)});
+  }catch(e){}
+})();
+</script>
+
+</body>
+</html>
