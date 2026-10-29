@@ -1143,6 +1143,92 @@ details.card summary{cursor:pointer;font-weight:700}
   .cv-act{margin-top:0;margin-left:0!important}
   .promo .art{width:90px;height:90px}
 }
+
+/* ---------- Mi agenda (Vocal) ---------- */
+.agenda{display:flex;flex-direction:column;gap:16px}
+.ag-top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px}
+.ag-kick{display:block;font-size:11.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.ag-ttl h1{margin:2px 0 0;font-size:26px;font-weight:800;letter-spacing:-.3px;line-height:1.15}
+.ag-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ag-week{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.ag-week.one{grid-template-columns:minmax(0,1fr)}
+.ag-day{background:#fff;border:1px solid var(--rim);border-radius:18px;display:flex;flex-direction:column;min-height:300px;overflow:hidden;box-shadow:var(--shadow)}
+.ag-day.past{background:#FBFBFC}
+.ag-dh{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;background:var(--soft2);padding:12px 16px 10px;border-bottom:1px solid var(--rim)}
+.ag-dn{font-size:17px;font-weight:700;text-transform:capitalize;color:var(--coal2);display:flex;flex-direction:column;line-height:1.1}
+.ag-dn.nocap{text-transform:none}
+.ag-dn small{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
+.ag-num{font-size:44px;font-weight:300;line-height:.9;color:var(--coal)}
+.ag-num.sm{font-size:22px;font-weight:600}
+.ag-day.today{border-color:var(--coal);box-shadow:0 0 0 2px var(--coal),var(--shadow)}
+.ag-day.today .ag-dh{background:var(--coal);border-color:var(--coal)}
+.ag-day.today .ag-dn,.ag-day.today .ag-num{color:#fff}
+.ag-body{flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:12px;background-image:radial-gradient(circle,#D3D6DB 1px,transparent 1.3px);background-size:16px 16px;background-position:8px 8px}
+.ag-sec{display:flex;flex-direction:column;gap:6px}
+.ag-lbl{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);background:#fff;align-self:flex-start;padding:0 4px 0 0}
+.ag-lbl.bad{color:var(--bad)}
+.ag-task{display:flex;flex-direction:column;gap:2px;text-align:left;font:inherit;color:inherit;cursor:pointer;background:#fff;border:1px solid var(--rim);border-left:5px solid var(--silver);border-radius:10px;padding:7px 10px}
+.ag-task:hover{border-color:var(--silver)}
+.ag-task.as-verde{border-left-color:var(--sv)}.ag-task.as-amarillo{border-left-color:var(--sa)}.ag-task.as-rojo{border-left-color:var(--sr)}.ag-task.as-vencida{border-left-color:var(--sx)}.ag-task.as-concluida{border-left-color:var(--sc);opacity:.65}
+.ag-tt{font-weight:600;font-size:13.5px;line-height:1.3}
+.ag-tm{font-size:12px;color:var(--muted)}
+.ag-note{display:flex;align-items:flex-start;gap:8px;background:#fff;border-radius:8px;padding:2px 2px 2px 0}
+.ag-chk{flex:none;width:22px;height:22px;border-radius:7px;border:1.6px solid var(--silver);background:#fff;display:grid;place-items:center;cursor:pointer;margin-top:1px;padding:0;color:#fff}
+.ag-note.done .ag-chk{background:var(--coal);border-color:var(--coal)}
+.ag-nt{flex:1;min-width:0;border:0;background:transparent;text-align:left;font:inherit;font-size:15px;line-height:1.35;color:#1D3A8A;cursor:pointer;padding:1px 0;overflow-wrap:anywhere;font-family:"Segoe Print","Bradley Hand","Comic Neue",var(--font)}
+.ag-note.done .ag-nt{text-decoration:line-through;color:var(--steel)}
+.ag-h{display:inline-block;font-family:var(--font);font-size:11.5px;font-weight:700;color:var(--coal);background:var(--soft2);border-radius:6px;padding:1px 6px;margin-right:6px;vertical-align:1px}
+.ag-carry{display:flex;align-items:flex-start;gap:6px}.ag-carry .ag-note{flex:1}
+.ag-from{font-size:11px;color:var(--muted);white-space:nowrap;margin-top:4px}
+.ag-empty{color:var(--steel);font-size:13px;background:#fff;align-self:flex-start;padding:0 4px}
+.ag-total{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 14px;border-top:2px solid #1D3A8A;margin:0 14px;font-size:12px;color:var(--muted);font-weight:600}
+.ag-total mark{background:#FF8FC7;color:#1D3A8A;font-weight:800;font-size:16px;padding:1px 8px;border-radius:4px}
+.ag-add{display:flex;gap:6px;padding:10px 12px 12px;border-top:1px solid var(--line2)}
+.ag-add input{flex:1;min-width:0;border:1px solid var(--rim);border-radius:10px;padding:9px 11px;font-size:14px;background:var(--paper)}
+.ag-add input:focus{outline:2px solid var(--coal);outline-offset:-1px;background:#fff}
+.ag-plus{flex:none;width:38px;border-radius:10px;border:0;background:var(--coal);color:#fff;display:grid;place-items:center;cursor:pointer}
+.ag-side .ag-dh{background:var(--mist)}
+.ag-kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px}
+.ag-kp div{background:#fff;border:1px solid var(--rim);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column}
+.ag-kp b{font-size:18px;line-height:1.2}.ag-kp span{font-size:11.5px;color:var(--muted)}
+.ag-month{background:#fff;border:1px solid var(--rim);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.ag-mh{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:var(--soft2);border-bottom:1px solid var(--rim)}
+.ag-mh span{padding:9px 10px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.ag-mg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.ag-mc{min-height:118px;border:0;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2);background:#fff;text-align:left;font:inherit;color:inherit;padding:8px;display:flex;flex-direction:column;gap:4px;cursor:pointer;min-width:0}
+.ag-mc:nth-child(7n){border-right:0}
+.ag-mc:hover{background:var(--paper)}
+.ag-mc.out{background:#FAFAFB;color:var(--steel)}
+.ag-mc .mn{font-size:15px;font-weight:700;width:28px;height:28px;border-radius:50%;display:grid;place-items:center}
+.ag-mc.today .mn{background:var(--coal);color:#fff}
+.ag-mc.sel{box-shadow:inset 0 0 0 2px var(--coal)}
+.ag-mc .mls{display:flex;flex-direction:column;gap:3px;min-width:0}
+.mline{display:flex;align-items:center;gap:5px;font-size:12px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.mline i{flex:none;width:7px;height:7px;border-radius:50%}
+.mline.note{color:#1D3A8A}.mline.note i{background:#1D3A8A}
+.mline.done{text-decoration:line-through;color:var(--steel)}
+.mmore{font-size:11.5px;color:var(--muted);font-weight:600}
+.ag-mc .mdots{display:none;gap:3px}.ag-mc .mdots i{width:6px;height:6px;border-radius:50%;display:block}.ag-mc .mdots i.nd{background:#1D3A8A}
+.ag-foot{display:flex;gap:6px;align-items:flex-start;margin:0}
+.cal-open{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:12px;border:1px solid var(--rim);background:var(--coal);color:#fff;border-radius:12px;padding:10px;font:inherit;font-weight:600;cursor:pointer}
+@media (max-width:1300px){.ag-week{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:1000px){.ag-week{grid-template-columns:repeat(2,minmax(0,1fr))}.ag-mc{min-height:92px}}
+@media (max-width:760px){
+  .ag-ttl h1{font-size:21px}
+  .ag-ctrl{width:100%}
+  .ag-ctrl .seg{margin-left:auto}
+  .ag-ctrl .lbl-long{display:none}
+  .ag-week{grid-template-columns:minmax(0,1fr);gap:12px}
+  .ag-day{min-height:0;scroll-margin-top:12px}
+  .ag-day.past:not(.today){opacity:.85}
+  .ag-num{font-size:36px}
+  .ag-add input{font-size:16px}
+  .ag-nt{font-size:16px}
+  .ag-mc{min-height:58px;padding:6px 2px;align-items:center}
+  .ag-mc .mls{display:none}
+  .ag-mc .mdots{display:flex;flex-wrap:wrap;justify-content:center}
+  .ag-mh span{padding:8px 0;text-align:center;font-size:11px}
+}
 </style>
 </head>
 <body>
@@ -2149,6 +2235,7 @@ function migrate(s) {
   if (!s.permsV2) { s.permisos.colaborador.editarTareas = false; s.permsV2 = true; }
   ['areas', 'people', 'items', 'automations', 'autoRuns', 'notifications', 'drafts', 'comms', 'audit'].forEach(function (k) { if (!Array.isArray(s[k])) s[k] = base[k]; });
   s.templates = s.templates || base.templates;
+  if (!Array.isArray(s.agenda)) s.agenda = [];
   /* Cuentas incluidas en el archivo que un borrador anterior todavía no tenía. */
   var embSec = (EMBED && EMBED.security) || {};
   s.security = s.security || {};
@@ -2443,11 +2530,12 @@ ACT.tab = function (el) { var t = el.getAttribute('data-tab'); if (t === 'tabler
    --------------------------------------------------------------------- */
 var TABS = [
   { id: 'panel', label: 'Inicio', icon: 'home' },
+  { id: 'agenda', label: 'Mi agenda', icon: 'calendar', role: 'vocal' },
   { id: 'persona', label: 'Mi espacio', icon: 'user' },
   { id: 'tablero', label: 'Tablero de tareas', icon: 'table' },
   { id: 'equipo', label: 'Equipo y permisos', icon: 'users' },
   { id: 'evidencias', label: 'Evidencias', icon: 'bookmark' },
-  { id: 'nube', label: 'Trabajo en equipo (OneDrive)', icon: 'cloud' },
+  { id: 'nube', label: 'Trabajo en equipo (nube)', icon: 'cloud' },
   { sep: true },
   { id: 'comunicaciones', label: 'Comunicaciones', icon: 'mail', perm: 'comunicaciones' },
   { id: 'automatizaciones', label: 'Automatizaciones', icon: 'zap' },
@@ -2455,7 +2543,7 @@ var TABS = [
   { id: 'docs', label: 'Documentación técnica', icon: 'book' },
   { id: 'config', label: 'Configuración', icon: 'settings', perm: 'configuracion' }
 ];
-function tabVisible(t) { return !!t && !t.sep && (!t.perm || can(t.perm)); }
+function tabVisible(t) { return !!t && !t.sep && (!t.perm || can(t.perm)) && (!t.role || session.role === t.role); }
 var VIEWS = {};
 function render() {
   if (!tabVisible(byId(TABS, ui.tab))) ui.tab = 'panel';
@@ -3983,7 +4071,7 @@ function nextCardHTML(items) {
 }
 function syncPromoHTML() {
   var on = typeof Sync !== 'undefined' && Sync.connected();
-  return '<div class="card promo" id="syncPromo">' + artStack('stk') + '<div style="min-width:0"><h4>' + (on ? 'Equipo conectado' : 'Trabajen al mismo tiempo') + '</h4><p>' + (on ? 'Sus cambios y los del equipo se comparten solos por la carpeta de OneDrive.' : 'Conecte una vez la carpeta compartida de OneDrive y vea al momento lo que actualiza cada integrante.') + '</p><button class="btn sm primary" data-act="tab" data-tab="nube">' + (on ? 'Ver la conexión' : 'Cómo conectarse') + ic('arrow', 'sm') + '</button></div></div>';
+  return '<div class="card promo" id="syncPromo">' + artStack('stk') + '<div style="min-width:0"><h4>' + (on ? 'Equipo conectado' : 'Trabajen al mismo tiempo') + '</h4><p>' + (on ? 'Sus cambios y los del equipo se comparten solos por internet.' : 'Conéctese una vez y vea al momento lo que actualiza cada integrante.') + '</p><button class="btn sm primary" data-act="tab" data-tab="nube">' + (on ? 'Ver la conexión' : 'Cómo conectarse') + ic('arrow', 'sm') + '</button></div></div>';
 }
 function myTaskCard(it) {
   var s = semaforo(it), touch = canTouch(it), meta = num(it.meta), next = NEXT_STEP[it.estado];
@@ -4060,7 +4148,7 @@ function calCardHTML(items) {
     '<div class="duehead"><b>' + head + '</b><span class="chip">' + dueSel.length + '</span><span class="spacer"></span>' + scopeSeg + '</div>' +
     (dueSel.length ? '<div class="duelist">' + dueSel.slice(0, 6).map(dcardHTML).join('') + (dueSel.length > 6 ? '<button class="btn sm ghost more" data-act="dayList" data-d="' + sel + '"' + (scope === 'mine' ? ' data-p="' + me.id + '"' : '') + '>Ver las ' + dueSel.length + ' ' + ic('arrow', 'sm') + '</button>' : '') + '</div>' :
       '<div class="empty small" style="padding:16px">Sin vencimientos ese día.' + (nextDue ? '<div style="margin-top:6px">Próximo: <a href="#" data-act="calDay" data-d="' + nextDue.limite + '">' + esc(DIAS[dow(nextDue.limite)] + ' ' + fmtShort(nextDue.limite)) + '</a></div>' : '') + '</div>') +
-    (overdue.length ? '<button class="overdue-link" data-act="' + (scope === 'mine' ? 'gotoPersonSem' : 'gotoSem') + '" data-sem="vencida"' + (scope === 'mine' ? ' data-id="' + me.id + '"' : '') + '>' + ic('alert', 'sm') + (overdue.length === 1 ? '1 tarea vencida sin concluir' : overdue.length + ' tareas vencidas sin concluir') + '<span class="spacer"></span>' + ic('arrow', 'sm') + '</button>' : '') + '</div>';
+    (overdue.length ? '<button class="overdue-link" data-act="' + (scope === 'mine' ? 'gotoPersonSem' : 'gotoSem') + '" data-sem="vencida"' + (scope === 'mine' ? ' data-id="' + me.id + '"' : '') + '>' + ic('alert', 'sm') + (overdue.length === 1 ? '1 tarea vencida sin concluir' : overdue.length + ' tareas vencidas sin concluir') + '<span class="spacer"></span>' + ic('arrow', 'sm') + '</button>' : '') + (session.role === 'vocal' ? '<button class="cal-open" data-act="openAgenda" data-d="' + sel + '">' + ic('calendar', 'sm') + 'Abrir mi agenda</button>' : '') + '</div>';
 }
 ACT.calDay = function (el) { ui.calDay = el.getAttribute('data-d'); render(); };
 ACT.calWeek = function (el) { var T = TODAY(), cur = validISO(ui.calDay) ? ui.calDay : T; ui.calDay = addDays(cur, +el.getAttribute('data-d')); if (weekStart(ui.calDay) === weekStart(T)) ui.calDay = T; render(); };
@@ -4232,7 +4320,7 @@ ACT.evArea = function (el) { ui.evArea = el.getAttribute('data-a'); render(); };
    cambio más reciente. Compatible con la misma lógica CRDT anterior.
    ===================================================================== */
 var SYNC_SCHEMA = 'wos-sync/1';
-var SYNC_COLLS = ['areas', 'people', 'items', 'automations', 'notifications', 'drafts', 'comms'];
+var SYNC_COLLS = ['areas', 'people', 'items', 'automations', 'notifications', 'drafts', 'comms', 'agenda'];
 var SYNC_NESTED = { items: { subitems: 1, updates: 1 } };
 var SYNC_OBJS = { org: 1, settings: 1, permisos: 2, security: 1, templates: 2 };
 var SYNC_NO_TOMB = { notifications: 1 };
@@ -4415,7 +4503,7 @@ var Sync = (function () {
   }
   function akey(e) { return (e.dev || '') + '#' + e.n + '#' + String(e.hash || '').slice(0, 12); }
   function normalize(s) {
-    ['areas', 'people', 'items', 'automations', 'notifications', 'drafts', 'comms', 'autoRuns', 'audit'].forEach(function (k) { if (!Array.isArray(s[k])) s[k] = []; });
+    ['areas', 'people', 'items', 'automations', 'notifications', 'drafts', 'comms', 'agenda', 'autoRuns', 'audit'].forEach(function (k) { if (!Array.isArray(s[k])) s[k] = []; });
     SYNC_COLLS.forEach(function (k) { s[k] = s[k].filter(function (r) { return r && Object.keys(r).length > 1; }); });
     s.items.forEach(function (it) {
       it.subitems = (Array.isArray(it.subitems) ? it.subitems : []).filter(function (x) { return x && x.titulo != null; });
@@ -4618,7 +4706,7 @@ var Sync = (function () {
       if (fromClick) toast('Equipo conectado. Los cambios se comparten automáticamente.', 4200);
     }).catch(function (e) {
       fbConnected = false; status = 'error';
-      lastErr = 'No se pudo conectar a internet: ' + ((e && e.message) || e);
+      lastErr = 'Revise que esta computadora tenga acceso a internet.' + (e && e.message ? ' (' + e.message + ')' : '');
       renderButton(); renderChrome(); refreshPage();
       if (fromClick) toast('No se pudo conectar. Verifique el acceso a internet.', 4800);
     });
@@ -4819,7 +4907,7 @@ var TOUR = [
   { sel: '.h-sem', tab: 'tablero', view: 'tabla', h: 'Semáforo (color)', p: 'Se calcula solo, nadie lo captura. Si una tarea se pone en rojo, conviene hablar con el responsable antes de que venza.' },
   { sel: '#spaceCover', tab: 'persona', h: 'Mi espacio', p: 'El perfil de cada persona: sus tareas, su avance, lo que vence en la semana y su actividad reciente. Con su cuenta, se abre directo en el suyo.' },
   { sel: '#lockBtn', h: 'Entrar con su cuenta', p: 'Para actualizar tareas, pulse <b>Entrar</b> y escriba la contraseña de su cuenta. Sin entrar, todo se puede consultar.' },
-  { sel: '#syncBtn', h: 'Trabajar en equipo', p: 'Conecte una vez la carpeta compartida de OneDrive: sus cambios llegan al resto del equipo y los de ellos a usted, sin enviar archivos.' },
+  { sel: '#syncBtn', h: 'Trabajar en equipo', p: 'Con «Conectar equipo» sus cambios llegan al resto del equipo y los de ellos a usted, sin enviar archivos.' },
   { sel: '#guideBtn', h: 'Vuelva cuando quiera', p: 'Este botón abre de nuevo la guía. Los íconos <b>?</b> junto a cada título también explican lo que muestran.' }
 ];
 var tour = null;
@@ -4877,6 +4965,183 @@ document.addEventListener('keydown', function (ev) {
   else if (ev.key === 'ArrowRight') tourStep(1);
   else if (ev.key === 'ArrowLeft') tourStep(-1);
 }, true);
+
+/* =====================================================================
+   MI AGENDA · planeador del Vocal
+   Vista grande tipo agenda de papel: cada día muestra las tareas que
+   vencen y las anotaciones propias del Vocal (con hora opcional).
+   Solo aparece en la sesión del Vocal; sus anotaciones viajan con la
+   sincronización para que las vea también desde su celular.
+   ===================================================================== */
+function agendaOK() { return session.role === 'vocal'; }
+function agMode() { return ui.agMode || prefGet('agMode', 'semana'); }
+function agDay() { return validISO(ui.agDay) ? ui.agDay : TODAY(); }
+function agNotes(d) {
+  return (state.agenda || []).filter(function (n) { return n.fecha === d; }).sort(function (a, b) {
+    var ha = a.hora || '99:99', hb = b.hora || '99:99';
+    return ha < hb ? -1 : ha > hb ? 1 : String(a.ts || '') < String(b.ts || '') ? -1 : 1;
+  });
+}
+function agTasks(d) { return sortItems(state.items.filter(function (it) { return it.limite === d; })); }
+/* Suma las cantidades con signo de pesos que aparezcan en las anotaciones del día ($1,250.50). */
+function agMoney(list) {
+  var t = 0, any = false;
+  list.forEach(function (n) {
+    String(n.texto || '').replace(/\$\s?(\d[\d,]*(?:\.\d{1,2})?)/g, function (m, v) { t += parseFloat(v.replace(/,/g, '')) || 0; any = true; return m; });
+  });
+  return any ? t : null;
+}
+function fmtMoney(v) { return '$' + v.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function fmtHora(h) {
+  if (!h) return '';
+  var p = h.split(':'), H = +p[0], ap = H < 12 ? 'a. m.' : 'p. m.', h12 = H % 12 || 12;
+  return h12 + ':' + p[1] + ' ' + ap;
+}
+
+function agTaskHTML(it) {
+  var s = semaforo(it), p = personBy(it.responsable);
+  return '<button class="ag-task as-' + s.k + '" data-act="openItem" data-id="' + it.id + '" data-tip="' + esc(it.titulo + '\n' + s.label + ' · ' + pname(p) + ' · avance ' + pct(it) + '%') + '">' +
+    '<span class="ag-tt">' + esc(it.titulo) + '</span><span class="ag-tm">' + esc(firstName(p)) + ' · ' + pct(it) + '%</span></button>';
+}
+function agNoteHTML(n) {
+  return '<div class="ag-note' + (n.hecho ? ' done' : '') + '">' +
+    '<button class="ag-chk" data-act="agToggle" data-id="' + n.id + '" aria-pressed="' + !!n.hecho + '" aria-label="' + (n.hecho ? 'Marcar como pendiente' : 'Marcar como hecho') + '">' + (n.hecho ? ic('check', 'sm') : '') + '</button>' +
+    '<button class="ag-nt" data-act="agEdit" data-id="' + n.id + '">' + (n.hora ? '<b class="ag-h">' + esc(fmtHora(n.hora)) + '</b>' : '') + esc(n.texto) + '</button></div>';
+}
+function agDayHTML(d, T) {
+  var tasks = agTasks(d), notes = agNotes(d), money = agMoney(notes), open = tasks.filter(function (it) { return it.estado !== 'listo'; }).length;
+  return '<section class="ag-day' + (d === T ? ' today' : '') + (d < T ? ' past' : '') + '" id="ag-' + d + '" aria-label="' + esc(DIAS[dow(d)] + ' ' + fmtLong(d)) + '">' +
+    '<header class="ag-dh"><span class="ag-dn">' + DIAS[dow(d)] + (d === T ? '<small>hoy</small>' : '') + '</span><span class="ag-num">' + (+d.slice(8)) + '</span></header>' +
+    '<div class="ag-body">' +
+    (tasks.length ? '<div class="ag-sec"><div class="ag-lbl">' + ic('table', 'sm') + (open ? (open === 1 ? 'Vence 1 tarea' : 'Vencen ' + open + ' tareas') : 'Tareas concluidas') + '</div>' + tasks.map(agTaskHTML).join('') + '</div>' : '') +
+    (notes.length ? '<div class="ag-sec">' + notes.map(agNoteHTML).join('') + '</div>' : '') +
+    (!tasks.length && !notes.length ? '<div class="ag-empty">Sin pendientes</div>' : '') +
+    '</div>' +
+    (money != null ? '<div class="ag-total"><span>Total del día</span><mark>' + fmtMoney(money) + '</mark></div>' : '') +
+    '<div class="ag-add"><input type="text" placeholder="Anotar… (ej. 10:00 Reunión)" data-enter="agAdd" data-d="' + d + '" aria-label="Nueva anotación para el ' + esc(DIAS[dow(d)] + ' ' + fmtShort(d)) + '"><button class="ag-plus" data-act="agAddBtn" data-d="' + d + '" aria-label="Agregar">' + ic('plus', 'sm') + '</button></div>' +
+    '</section>';
+}
+function agWeekSideHTML(ws, T) {
+  var we = addDays(ws, 6);
+  var overdue = sortItems(state.items.filter(function (it) { return it.estado !== 'listo' && validISO(it.limite) && it.limite < T; }));
+  var undated = (state.agenda || []).filter(function (n) { return !n.hecho && n.fecha < T && n.fecha >= addDays(T, -30); }).sort(function (a, b) { return a.fecha < b.fecha ? -1 : 1; });
+  var wk = [], wm = 0, anyM = false;
+  for (var i = 0; i < 7; i++) { var nn = agNotes(addDays(ws, i)); wk = wk.concat(nn); var m = agMoney(nn); if (m != null) { wm += m; anyM = true; } }
+  var hechas = wk.filter(function (n) { return n.hecho; }).length;
+  return '<section class="ag-day ag-side"><header class="ag-dh"><span class="ag-dn nocap">Resumen de la semana</span><span class="ag-num sm">' + (+ws.slice(8)) + '–' + (+we.slice(8)) + '</span></header><div class="ag-body">' +
+    '<div class="ag-kp"><div><b>' + wk.length + '</b><span>anotaciones</span></div><div><b>' + hechas + '</b><span>hechas</span></div>' + (anyM ? '<div><b>' + fmtMoney(wm) + '</b><span>total</span></div>' : '') + '</div>' +
+    (overdue.length ? '<div class="ag-sec"><div class="ag-lbl bad">' + ic('alert', 'sm') + (overdue.length === 1 ? '1 tarea vencida sin concluir' : overdue.length + ' tareas vencidas sin concluir') + '</div>' + overdue.slice(0, 5).map(agTaskHTML).join('') + (overdue.length > 5 ? '<button class="btn sm ghost" data-act="gotoSem" data-sem="vencida">Ver las ' + overdue.length + ' ' + ic('arrow', 'sm') + '</button>' : '') + '</div>' : '') +
+    (undated.length ? '<div class="ag-sec"><div class="ag-lbl">' + ic('clock', 'sm') + 'Anotaciones atrasadas</div>' + undated.slice(0, 5).map(function (n) { return '<div class="ag-carry">' + agNoteHTML(n) + '<span class="ag-from">' + esc(DIA3[dow(n.fecha)] + ' ' + (+n.fecha.slice(8))) + '</span></div>'; }).join('') + '</div>' : '') +
+    (!overdue.length && !undated.length ? '<div class="ag-empty">Nada atrasado. Todo al día.</div>' : '') +
+    '</div></section>';
+}
+function agMonthHTML(sel, T) {
+  var first = sel.slice(0, 8) + '01', start = weekStart(first), mo = sel.slice(5, 7), cells = '';
+  for (var i = 0; i < 42; i++) {
+    var d = addDays(start, i);
+    if (i === 35 && d.slice(5, 7) !== mo) break;
+    var tasks = agTasks(d), notes = agNotes(d), all = tasks.length + notes.length;
+    var lines = tasks.slice(0, 3).map(function (it) { return '<span class="mline"><i class="k-' + semaforo(it).k + '-bg"></i>' + esc(it.titulo) + '</span>'; })
+      .concat(notes.slice(0, Math.max(0, 3 - tasks.length)).map(function (n) { return '<span class="mline note' + (n.hecho ? ' done' : '') + '"><i></i>' + esc((n.hora ? n.hora + ' ' : '') + n.texto) + '</span>'; }));
+    var dots = tasks.slice(0, 4).map(function (it) { return '<i class="k-' + semaforo(it).k + '-bg"></i>'; }).join('') + (notes.length ? '<i class="nd"></i>' : '');
+    cells += '<button class="ag-mc' + (d.slice(5, 7) !== mo ? ' out' : '') + (d === T ? ' today' : '') + (d === sel ? ' sel' : '') + '" data-act="agPick" data-d="' + d + '" aria-label="' + esc(DIAS[dow(d)] + ' ' + fmtLong(d) + (all ? ', ' + plural(all, 'pendiente') : '')) + '">' +
+      '<span class="mn">' + (+d.slice(8)) + '</span><span class="mls">' + lines.join('') + (all > 3 ? '<span class="mmore">+' + (all - 3) + ' más</span>' : '') + '</span><span class="mdots">' + dots + '</span></button>';
+  }
+  return '<div class="ag-month"><div class="ag-mh">' + ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map(function (x) { return '<span>' + x + '</span>'; }).join('') + '</div><div class="ag-mg">' + cells + '</div></div>';
+}
+
+VIEWS.agenda = function () {
+  if (!agendaOK()) return '<div class="empty">Esta sección es exclusiva del Vocal.</div>';
+  var T = TODAY(), sel = agDay(), mode = agMode(), ws = weekStart(sel), we = addDays(ws, 6);
+  var title = mode === 'mes' ? cap(MESES[+sel.slice(5, 7) - 1]) + ' ' + sel.slice(0, 4)
+    : (ws.slice(5, 7) === we.slice(5, 7) ? (+ws.slice(8)) + ' al ' + (+we.slice(8)) + ' de ' + MESES[+we.slice(5, 7) - 1] : (+ws.slice(8)) + ' de ' + MESES[+ws.slice(5, 7) - 1] + ' al ' + (+we.slice(8)) + ' de ' + MESES[+we.slice(5, 7) - 1]) + ' ' + we.slice(0, 4);
+  var isNow = mode === 'mes' ? sel.slice(0, 7) === T.slice(0, 7) : ws === weekStart(T);
+  var head = '<div class="ag-top"><div class="ag-ttl"><span class="ag-kick">Mi agenda · solo visible para usted</span><h1>' + esc(title) + '</h1></div><span class="spacer"></span>' +
+    '<div class="ag-ctrl">' + (isNow ? '' : '<button class="btn sm" data-act="agToday">Hoy</button>') +
+    '<button class="cal-nav" data-act="agNav" data-d="-1" aria-label="Anterior">' + ic('left', 'sm') + '</button><button class="cal-nav" data-act="agNav" data-d="1" aria-label="Siguiente">' + ic('right', 'sm') + '</button>' +
+    '<div class="seg" role="tablist" aria-label="Vista"><button class="' + (mode === 'semana' ? 'on' : '') + '" data-act="agMode" data-m="semana">Semana</button><button class="' + (mode === 'mes' ? 'on' : '') + '" data-act="agMode" data-m="mes">Mes</button></div>' +
+    '<button class="btn sm primary" data-act="agNew">' + ic('plus', 'sm') + '<span class="lbl-long">Anotación</span></button></div></div>';
+  var body;
+  if (mode === 'mes') body = agMonthHTML(sel, T) + '<div class="ag-week one">' + agDayHTML(sel, T) + '</div>';
+  else {
+    var days = '';
+    for (var i = 0; i < 7; i++) days += agDayHTML(addDays(ws, i), T);
+    body = '<div class="ag-week">' + days + agWeekSideHTML(ws, T) + '</div>';
+  }
+  return '<div class="agenda">' + head + body + '<p class="ag-foot small muted">' + ic('lock', 'sm') + '<span>Sus anotaciones solo se muestran en la sesión del Vocal y se sincronizan con sus otros dispositivos. Las tareas del equipo aparecen en el día de su fecha límite. Si escribe cantidades con signo de pesos (<b>$250</b>), la agenda suma el total del día.</span></p></div>';
+};
+VIEWS.agenda_after = function () {
+  if (ui.agFocus) { var el = $('.ag-add input[data-d="' + ui.agFocus + '"]'); ui.agFocus = null; if (el) try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } }
+  if (ui.agScroll && window.innerWidth <= 760) { var t = $('#ag-' + ui.agScroll); ui.agScroll = null; if (t) setTimeout(function () { var y = t.getBoundingClientRect().top + window.scrollY - 12; window.scrollTo(0, Math.max(0, y)); }, 60); }
+};
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+/* ---------- acciones ---------- */
+function agParse(txt) {
+  var m = /^(\d{1,2})(?::(\d{2}))?\s*(am|a\.?\s?m\.?|pm|p\.?\s?m\.?|h|hrs?)?\s+(.+)$/i.exec(txt);
+  if (m && (m[2] || m[3])) {
+    var H = +m[1], M = m[2] ? +m[2] : 0, ap = (m[3] || '').toLowerCase().replace(/[\s.]/g, '');
+    if (ap.indexOf('p') === 0 && H < 12) H += 12;
+    if (ap.indexOf('a') === 0 && H === 12) H = 0;
+    if (H < 24 && M < 60) return { hora: pad2(H) + ':' + pad2(M), texto: m[4].trim() };
+  }
+  return { hora: '', texto: txt };
+}
+function agAddFrom(input) {
+  var v = String(input.value || '').trim(), d = input.getAttribute('data-d');
+  if (!v || !validISO(d) || !agendaOK()) return;
+  var p = agParse(v);
+  if (!Array.isArray(state.agenda)) state.agenda = [];
+  state.agenda.push({ id: uid('ag'), fecha: d, hora: p.hora, texto: p.texto.slice(0, 400), hecho: false, ts: nowISO() });
+  input.value = ''; ui.agFocus = d;
+  commit();
+}
+ACT.agAdd = function (el) { agAddFrom(el); };
+ACT.agAddBtn = function (el) { var i = el.parentNode.querySelector('input'); if (i && i.value.trim()) agAddFrom(i); else if (i) i.focus(); };
+ACT.agToggle = function (el) { var n = byId(state.agenda || [], el.getAttribute('data-id')); if (!n || !agendaOK()) return; n.hecho = !n.hecho; commit(); };
+ACT.agMode = function (el) { ui.agMode = el.getAttribute('data-m'); prefSet('agMode', ui.agMode); render(); };
+ACT.agToday = function () { ui.agDay = TODAY(); ui.agScroll = TODAY(); render(); };
+/* Al entrar desde el menú en el celular, la agenda baja sola al día de hoy. */
+var _agTab = ACT.tab; ACT.tab = function (el) { if (el.getAttribute('data-tab') === 'agenda') ui.agScroll = agDay(); _agTab(el); };
+ACT.agNav = function (el) {
+  var k = +el.getAttribute('data-d'), sel = agDay();
+  if (agMode() === 'mes') { var y = +sel.slice(0, 4), m = +sel.slice(5, 7) - 1 + k; y += Math.floor(m / 12); m = ((m % 12) + 12) % 12; ui.agDay = y + '-' + pad2(m + 1) + '-01'; }
+  else ui.agDay = addDays(sel, 7 * k);
+  var T = TODAY();
+  if (agMode() === 'mes' ? ui.agDay.slice(0, 7) === T.slice(0, 7) : weekStart(ui.agDay) === weekStart(T)) ui.agDay = T;
+  render();
+};
+ACT.agPick = function (el) { ui.agDay = el.getAttribute('data-d'); render(); var o = $('.ag-week.one'); if (o && window.innerWidth <= 1000) o.scrollIntoView({ block: 'start', behavior: 'smooth' }); };
+ACT.openAgenda = function (el) { ui.tab = 'agenda'; if (el && el.getAttribute('data-d')) ui.agDay = el.getAttribute('data-d'); ui.agScroll = agDay(); window.scrollTo(0, 0); render(); };
+function agForm(n) {
+  openModal({
+    title: n.id ? 'Editar anotación' : 'Nueva anotación', size: 'narrow',
+    body: '<div class="field"><label for="agTx">Anotación</label><textarea id="agTx" rows="3" maxlength="400" autofocus>' + esc(n.texto || '') + '</textarea></div>' +
+      '<div class="fgrid"><div class="field"><label for="agFe">Fecha</label><input type="date" id="agFe" value="' + esc(n.fecha) + '"></div><div class="field"><label for="agHo">Hora (opcional)</label><input type="time" id="agHo" value="' + esc(n.hora || '') + '"></div></div>' +
+      (n.id ? '<label class="row small" style="margin-top:8px"><input type="checkbox" id="agHe"' + (n.hecho ? ' checked' : '') + '> Hecho</label>' : ''),
+    foot: (n.id ? '<button class="btn danger" data-act="agDel" data-id="' + n.id + '">' + ic('trash', 'sm') + 'Eliminar</button>' : '') + '<span class="spacer"></span><button class="btn" data-act="closeModal">Cancelar</button><button class="btn primary" data-act="agSave" data-id="' + (n.id || '') + '">Guardar</button>'
+  });
+}
+ACT.agNew = function () { agForm({ fecha: agDay(), hora: '', texto: '' }); };
+ACT.agEdit = function (el) { var n = byId(state.agenda || [], el.getAttribute('data-id')); if (n) agForm(n); };
+ACT.agSave = function (el) {
+  if (!agendaOK()) return;
+  var tx = $('#agTx').value.trim(), fe = $('#agFe').value, ho = $('#agHo').value, he = $('#agHe');
+  if (!tx) { toast('Escriba la anotación'); return; }
+  if (!validISO(fe)) { toast('Elija una fecha válida'); return; }
+  if (!Array.isArray(state.agenda)) state.agenda = [];
+  var id = el.getAttribute('data-id'), n = id && byId(state.agenda, id);
+  if (n) { n.texto = tx.slice(0, 400); n.fecha = fe; n.hora = ho || ''; if (he) n.hecho = he.checked; }
+  else state.agenda.push({ id: uid('ag'), fecha: fe, hora: ho || '', texto: tx.slice(0, 400), hecho: false, ts: nowISO() });
+  ui.agDay = fe; closeModal(); commit();
+};
+ACT.agDel = function (el) {
+  var id = el.getAttribute('data-id');
+  confirmBox('Eliminar anotación', 'La anotación se borrará de su agenda en todos sus dispositivos.', 'Eliminar', function () {
+    state.agenda = (state.agenda || []).filter(function (n) { return n.id !== id; }); commit();
+  }, true);
+};
+if (window.__WOS_TEST__) window.__wosAg = function (f) { return f({ session: session, state: function () { return state; }, setState: function (s) { state = s; }, ui: ui, render: render, TODAY: TODAY, addDays: addDays, SYNC_COLLS: SYNC_COLLS }); };
 
 /* =====================================================================
    AUDITORÍA · CONFIGURACIÓN · DOCUMENTACIÓN · NOTIFICACIONES · ACCESO
@@ -4943,7 +5208,7 @@ VIEWS.config = function () {
     '<div class="row"><button class="btn" data-act="exportCSV">' + ic('table', 'sm') + 'Exportar tareas para Excel (CSV)</button></div>' +
     (state.items.some(function (it) { return it.demo; }) ? '<div class="row"><button class="btn danger" data-act="removeDemo">' + ic('trash', 'sm') + 'Quitar las tareas de ejemplo</button><span class="small muted">' + plural(state.items.filter(function (it) { return it.demo; }).length, 'tarea') + ' de ejemplo</span></div>' : '') +
     '<p class="small muted" style="margin:0">Los cambios se guardan en este navegador mientras trabaja y, con la carpeta compartida conectada, llegan al resto del equipo. «Guardar versión» genera el archivo HTML completo para archivarlo o entregar una copia.</p></div></div></div>';
-  html += '<div class="card" style="margin-top:14px"><h3>' + ic('cloud') + 'Trabajo en equipo (OneDrive)<span class="sub">' + (Sync.connected() ? 'conectado en esta computadora' : 'sin conectar en esta computadora') + '</span></h3><p class="small muted" style="margin-top:0">Cada computadora escribe sus cambios en la carpeta compartida de OneDrive del Work OS y lee los de las demás cada 15 segundos. Se configura una vez por computadora.</p>' +
+  html += '<div class="card" style="margin-top:14px"><h3>' + ic('cloud') + 'Trabajo en equipo (nube)<span class="sub">' + (Sync.connected() ? 'conectado en esta computadora' : 'sin conectar en esta computadora') + '</span></h3><p class="small muted" style="margin-top:0">Cada computadora o celular envía sus cambios por internet y recibe los de los demás cada 15 segundos. No requiere carpetas compartidas.</p>' +
     '<div class="row"><button class="btn primary" data-act="openSync">' + ic('folder', 'sm') + 'Opciones de trabajo en equipo</button>' + (isV ? '<button class="btn ghost" data-act="discardDraft">Descartar los datos guardados en esta computadora</button>' : '') + '</div></div>';
   return html;
 };
@@ -5109,7 +5374,7 @@ ACT.doSave = function () {
   state.rev = (state.rev || 0) + 1; state.savedAt = nowISO(); state.updatedAt = state.savedAt;
   var data = clone(state);
   if (kind === 'consulta') {
-    data.edicion = 'consulta'; data.comms = []; data.drafts = []; data.autoRuns = [];
+    data.edicion = 'consulta'; data.comms = []; data.drafts = []; data.autoRuns = []; data.agenda = [];
     data.audit = []; data.notifications = data.notifications.map(function (n) { n.leida = true; return n; });
   } else { data.edicion = 'maestra'; savedRev = state.rev; }
   var html;
