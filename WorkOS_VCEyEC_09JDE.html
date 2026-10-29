@@ -2530,7 +2530,7 @@ ACT.tab = function (el) { var t = el.getAttribute('data-tab'); if (t === 'tabler
    --------------------------------------------------------------------- */
 var TABS = [
   { id: 'panel', label: 'Inicio', icon: 'home' },
-  { id: 'agenda', label: 'Mi agenda', icon: 'calendar', role: 'vocal' },
+  { id: 'agenda', label: 'Mi agenda', icon: 'calendar', needMe: true },
   { id: 'persona', label: 'Mi espacio', icon: 'user' },
   { id: 'tablero', label: 'Tablero de tareas', icon: 'table' },
   { id: 'equipo', label: 'Equipo y permisos', icon: 'users' },
@@ -2543,7 +2543,7 @@ var TABS = [
   { id: 'docs', label: 'Documentación técnica', icon: 'book' },
   { id: 'config', label: 'Configuración', icon: 'settings', perm: 'configuracion' }
 ];
-function tabVisible(t) { return !!t && !t.sep && (!t.perm || can(t.perm)) && (!t.role || session.role === t.role); }
+function tabVisible(t) { return !!t && !t.sep && (!t.perm || can(t.perm)) && (!t.role || session.role === t.role) && (!t.needMe || !!actorPerson()); }
 var VIEWS = {};
 function render() {
   if (!tabVisible(byId(TABS, ui.tab))) ui.tab = 'panel';
@@ -4149,7 +4149,7 @@ function calCardHTML(items) {
     '<div class="duehead"><b>' + head + '</b><span class="chip">' + dueSel.length + '</span><span class="spacer"></span>' + scopeSeg + '</div>' +
     (dueSel.length ? '<div class="duelist">' + dueSel.slice(0, 6).map(dcardHTML).join('') + (dueSel.length > 6 ? '<button class="btn sm ghost more" data-act="dayList" data-d="' + sel + '"' + (scope === 'mine' ? ' data-p="' + me.id + '"' : '') + '>Ver las ' + dueSel.length + ' ' + ic('arrow', 'sm') + '</button>' : '') + '</div>' :
       '<div class="empty small" style="padding:16px">Sin vencimientos ese día.' + (nextDue ? '<div style="margin-top:6px">Próximo: <a href="#" data-act="calDay" data-d="' + nextDue.limite + '">' + esc(DIAS[dow(nextDue.limite)] + ' ' + fmtShort(nextDue.limite)) + '</a></div>' : '') + '</div>') +
-    (overdue.length ? '<button class="overdue-link" data-act="' + (scope === 'mine' ? 'gotoPersonSem' : 'gotoSem') + '" data-sem="vencida"' + (scope === 'mine' ? ' data-id="' + me.id + '"' : '') + '>' + ic('alert', 'sm') + (overdue.length === 1 ? '1 tarea vencida sin concluir' : overdue.length + ' tareas vencidas sin concluir') + '<span class="spacer"></span>' + ic('arrow', 'sm') + '</button>' : '') + (session.role === 'vocal' ? '<button class="cal-open" data-act="openAgenda" data-d="' + sel + '">' + ic('calendar', 'sm') + 'Abrir mi agenda</button>' : '') + '</div>';
+    (overdue.length ? '<button class="overdue-link" data-act="' + (scope === 'mine' ? 'gotoPersonSem' : 'gotoSem') + '" data-sem="vencida"' + (scope === 'mine' ? ' data-id="' + me.id + '"' : '') + '>' + ic('alert', 'sm') + (overdue.length === 1 ? '1 tarea vencida sin concluir' : overdue.length + ' tareas vencidas sin concluir') + '<span class="spacer"></span>' + ic('arrow', 'sm') + '</button>' : '') + (me ? '<button class="cal-open" data-act="openAgenda" data-d="' + sel + '">' + ic('calendar', 'sm') + 'Abrir mi agenda</button>' : '') + '</div>';
 }
 ACT.calDay = function (el) { ui.calDay = el.getAttribute('data-d'); render(); };
 ACT.calWeek = function (el) { var T = TODAY(), cur = validISO(ui.calDay) ? ui.calDay : T; ui.calDay = addDays(cur, +el.getAttribute('data-d')); if (weekStart(ui.calDay) === weekStart(T)) ui.calDay = T; render(); };
@@ -4267,8 +4267,8 @@ VIEWS.persona = function () {
       (open.length ? '<div class="mytasks">' + open.map(myTaskCard).join('') + '</div>' : '<div class="empty">' + (list.length ? 'No tiene tareas pendientes.' : 'Todavía no tiene tareas asignadas.') + '</div>') +
       (done.length ? '<details class="donelist"><summary>' + plural(done.length, 'tarea concluida', 'tareas concluidas') + '</summary><div class="alist2">' + done.slice(0, 20).map(function (it) { return compactRowHTML(it, false); }).join('') + '</div></details>' : '') + '</div>';
   }
-  return '<h1 class="sr">' + esc(mineP ? 'Mi espacio' : 'Espacio de ' + pname(p)) + '</h1>' + picker + cover + tiles + (sup ? '' : personAgendaHTML(p, mineP)) +
-    '<div class="space2"><div class="col2">' + tasks + activityCardHTML(p) + '</div><div class="col2">' + (sup ? focusCardHTML(p, state.items, true) : '') + matesCardHTML(p) + '</div></div>';
+  return '<h1 class="sr">' + esc(mineP ? 'Mi espacio' : 'Espacio de ' + pname(p)) + '</h1>' + picker + cover + tiles +
+    '<div class="space2"><div class="col2">' + tasks + activityCardHTML(p) + '</div><div class="col2">' + focusCardHTML(p, sup ? state.items : list, sup) + matesCardHTML(p) + '</div></div>';
 };
 
 /* =====================================================================
@@ -5072,13 +5072,11 @@ function agendaHTML(o) {
 }
 
 VIEWS.agenda = function () {
-  if (!agendaOK()) return '<div class="empty">Esta sección es exclusiva del Vocal.</div>';
-  return agendaHTML({ sc: 'v', pool: state.items, showP: true, assign: can('crearTareas'), notes: true, kicker: 'Mi agenda · solo visible para usted', h: 'h1' });
+  var me = actorPerson();
+  if (!me) return '<div class="empty">Entre con su cuenta para ver su agenda.</div>';
+  if (agendaOK()) return agendaHTML({ sc: 'v', pool: state.items, showP: true, assign: can('crearTareas'), notes: true, kicker: 'Mi agenda · tareas de todo el equipo', h: 'h1' });
+  return agendaHTML({ sc: 'v', pool: itemsOf(me.id), showP: false, assign: false, notes: false, kicker: 'Mi agenda · tareas que le asignó el Vocal', h: 'h1' });
 };
-/* Agenda en el espacio de cada colaborador: solo sus tareas. */
-function personAgendaHTML(p, mineP) {
-  return '<div class="card ag-card">' + agendaHTML({ sc: 'p', pool: itemsOf(p.id), showP: false, assign: can('crearTareas') && p.activo !== false, pid: p.id, notes: false, kicker: mineP ? 'Mi agenda' : 'Agenda de ' + (p.nombre ? firstName(p) : cargoCorto(p)), h: 'h2' }) + '</div>';
-}
 function agAfter(sc) {
   var key = agKey(sc, 'Scroll');
   if (ui[key] && window.innerWidth <= 760) {
