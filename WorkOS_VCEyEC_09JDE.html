@@ -1972,7 +1972,7 @@ var PRISTINE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 var ASSETS = JSON.parse(document.getElementById('wos-assets').textContent);
 var EMBED = JSON.parse(document.getElementById('wos-data').textContent);
 var LS_KEY = 'wos09:' + EMBED.fileId;
-var AUTOLOCK_MIN = 20;
+var AUTOLOCK_MIN = 10;
 
 /* ---------------------------------------------------------------------
    Utilidades
@@ -4315,7 +4315,7 @@ ACT.evArea = function (el) { ui.evArea = el.getAttribute('data-a'); render(); };
 /* =====================================================================
    TRABAJO EN EQUIPO · sincronización por Firebase Firestore
    Cada computadora escribe su propio documento en Firestore
-   («cambios/<deviceId>») y lee los de las demás cada 15 segundos.
+   («cambios/<deviceId>») y recibe los de las demás en tiempo real.
    Por cada dato (campo de una tarea, persona, permiso…) gana el
    cambio más reciente. Compatible con la misma lógica CRDT anterior.
    ===================================================================== */
@@ -4607,7 +4607,7 @@ var Sync = (function () {
   function fileView() {
     var cutN = (Date.now() - 45 * 864e5) * 1000, f = {};
     for (var p in mine.f) { if (!hasOwn(mine.f, p)) continue; var e = mine.f[p]; if (p.indexOf('c/notifications/') === 0 && e[0] < cutN) continue; f[p] = e; }
-    return { schema: SYNC_SCHEMA, fileId: fid(), dev: DEV, at: nowISO(), quien: mine.quien || null, f: f, audit: mine.audit.length > 4000 ? mine.audit.slice(-4000) : mine.audit };
+    return { schema: SYNC_SCHEMA, fileId: fid(), dev: DEV, at: nowISO(), quien: mine.quien || null, f: f, audit: mine.audit.length > 1000 ? mine.audit.slice(-1000) : mine.audit };
   }
   function hasOwnData() { return Object.keys(mine.f).length > 0 || mine.audit.length > 0; }
 
@@ -4632,21 +4632,7 @@ var Sync = (function () {
     busy = true; renderButton();
     return fbDb.collection(FB_ORG).doc(FB_COLLECTION).collection('devs').get().then(function (snap) {
       var changed = false;
-      snap.forEach(function (doc) {
-        var D = doc.data();
-        if (!D || D.dev === DEV) return;
-        /* Decodificar claves */
-        if (D.f_enc) {
-          D.f = {};
-          for (var k in D.f_enc) {
-            if (!hasOwn(D.f_enc, k)) continue;
-            try { D.f[atob(k.replace(/-/g, '+').replace(/_/g, '/'))] = D.f_enc[k]; } catch (e) {}
-          }
-          delete D.f_enc;
-        }
-        if (!validDelta(D)) return;
-        if (absorb(D, doc.id)) changed = true;
-      });
+      snap.forEach(function (doc) { if (takeDoc(doc)) changed = true; });
       if (needWrite) return writeMine().then(function () { return changed; });
       return changed;
     }).then(function (changed) {
@@ -4660,6 +4646,39 @@ var Sync = (function () {
     }).then(function (r) { busy = false; renderButton(); renderChrome(); return r; });
   }
 
+  /* Lee un documento de otra computadora; devuelve true si trajo cambios nuevos. */
+  function takeDoc(doc) {
+    var D = doc.data();
+    if (!D || D.dev === DEV) return false;
+    if (D.f_enc) {
+      D.f = {};
+      for (var k in D.f_enc) {
+        if (!hasOwn(D.f_enc, k)) continue;
+        try { D.f[atob(k.replace(/-/g, '+').replace(/_/g, '/'))] = D.f_enc[k]; } catch (e) {}
+      }
+      delete D.f_enc;
+    }
+    if (!validDelta(D)) return false;
+    return absorb(D, doc.id);
+  }
+  /* Escucha en tiempo real: Firestore avisa solo cuando una computadora cambia algo. */
+  var unsub = null;
+  function startListen() {
+    if (unsub || !fbDb) return;
+    loopOn = true;
+    unsub = fbDb.collection(FB_ORG).doc(FB_COLLECTION).collection('devs').onSnapshot(function (snap) {
+      var changed = false;
+      snap.docChanges().forEach(function (ch) { if (ch.type !== 'removed' && takeDoc(ch.doc)) changed = true; });
+      lastOk = Date.now(); lastErr = ''; status = 'on';
+      if (needWrite) writeMine().catch(function () {});
+      if (changed) { persistRemote(); applyRemote(); }
+      renderButton(); renderChrome();
+    }, function (e) {
+      lastErr = (e && (e.message || e.name)) || String(e);
+      status = 'error'; unsub = null; loopOn = false;
+      renderButton(); renderChrome(); refreshPage();
+    });
+  }
   function validDelta(D) { return D && D.schema === SYNC_SCHEMA && D.fileId === fid() && typeof D.dev === 'string' && D.dev && D.f && typeof D.f === 'object'; }
 
   function absorb(D, name) {
@@ -4689,17 +4708,13 @@ var Sync = (function () {
     busy = true; renderButton();
     return writeMine().then(function () { lastOk = Date.now(); status = 'on'; }).catch(function (e) { lastErr = (e && (e.message || e.name)) || String(e); status = 'error'; }).then(function () { busy = false; renderButton(); renderChrome(); });
   }
-  function startLoop() {
-    if (loopOn) return; loopOn = true;
-    setInterval(function () { if (fbConnected && status === 'on' && document.visibilityState !== 'hidden') poll(); }, SYNC_POLL_MS);
-  }
 
   /* ---------- conexión con Firebase ---------- */
   function connectFirebase(fromClick) {
     if (fbConnected) { poll(true).then(function () { renderButton(); renderChrome(); refreshPage(); }); return; }
     status = 'connecting'; renderButton();
     initFirebase().then(function () {
-      status = 'on'; needWrite = true; startLoop();
+      status = 'on'; needWrite = true; startListen();
       return poll(true);
     }).then(function () {
       renderButton(); renderChrome(); refreshPage();
@@ -4714,6 +4729,7 @@ var Sync = (function () {
 
   function disconnect() {
     fbConnected = false; status = 'off'; loopOn = false;
+    if (unsub) { try { unsub(); } catch (e) {} unsub = null; }
     renderButton(); renderChrome();
   }
 
@@ -4831,12 +4847,12 @@ var Sync = (function () {
     var leg = '<div class="legrow"><i style="background:' + GRAYS[0] + '"></i><span><b>Esta computadora</b>' + (mineQ ? ' · ' + esc(pshortName(mineQ.nombre)) : '') + '</span><span class="tiny muted">' + plural(devCount(mine), 'cambio') + '</span></div>' +
       devs.map(function (d, i) { return '<div class="legrow"><i style="background:' + GRAYS[(i + 1) % GRAYS.length] + '"></i><span>' + esc(pshortName(devName(d.quien, 'Computadora sin sesión'))) + '</span><span class="tiny muted">' + plural(devCount(d), 'cambio') + '</span></div>'; }).join('');
 
-    var html = pageHead('Trabajo en equipo en la nube', 'Los cambios de cada integrante se sincronizan automáticamente a través de internet cada ' + (SYNC_POLL_MS / 1000) + ' segundos. No hace falta carpetas compartidas ni configuración adicional.', btns);
+    var html = pageHead('Trabajo en equipo en la nube', 'Los cambios de cada integrante se sincronizan automáticamente a través de internet, en tiempo real. No hace falta carpetas compartidas ni configuración adicional.', btns);
     html += '<div class="cloudwrap"><div class="card" id="syncStatus"><div class="ctitle"><h3>Estado de la conexión</h3><span class="spacer"></span>' + st + '</div>' +
       '<div class="ringcard">' + ringSVG(parts, String(nDev), nDev === 1 ? 'computadora' : 'computadoras', 'Cambios registrados por computadora') + '<div class="rleg"><div class="lbl" style="margin-bottom:6px">Cambios registrados por computadora</div>' + leg + '</div></div>' +
       (status === 'error' ? '<div class="callout" style="margin:14px 0 0;border-left-color:var(--sr)">' + esc(lastErr) + '</div>' : '') +
       (status === 'off' && pending() ? '<div class="callout" style="margin:14px 0 0">Tiene cambios guardados en esta computadora que el equipo todavía no ve. Se compartirán al conectarse a internet.</div>' : '') + '</div>' +
-      '<div class="card"><div class="ctitle"><h3>Cómo funciona</h3></div><div class="syncflow"><div class="sb">' + ic('user') + '<b>Su computadora</b>guarda sus cambios localmente</div><div class="sa">' + ic('arrow') + '</div><div class="sb mid">' + ic('cloud') + '<b>Servidor en la nube</b>sincroniza cambios de todos</div><div class="sa">' + ic('arrow') + '</div><div class="sb">' + ic('users') + '<b>Cada integrante</b>recibe los cambios cada ' + (SYNC_POLL_MS / 1000) + ' s</div></div>' +
+      '<div class="card"><div class="ctitle"><h3>Cómo funciona</h3></div><div class="syncflow"><div class="sb">' + ic('user') + '<b>Su computadora</b>guarda sus cambios localmente</div><div class="sa">' + ic('arrow') + '</div><div class="sb mid">' + ic('cloud') + '<b>Servidor en la nube</b>sincroniza cambios de todos</div><div class="sa">' + ic('arrow') + '</div><div class="sb">' + ic('users') + '<b>Cada integrante</b>recibe los cambios al momento</div></div>' +
       '<p class="small muted" style="margin:12px 0 0">Si dos personas cambian lo mismo, se conserva el cambio más reciente. Si cambian cosas distintas de una tarea, se conservan ambos.</p>' +
       (status !== 'on' ? '<div class="howto"><h4>' + ic('bulb', 'sm') + 'Cómo conectarse</h4><ol class="steps-num"><li><span>Abra el Work OS en su navegador (Edge o Chrome).</span></li><li><span>Pulse <b>«Conectar equipo»</b> — el sistema se conecta automáticamente.</span></li><li><span>El botón superior dirá <b>«Equipo conectado»</b> cuando esté listo.</span></li></ol></div>' : '') + '</div></div>';
 
@@ -5208,7 +5224,7 @@ VIEWS.config = function () {
     '<div class="row"><button class="btn" data-act="exportCSV">' + ic('table', 'sm') + 'Exportar tareas para Excel (CSV)</button></div>' +
     (state.items.some(function (it) { return it.demo; }) ? '<div class="row"><button class="btn danger" data-act="removeDemo">' + ic('trash', 'sm') + 'Quitar las tareas de ejemplo</button><span class="small muted">' + plural(state.items.filter(function (it) { return it.demo; }).length, 'tarea') + ' de ejemplo</span></div>' : '') +
     '<p class="small muted" style="margin:0">Los cambios se guardan en este navegador mientras trabaja y, con la carpeta compartida conectada, llegan al resto del equipo. «Guardar versión» genera el archivo HTML completo para archivarlo o entregar una copia.</p></div></div></div>';
-  html += '<div class="card" style="margin-top:14px"><h3>' + ic('cloud') + 'Trabajo en equipo (nube)<span class="sub">' + (Sync.connected() ? 'conectado en esta computadora' : 'sin conectar en esta computadora') + '</span></h3><p class="small muted" style="margin-top:0">Cada computadora o celular envía sus cambios por internet y recibe los de los demás cada 15 segundos. No requiere carpetas compartidas.</p>' +
+  html += '<div class="card" style="margin-top:14px"><h3>' + ic('cloud') + 'Trabajo en equipo (nube)<span class="sub">' + (Sync.connected() ? 'conectado en esta computadora' : 'sin conectar en esta computadora') + '</span></h3><p class="small muted" style="margin-top:0">Cada computadora o celular envía sus cambios por internet y recibe los de los demás al momento. No requiere carpetas compartidas.</p>' +
     '<div class="row"><button class="btn primary" data-act="openSync">' + ic('folder', 'sm') + 'Opciones de trabajo en equipo</button>' + (isV ? '<button class="btn ghost" data-act="discardDraft">Descartar los datos guardados en esta computadora</button>' : '') + '</div></div>';
   return html;
 };
