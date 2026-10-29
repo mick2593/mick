@@ -221,6 +221,44 @@ svg.stage{display:block; width:100%; max-width:420px; margin:0 auto; height:auto
 .chart .wlab{fill:var(--accent-2); font-family:var(--font-mono); font-size:10.5px; font-weight:600}
 .chart .goalw{stroke:var(--accent); stroke-width:1.3; stroke-dasharray:5 4}
 .chart .goalt{fill:var(--accent); font-family:var(--font-mono); font-size:10px; font-weight:600}
+/* pasos */
+.steptot{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-top:12px; padding:10px 12px; border-radius:8px; background:var(--paper)}
+.steptot span{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted)}
+.steptot b{font-family:var(--font-display); font-size:30px; font-weight:800; font-variant-numeric:tabular-nums}
+/* gastos */
+.costin{flex:0 0 92px; width:92px; height:38px; text-align:right}
+.spend .wbig{font-size:44px}
+/* reflexión */
+.qcard{display:flex; flex-direction:column; gap:6px; width:100%; text-align:left; margin-top:10px; padding:14px 16px; border-radius:8px; border:1px solid var(--line); border-left:4px solid var(--accent-2); background:var(--panel); cursor:pointer}
+.qcard .qk{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-2); font-weight:600}
+.qcard .qt{font-size:15px; line-height:1.45}
+.qcard .qa{font-family:var(--font-mono); font-size:11.5px; color:var(--muted)}
+.welcome .sh{display:flex; align-items:center; gap:10px}
+.welcome .wk{flex:1; font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+.welcome .wg{font-size:34px; font-weight:800; margin-top:14px; line-height:1.05}
+.welcome .wtheme{display:inline-block; margin-top:10px; font-family:var(--font-mono); font-size:11px; color:var(--accent-2); border:1px solid var(--accent-2); border-radius:999px; padding:3px 10px}
+.welcome .wq{margin:18px 0 0; padding:0 0 0 14px; border-left:4px solid var(--accent); font-family:var(--font-display); font-size:27px; font-weight:700; line-height:1.18; text-wrap:balance}
+.welcome .wq cite{display:block; margin-top:10px; font-family:var(--font-mono); font-size:12.5px; font-weight:500; font-style:normal; color:var(--muted)}
+.welcome .wmine{margin-top:18px; padding:12px 14px; border-radius:8px; background:var(--ink); color:var(--paper); font-weight:700; font-size:16px}
+.welcome .wmine span{display:block; font-family:var(--font-mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.08em; opacity:.7; margin-bottom:4px}
+.welcome .wplan{margin-top:12px; font-size:14px; color:var(--muted)}
+.welcome .wplan b{color:var(--ink)}
+/* insignias */
+.medals{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px}
+.mcell{display:flex; flex-direction:column; align-items:center; gap:2px; text-align:center; padding:10px 4px; border-radius:8px; background:var(--paper)}
+.mcell b{font-size:12.5px; line-height:1.2; margin-top:4px}
+.mcell span{font-family:var(--font-mono); font-size:10.5px; color:var(--muted)}
+.mcell:not(.on){opacity:.55}
+.medal .o{fill:var(--soft); stroke:var(--muted); stroke-width:2}
+.medal .i{fill:none; stroke:var(--muted); stroke-width:1.2; stroke-dasharray:2 3}
+.medal .rb{fill:var(--muted); opacity:.5}
+.medal .n{fill:var(--muted); font-family:var(--font-display); font-weight:800; font-size:24px}
+.medal .u{fill:var(--muted); font-family:var(--font-mono); font-weight:600; font-size:7.5px; letter-spacing:.08em}
+.medal.on .o{fill:var(--accent); stroke:var(--accent)}
+.medal.on .i{stroke:#fff; opacity:.7}
+.medal.on .rb{fill:var(--accent-2); opacity:1}
+.medal.on .n,.medal.on .u{fill:#fff}
+.bigmedal{display:flex; justify-content:center; margin-top:10px}
 .legend{display:flex; gap:12px; flex-wrap:wrap; font-family:var(--font-mono); font-size:11px; color:var(--muted); margin-top:6px}
 .legend i{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:4px; vertical-align:-1px}
 .stat{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px}
@@ -956,6 +994,390 @@ pose:function(p,rep,t){
 </script>
 <script>
 var DATA={"R": {"A": {"title": "Rutina A · Empuje", "focus": "Pecho · Hombro · Tríceps", "warm": "martes", "ex": [{"id": "bench", "ex": "bench", "name": "Press de banca con barra", "sets": "4 x 6–8", "n": 4, "lo": 6, "hi": 8, "fail": false, "iso": false, "side": false, "tempo": "3-1-1", "rest": "120 seg", "phase": "Baja hasta rozar pecho → empuja arriba", "pos": "Acostado con los ojos bajo la barra. Omóplatos juntos y hacia abajo (como metidos en los bolsillos de atrás), pies firmes bajo las rodillas, arco lumbar natural. Agarre ~1.5 veces el ancho de hombros, muñecas rectas.", "mov": "Baja en 3 s hasta rozar el pecho a la altura del pezón, con los codos a ~45–60° del torso (el codo llega a ~90°). Pausa 1 s sin relajarte. Sube en 1 s en línea ligeramente diagonal hacia los ojos.", "err": "Codos abiertos a 90° (en \"T\"): es lo que más carga el hombro. Rebotar la barra; despegar los glúteos; doblar las muñecas hacia atrás.", "work": "Pectoral mayor, deltoide anterior, tríceps.", "note": "", "hold": "", "days": ""}, {"id": "ohp", "ex": "ohp", "name": "Press militar de pie con mancuernas", "sets": "3 x 8–10", "n": 3, "lo": 8, "hi": 10, "fail": false, "iso": false, "side": false, "tempo": "2-0-2", "rest": "90 seg", "phase": "Empuja arriba → baja controlado a los hombros", "pos": "De pie, pies al ancho de caderas, glúteos y abdomen apretados. Mancuernas a la altura de los hombros, antebrazos verticales y codos un poco por delante del cuerpo (~30°).", "mov": "Empuja en 2 s hasta casi extender los codos (sin bloquear); las mancuernas se juntan sobre la cabeza, ligeramente por detrás de las orejas. Baja en 2 s hasta que el codo quede a ~90°.", "err": "Arquear la zona lumbar y sacar las costillas; empujar hacia adelante en vez de hacia arriba; bloquear los codos; ayudarte con las piernas.", "work": "Deltoide anterior y medio, tríceps, trapecio superior. El abdomen estabiliza.", "note": "", "hold": "", "days": ""}, {"id": "fly", "ex": "fly", "name": "Aperturas en polea cruzada", "sets": "3 x 12–15", "n": 3, "lo": 12, "hi": 15, "fail": false, "iso": false, "side": false, "tempo": "2-1-2", "rest": "60 seg", "phase": "Abre los brazos → junta al frente del pecho", "pos": "Poleas altas a ambos lados. Un paso al frente en postura escalonada, torso inclinado ~10–15° y codos con flexión suave y fija (~15–20°).", "mov": "Abre en 2 s hasta que las manos queden a la altura de los hombros (codos un poco por detrás del torso), sin forzar el estiramiento. Junta en 2 s trazando un arco al frente del esternón y pausa 1 s apretando el pecho.", "err": "Doblar y estirar los codos (se vuelve press); encoger los hombros; abrir tanto que el hombro se va hacia adelante. Si el hombro molesta, abre solo hasta la línea del torso.", "work": "Pectoral mayor y deltoide anterior.", "note": "", "hold": "", "days": ""}, {"id": "dip", "ex": "dip", "name": "Fondos en power tower", "sets": "3 x al fallo", "n": 3, "lo": null, "hi": null, "fail": true, "iso": false, "side": false, "tempo": "2-0-2", "rest": "90 seg", "phase": "Baja hasta 90° de codo → empuja arriba", "pos": "Brazos extendidos entre las barras, hombros lejos de las orejas, torso inclinado ~15–20° hacia adelante, piernas cruzadas detrás.", "mov": "Baja en 2 s hasta ~90° de codo (el hombro a la altura de los codos, no más profundo); sube en 2 s sin bloquear. Codos hacia atrás y ligeramente afuera.", "err": "Bajar más de 90°: es la causa más común de dolor de hombro en fondos. Encogerte de hombros; balancearte. Si hoy el hombro duele, cambia los fondos por flexiones o por una serie más de tríceps en polea.", "work": "Pecho inferior, tríceps y deltoide anterior.", "note": "", "hold": "", "days": ""}, {"id": "pushdown", "ex": "pushdown", "name": "Extensión de tríceps en polea", "sets": "3 x 10–12", "n": 3, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": false, "tempo": "2-0-2", "rest": "60 seg", "phase": "Extiende abajo → sube controlado", "pos": "Polea alta con cuerda o barra. De pie con inclinación ~10° hacia adelante y los codos pegados a las costillas.", "mov": "Empuja hacia abajo en 2 s hasta extender el codo (~170°, sin bloquear). Sube en 2 s hasta ~80–90° de codo. Solo se mueve el antebrazo.", "err": "Dejar que los codos se vayan adelante; usar el peso del cuerpo; subir más de 90° (el hombro entra a compensar).", "work": "Tríceps (cabezas lateral y medial).", "note": "", "hold": "", "days": ""}, {"id": "lateral", "ex": "lateral", "name": "Elevación lateral en polea baja (cable por detrás de las piernas)", "sets": "4 x 12–15", "n": 4, "lo": 12, "hi": 15, "fail": false, "iso": false, "side": false, "tempo": "2-1-2", "rest": "45–60 seg", "phase": "Eleva el brazo hasta la altura del hombro → baja con control", "pos": "Polea en la posición más baja, de lado a la torre. Toma la agarradera con la mano más lejana a la polea y pasa el cable por detrás de tus piernas. Pies firmes, torso casi recto (~5°), codo con flexión suave (~15°).", "mov": "Lidera con el codo: sube en 2 s hasta la altura del hombro (≈90°), un poco por delante del plano del cuerpo; pausa 1 s; baja en 2 s sin dejar que el cable te jale. Todas las series de un brazo y cambia de lado.", "err": "Subir más de 90° (entra el trapecio y se pellizca el hombro); balancear el torso para generar impulso; subir la muñeca antes que el codo.", "work": "Deltoide medio.", "note": "Ajuste del plan: 3 → 4 series (más volumen para el deltoide medio, según la evidencia de la guía).", "hold": "", "days": ""}]}, "B": {"title": "Rutina B · Tirón", "focus": "Espalda · Bíceps · Deltoide posterior · Pantorrilla", "warm": "miercoles", "ex": [{"id": "pullup_close", "ex": "pullup_close", "name": "Dominadas agarre cerrado", "sets": "4 x al fallo", "n": 4, "lo": null, "hi": null, "fail": true, "iso": false, "side": false, "tempo": "2-0-2", "rest": "120 seg", "phase": "Agarre cerrado · jala el pecho a la barra", "pos": "Cuélgate con brazos extendidos, manos a ancho de hombros, palmas hacia ti o neutras. Antes de jalar baja los omóplatos (aleja los hombros de las orejas). Piernas cruzadas un poco detrás.", "mov": "Jala en 2 s llevando el pecho hacia la barra y los codos hacia las costillas hasta pasar la barbilla; baja en 2 s hasta casi extender (~165–170° de codo).", "err": "Balancearte (kipping); jalar solo con el cuello estirado; no extender abajo; subir los hombros hacia las orejas.", "work": "Dorsal ancho, redondo mayor, bíceps y romboides.", "note": "", "hold": "", "days": ""}, {"id": "pulldown", "ex": "pulldown", "name": "Jalón al pecho en polea alta", "sets": "4 x 10–12", "n": 4, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": false, "tempo": "2-1-2", "rest": "90 seg", "phase": "Jala al pecho → regresa con control", "pos": "Muslos bajo el cojín, pecho arriba, inclinación ~10–20° hacia atrás. Agarre un poco más ancho que los hombros.", "mov": "Jala en 2 s llevando los codos hacia abajo y atrás hasta que la barra toque la parte alta del pecho; pausa 1 s; regresa en 2 s hasta casi extender los brazos.", "err": "Jalar la barra detrás de la nuca; usar impulso con el torso; encoger los hombros.", "work": "Dorsal ancho, redondo mayor y bíceps.", "note": "", "hold": "", "days": ""}, {"id": "row", "ex": "row", "name": "Remo sentado en polea baja", "sets": "3 x 10–12", "n": 3, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": false, "tempo": "2-1-2", "rest": "90 seg", "phase": "Jala hacia el abdomen → extiende al frente", "pos": "Sentado con las rodillas ligeramente flexionadas, pecho erguido y columna neutra. Brazos extendidos al frente.", "mov": "Jala en 2 s llevando los codos atrás, rozando las costillas, con las manos hacia el abdomen bajo; pausa 1 s apretando los omóplatos; extiende en 2 s sin redondear la espalda.", "err": "Echar el torso hacia atrás para jalar; redondear la lumbar al extender; encoger los hombros.", "work": "Dorsal ancho, romboides, trapecio medio e inferior, bíceps.", "note": "", "hold": "", "days": ""}, {"id": "pullup_wide", "ex": "pullup_wide", "name": "Dominadas agarre abierto", "sets": "3 x al fallo", "n": 3, "lo": null, "hi": null, "fail": true, "iso": false, "side": false, "tempo": "2-0-2", "rest": "120 seg", "phase": "Agarre abierto · jala el pecho a la barra", "pos": "Manos ~1.5 veces el ancho de hombros, palmas al frente. Omóplatos hacia abajo antes de empezar.", "mov": "Jala en 2 s llevando los codos hacia el piso y los lados hasta pasar la barbilla; baja en 2 s hasta extensión casi completa.", "err": "Media repetición abajo; agarrar demasiado ancho (más de ~2 veces el ancho de hombros estresa el hombro); jalar hasta la nuca.", "work": "Dorsal ancho, redondo mayor, trapecio inferior.", "note": "", "hold": "", "days": ""}, {"id": "curl", "ex": "curl", "name": "Curl de bíceps con barra Z", "sets": "3 x 10–12", "n": 3, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": false, "tempo": "2-0-2", "rest": "60 seg", "phase": "Flexiona el codo → baja controlado", "pos": "De pie con la barra Z en agarre medio, codos pegados a las costillas y hombros atrás.", "mov": "Sube en 2 s flexionando el codo hasta ~145° (la barra a la altura del pecho) sin mover los codos; baja en 2 s hasta casi extender.", "err": "Balancear el torso; adelantar los codos; doblar las muñecas; soltar la bajada.", "work": "Bíceps braquial y braquial.", "note": "", "hold": "", "days": ""}, {"id": "hammer", "ex": "hammer", "name": "Curl martillo con mancuernas", "sets": "3 x 10–12", "n": 3, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": false, "tempo": "2-0-2", "rest": "60 seg", "phase": "Agarre neutro · flexiona → baja controlado", "pos": "De pie, una mancuerna en cada mano con las palmas mirándose (agarre neutro), codos pegados a las costillas, hombros atrás.", "mov": "Alterna los brazos: sube una mancuerna en 2 s hasta ~145° de flexión del codo sin mover el codo, baja en 2 s hasta casi extender, y sigue con el otro brazo.", "err": "Balancear el torso; adelantar los codos; girar la muñeca durante la subida.", "work": "Braquial, braquiorradial y bíceps (da grosor al brazo).", "note": "", "hold": "", "days": ""}, {"id": "facepull_l", "ex": "facepull", "name": "Face pull en polea (deltoide posterior)", "sets": "3 x 15", "n": 3, "lo": 15, "hi": 15, "fail": false, "iso": false, "side": false, "tempo": "2-1-2", "rest": "60 seg", "phase": "Jala a la altura de la cara, codos arriba → regresa", "pos": "Polea a la altura de la cara con cuerda, pulgares hacia ti. Da un paso atrás, inclinación ligera hacia atrás (~6°) y brazos extendidos.", "mov": "Jala en 2 s hacia la frente separando las manos hasta que queden junto a las orejas, codos altos y antebrazos casi verticales (~90° de codo); pausa 1 s apretando la espalda alta; regresa en 2 s.", "err": "Jalar con las manos bajas hacia el pecho (se vuelve remo); usar demasiado peso; encoger el cuello.", "work": "Deltoide posterior, manguito rotador (infraespinoso y redondo menor), trapecio medio e inferior.", "note": "Nuevo en tu plan: refuerza deltoide posterior y manguito rotador. Úsalo con carga ligera (~40–50 % de lo que moverías en el sábado).", "hold": "", "days": ""}, {"id": "calf", "ex": "calf", "name": "Elevación de pantorrillas", "sets": "3 x 20", "n": 3, "lo": 20, "hi": 20, "fail": false, "iso": false, "side": false, "tempo": "1-1-2", "rest": "45 seg", "phase": "Sube en punta → baja estirando el talón", "pos": "De pie en el borde de un escalón o disco con los talones al aire, mancuernas a los lados, rodillas casi extendidas.", "mov": "Tempo 1-1-2: baja 1 s dejando que el talón pase por debajo del escalón, pausa 1 s en el estiramiento completo y sube en 2 s hasta quedar en puntas.", "err": "Rebotar en el estiramiento; doblar las rodillas para ayudarte; recorrido corto.", "work": "Gastrocnemio y sóleo.", "note": "Nuevo en tu plan: +3 series de pantorrilla por semana (la frecuencia de 2×/semana la mejora).", "hold": "", "days": ""}]}, "C": {"title": "Rutina C · Pierna", "focus": "Cuádriceps · Isquios · Glúteo · Pantorrilla", "warm": "viernes", "ex": [{"id": "gobletheel", "ex": "gobletheel", "name": "Sentadilla goblet con talones elevados", "sets": "4 x 10–15", "n": 4, "lo": 10, "hi": 15, "fail": false, "iso": false, "side": false, "tempo": "3-1-1", "rest": "120 seg", "phase": "Baja entre las piernas, torso erguido → sube", "pos": "Mancuerna vertical pegada al pecho, manos en copa bajo el disco de arriba y codos hacia abajo. Talones sobre un disco de 5–10 kg (2–3 cm de alto), pies al ancho de hombros con las puntas ~15–20° hacia afuera. Inhala y aprieta el abdomen antes de bajar.", "mov": "Baja en 3 s entre las piernas con el torso casi vertical (~15–25° de inclinación) hasta que el muslo llegue a paralelo o un poco más abajo (el arco marca ~70° de rodilla en el fondo), sin que la lumbar se redondee. Pausa 1 s y sube en 1 s empujando con todo el pie. Que las rodillas pasen por delante de las puntas es normal con los talones elevados.", "err": "Separar la mancuerna del pecho (te jala hacia adelante y carga la lumbar); redondear la espalda al fondo; rodillas que se cierran; rebotar abajo.", "work": "Cuádriceps, glúteo mayor y aductores. La carga va al frente del cuerpo y no sobre la columna: la espalda baja trabaja mucho menos que con la barra en la espalda.", "note": "Sustituye a la sentadilla trasera con barra por tu dolor lumbar. Para crecer, la carga ligera funciona si llegas cerca del fallo (1–2 repeticiones en reserva). Con la mancuerna de 24 kg, al completar 4×15 limpias: usa tempo 4-2-1, luego repeticiones de 1 y ½. Si la espalda está bien por 4–6 semanas, puedes probar la sentadilla frontal con barra.", "hold": "", "days": ""}, {"id": "rdl", "ex": "rdl", "name": "Peso muerto rumano con barra", "sets": "4 x 10–12", "n": 4, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": false, "tempo": "3-0-1", "rest": "120 seg", "phase": "Baja con cadera atrás → sube extendiendo cadera", "pos": "De pie, barra frente a los muslos, pies al ancho de caderas, rodillas con ligera flexión (~15–20°), pecho arriba, omóplatos atrás.", "mov": "Baja en 3 s llevando la cadera hacia atrás, con la barra pegada a muslos y espinillas, hasta sentir el estiramiento de los isquios (torso ~60–70° de inclinación). Sube en 1 s empujando la cadera hacia adelante.", "err": "Redondear la espalda; separar la barra del cuerpo; flexionar demasiado las rodillas (se vuelve sentadilla); hiperextender arriba.", "work": "Isquiotibiales, glúteo mayor y erectores espinales.", "note": "", "hold": "", "days": ""}, {"id": "split", "ex": "split", "name": "Sentadilla búlgara con mancuernas", "sets": "3 x 10–12 / pierna", "n": 3, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": true, "tempo": "2-0-2", "rest": "90 seg", "phase": "Baja la rodilla trasera → sube con la pierna delantera", "pos": "Pie trasero apoyado en un banco detrás de ti, pie delantero a ~60–70 cm, mancuernas a los lados, torso ligeramente inclinado.", "mov": "Baja en 2 s en línea recta hasta que el muslo delantero quede paralelo (rodilla delantera ~90°). Sube en 2 s empujando con el pie delantero.", "err": "Rodilla delantera que se cierra; paso demasiado corto; empujar con el pie trasero.", "work": "Cuádriceps, glúteo mayor y aductores.", "note": "", "hold": "", "days": ""}, {"id": "lunge", "ex": "lunge", "name": "Zancadas con mancuernas", "sets": "3 x 10–12 / pierna", "n": 3, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": true, "tempo": "2-0-2", "rest": "75 seg", "phase": "Da el paso y baja → empuja de regreso", "pos": "De pie con mancuernas a los lados, pies al ancho de caderas, torso erguido.", "mov": "Da un paso largo (~80–90 cm) y baja en 2 s hasta que ambas rodillas formen ~90° (la trasera casi roza el piso). Empuja de regreso en 2 s con el pie delantero.", "err": "Paso corto; torso colapsado hacia adelante; rodilla hacia adentro; rebotar en el piso.", "work": "Glúteo mayor, cuádriceps e isquiotibiales.", "note": "", "hold": "", "days": ""}, {"id": "calf", "ex": "calf", "name": "Elevación de pantorrillas", "sets": "4 x 20–25", "n": 4, "lo": 20, "hi": 25, "fail": false, "iso": false, "side": false, "tempo": "1-1-2", "rest": "45 seg", "phase": "Sube en punta → baja estirando el talón", "pos": "De pie en el borde de un escalón o disco con los talones al aire, mancuernas a los lados, rodillas casi extendidas.", "mov": "Tempo 1-1-2: baja 1 s dejando que el talón pase por debajo del escalón, pausa 1 s en el estiramiento completo y sube en 2 s hasta quedar en puntas.", "err": "Rebotar en el estiramiento; doblar las rodillas para ayudarte; recorrido corto.", "work": "Gastrocnemio y sóleo.", "note": "", "hold": "", "days": ""}]}, "D": {"title": "Rutina D · Hombro y brazo", "focus": "Deltoide · Bíceps · Tríceps", "warm": "sabado", "ex": [{"id": "ohp", "ex": "ohp", "name": "Press militar de pie con mancuernas", "sets": "4 x 8–10", "n": 4, "lo": 8, "hi": 10, "fail": false, "iso": false, "side": false, "tempo": "2-0-2", "rest": "90 seg", "phase": "Empuja arriba → baja controlado a los hombros", "pos": "De pie, pies al ancho de caderas, glúteos y abdomen apretados. Mancuernas a la altura de los hombros, antebrazos verticales y codos un poco por delante del cuerpo (~30°).", "mov": "Empuja en 2 s hasta casi extender los codos (sin bloquear); las mancuernas se juntan sobre la cabeza, ligeramente por detrás de las orejas. Baja en 2 s hasta que el codo quede a ~90°.", "err": "Arquear la zona lumbar y sacar las costillas; empujar hacia adelante en vez de hacia arriba; bloquear los codos; ayudarte con las piernas.", "work": "Deltoide anterior y medio, tríceps, trapecio superior. El abdomen estabiliza.", "note": "", "hold": "", "days": ""}, {"id": "lateral", "ex": "lateral", "name": "Elevación lateral en polea baja (cable por detrás de las piernas)", "sets": "5 x 12–15", "n": 5, "lo": 12, "hi": 15, "fail": false, "iso": false, "side": false, "tempo": "2-1-2", "rest": "45–60 seg", "phase": "Eleva el brazo hasta la altura del hombro → baja con control", "pos": "Polea en la posición más baja, de lado a la torre. Toma la agarradera con la mano más lejana a la polea y pasa el cable por detrás de tus piernas. Pies firmes, torso casi recto (~5°), codo con flexión suave (~15°).", "mov": "Lidera con el codo: sube en 2 s hasta la altura del hombro (≈90°), un poco por delante del plano del cuerpo; pausa 1 s; baja en 2 s sin dejar que el cable te jale. Todas las series de un brazo y cambia de lado.", "err": "Subir más de 90° (entra el trapecio y se pellizca el hombro); balancear el torso para generar impulso; subir la muñeca antes que el codo.", "work": "Deltoide medio.", "note": "", "hold": "", "days": ""}, {"id": "facepull", "ex": "facepull", "name": "Face pull en polea (deltoide posterior)", "sets": "4 x 12–15", "n": 4, "lo": 12, "hi": 15, "fail": false, "iso": false, "side": false, "tempo": "2-1-2", "rest": "60 seg", "phase": "Jala a la altura de la cara, codos arriba → regresa", "pos": "Polea a la altura de la cara con cuerda, pulgares hacia ti. Da un paso atrás, inclinación ligera hacia atrás (~6°) y brazos extendidos.", "mov": "Jala en 2 s hacia la frente separando las manos hasta que queden junto a las orejas, codos altos y antebrazos casi verticales (~90° de codo); pausa 1 s apretando la espalda alta; regresa en 2 s.", "err": "Jalar con las manos bajas hacia el pecho (se vuelve remo); usar demasiado peso; encoger el cuello.", "work": "Deltoide posterior, manguito rotador (infraespinoso y redondo menor), trapecio medio e inferior.", "note": "", "hold": "", "days": ""}, {"id": "curlcable", "ex": "curlcable", "name": "Curl de bíceps en polea", "sets": "3 x 10–12", "n": 3, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": false, "tempo": "2-0-2", "rest": "60 seg", "phase": "Flexiona el codo → baja controlado", "pos": "Polea baja con barra recta o Z. De pie a ~30–40 cm de la torre, codos pegados a las costillas, hombros atrás.", "mov": "Sube en 2 s hasta ~145° de flexión del codo sin mover los codos; baja en 2 s hasta casi extender manteniendo la tensión del cable.", "err": "Balancear el torso; adelantar los codos; soltar la bajada.", "work": "Bíceps braquial y braquial.", "note": "", "hold": "", "days": ""}, {"id": "tricable", "ex": "tricable", "name": "Extensión de tríceps sobre cabeza en polea baja (cuerda)", "sets": "4 x 10–12", "n": 4, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": false, "tempo": "2-0-2", "rest": "60 seg", "phase": "Estira los brazos hacia arriba → baja la cuerda detrás de la cabeza", "pos": "De espaldas a la polea baja con cuerda. Un paso adelante en postura escalonada, torso inclinado ~20° hacia adelante, codos apuntando al techo junto a las orejas, antebrazos detrás de la cabeza.", "mov": "Extiende en 2 s hasta que los brazos queden casi rectos (~170°, sin bloquear). Baja en 2 s hasta ~90° de codo, sintiendo el estiramiento largo del tríceps. El codo no se abre.", "err": "Abrir los codos; arquear la lumbar; rebotar abajo. Si el estiramiento incomoda el hombro, baja menos y reduce el peso.", "work": "Tríceps, sobre todo la cabeza larga. Es la posición con más crecimiento en los estudios (Maeo 2022).", "note": "Ajuste del plan: 3 → 4 series.", "hold": "", "days": "", "altOf": true}, {"id": "trioverhead", "ex": "trioverhead", "name": "Variante B: extensión de tríceps sobre cabeza con mancuerna", "sets": "4 x 10–12", "n": 4, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": false, "tempo": "2-0-2", "rest": "60 seg", "phase": "Extiende el codo arriba → baja controlado detrás de la cabeza", "pos": "De pie o sentado con la espalda apoyada, una mancuerna sujeta con ambas manos en forma de copa, brazos verticales y codos junto a las orejas.", "mov": "Baja la mancuerna en 2 s detrás de la cabeza hasta ~90° de codo; sube en 2 s hasta casi extender.", "err": "Abrir los codos; arquear la lumbar; usar demasiado peso. Elige esta variante o la de polea, no ambas el mismo día.", "work": "Tríceps (cabeza larga).", "note": "", "hold": "", "days": "", "alt": "tricable"}, {"id": "hammer", "ex": "hammer", "name": "Curl martillo con mancuernas", "sets": "3 x 10–12", "n": 3, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": false, "tempo": "2-0-2", "rest": "60 seg", "phase": "Agarre neutro · flexiona → baja controlado", "pos": "De pie, una mancuerna en cada mano con las palmas mirándose (agarre neutro), codos pegados a las costillas, hombros atrás.", "mov": "Alterna los brazos: sube una mancuerna en 2 s hasta ~145° de flexión del codo sin mover el codo, baja en 2 s hasta casi extender, y sigue con el otro brazo.", "err": "Balancear el torso; adelantar los codos; girar la muñeca durante la subida.", "work": "Braquial, braquiorradial y bíceps (da grosor al brazo).", "note": "", "hold": "", "days": ""}]}}, "AB": {"S1": {"title": "Abdomen · Sesión 1", "ex": [{"id": "plank", "ex": "plank", "name": "Plancha (plank)", "sets": "3 x 30–45 seg", "n": 3, "lo": 30, "hi": 45, "fail": false, "iso": true, "side": false, "tempo": "", "rest": "45 seg", "phase": "Mantén línea recta de cabeza a talón", "pos": "Antebrazos en el piso, codos bajo los hombros, cuerpo en línea de cabeza a talones, glúteos y abdomen apretados, mirada al piso.", "mov": "Mantén 30–45 s respirando con calma. Empuja el piso con los antebrazos y \"arrastra\" los codos hacia los pies sin moverlos: activa más abdomen.", "err": "Cadera caída (carga la lumbar) o demasiado alta; cuello estirado; aguantar la respiración.", "work": "Recto abdominal, transverso, oblicuos y glúteo.", "note": "", "hold": "45", "days": "Lun · Vie — Sesión 1"}, {"id": "legraise", "ex": "legraise", "name": "Elevación de piernas en power tower", "sets": "3 x 12–15", "n": 3, "lo": 12, "hi": 15, "fail": false, "iso": false, "side": false, "tempo": "2-1-2", "rest": "60 seg", "phase": "Eleva las piernas controlado → baja sin balanceo", "pos": "En la torre, apoyado en los antebrazos o colgado, espalda pegada al respaldo si lo hay, hombros hacia abajo.", "mov": "Inclina la pelvis hacia atrás (enróllala) y sube las piernas en 2 s hasta que los muslos queden ~90° respecto al torso; pausa 1 s; baja en 2 s sin balancear.", "err": "Balancearse; mover solo las piernas sin inclinar la pelvis (trabaja el psoas y carga la lumbar); soltar la bajada.", "work": "Abdomen inferior y flexores de cadera.", "note": "", "hold": "", "days": "Lun · Vie — Sesión 1"}]}, "S2": {"title": "Abdomen · Sesión 2", "ex": [{"id": "deadbug", "ex": "deadbug", "name": "Dead bug", "sets": "3 x 10–12 / lado", "n": 3, "lo": 10, "hi": 12, "fail": false, "iso": false, "side": true, "tempo": "2-1-2", "rest": "45 seg", "phase": "Extiende brazo y pierna opuestos → regresa al centro", "pos": "Boca arriba, brazos al techo y caderas y rodillas a 90°. Zona lumbar pegada al piso.", "mov": "Extiende brazo y pierna opuestos a la vez en 2 s, pausa 1 s sin que la lumbar se despegue; regresa en 2 s y cambia de lado.", "err": "Lumbar que se despega: reduce el rango. Ir con prisa; contener la respiración. Es la alternativa segura al rodillo abdominal si te dio dolor de espalda.", "work": "Transverso del abdomen y recto abdominal.", "note": "", "hold": "", "days": "Mié · Dom — Sesión 2"}, {"id": "sideplank", "ex": "sideplank", "name": "Plancha lateral", "sets": "3 x 20–30 seg / lado", "n": 3, "lo": 20, "hi": 30, "fail": false, "iso": true, "side": true, "tempo": "", "rest": "45 seg", "phase": "Mantén cadera elevada en línea recta", "pos": "De lado, codo bajo el hombro, pies apilados, cuerpo en línea recta de cabeza a pies.", "mov": "Eleva la cadera y mantén 20–30 s respirando; la mano libre en la cadera o extendida al techo. Repite del otro lado.", "err": "Cadera que cae al piso; rotar el torso; hombro encogido.", "work": "Oblicuos, cuadrado lumbar, glúteo medio.", "note": "", "hold": "30", "days": "Mié · Dom — Sesión 2"}]}}, "W": {"martes": {"title": "Calentamiento de empuje", "mins": "≈ 10 min", "intro": "Del general a lo específico: sube la temperatura, moviliza la espalda alta, activa el manguito rotador y el serrato, y termina con series de aproximación en el press de banca. No es un relleno: aquí es donde se protege el hombro.", "items": [{"key": "jj", "name": "Jumping jacks", "dose": "2 × 30 s", "how": "Salta abriendo piernas y llevando los brazos por encima de la cabeza; cierra al aterrizar. Ritmo ligero, aterriza suave sobre la punta de los pies. Si el hombro molesta, sube los brazos solo hasta la altura de los hombros.", "why": "Sube temperatura y frecuencia cardiaca antes de mover articulaciones.", "tempo": "1-0-1", "hold": ""}, {"key": "armcircles", "name": "Círculos de brazo", "dose": "2 × (10 adelante + 10 atrás)", "how": "Brazos extendidos, círculos de ~55 cm de radio desde el hombro. Empieza pequeños y agrándalos con cada vuelta; luego invierte el sentido.", "why": "Lubrica el hombro y sube el flujo sanguíneo al manguito rotador y al deltoide.", "tempo": "", "hold": "20"}, {"key": "catcow", "name": "Gato–vaca", "dose": "8–10 repeticiones lentas", "how": "En cuatro apoyos, manos bajo los hombros y rodillas bajo la cadera. Redondea toda la espalda (2 s), luego arquea mirando al frente (2 s). Mueve sobre todo la parte alta de la espalda.", "why": "Movilidad de la columna torácica: si no se mueve, el hombro compensa en cada press.", "tempo": "2-1-2", "hold": ""}, {"key": "wallslide", "name": "Wall slide", "dose": "2 × 10", "how": "Frente a la pared, antebrazos y muñecas pegados formando una \"W\" (codos ~90°). Desliza hacia arriba hasta una \"Y\" sin despegar los antebrazos ni arquear la lumbar; baja a la \"W\".", "why": "Activa serrato anterior y trapecio inferior, que giran la escápula al elevar el brazo.", "tempo": "2-1-2", "hold": ""}, {"key": "extrot", "name": "Rotación externa en polea", "dose": "2 × 12–15 por lado, carga mínima", "how": "Polea a la altura del codo, de lado. Codo pegado a la costilla con una toalla enrollada entre ambos, antebrazo a 90°. Rota el antebrazo hacia afuera ~45–55° y regresa en 2 s. Si no se mueve la toalla, vas bien.", "why": "Activa infraespinoso y redondo menor, que mantienen la cabeza del húmero centrada durante los presses.", "tempo": "2-1-2", "hold": ""}], "ramp": {"t": "Series de aproximación · Press de banca", "steps": [["Barra vacía", "×10"], ["50 %", "×6"], ["70 %", "×4"], ["85 %", "×2"], ["Serie de trabajo", ""]], "n": "Descansa 45–60 s entre aproximaciones. Ninguna debe acercarse al fallo."}}, "miercoles": {"title": "Calentamiento de tirón", "mins": "≈ 8 min", "intro": "Prepara agarre, dorsal y hombro. Las dominadas son lo primero que haces, así que el colgado y las aproximaciones son parte del trabajo.", "items": [{"key": "jj", "name": "Jumping jacks", "dose": "2 × 30 s", "how": "Salta abriendo piernas y llevando los brazos por encima de la cabeza; cierra al aterrizar. Ritmo ligero, aterriza suave sobre la punta de los pies. Si el hombro molesta, sube los brazos solo hasta la altura de los hombros.", "why": "Sube temperatura y frecuencia cardiaca antes de mover articulaciones.", "tempo": "1-0-1", "hold": ""}, {"key": "deadhang", "name": "Colgado pasivo", "dose": "2 × 20 s", "how": "Agarre a ancho de hombros, brazos estirados. Primero relaja y deja que los hombros suban; luego baja los omóplatos suavemente, sin doblar los codos. Respira.", "why": "Descomprime el hombro y prepara antebrazos y dorsal para las dominadas.", "tempo": "", "hold": "20"}, {"key": "catcow", "name": "Gato–vaca", "dose": "8–10 repeticiones lentas", "how": "En cuatro apoyos, manos bajo los hombros y rodillas bajo la cadera. Redondea toda la espalda (2 s), luego arquea mirando al frente (2 s). Mueve sobre todo la parte alta de la espalda.", "why": "Movilidad de la columna torácica: si no se mueve, el hombro compensa en cada press.", "tempo": "2-1-2", "hold": ""}, {"key": "extrot", "name": "Rotación externa en polea", "dose": "2 × 12–15 por lado, carga mínima", "how": "Polea a la altura del codo, de lado. Codo pegado a la costilla con una toalla enrollada entre ambos, antebrazo a 90°. Rota el antebrazo hacia afuera ~45–55° y regresa en 2 s. Si no se mueve la toalla, vas bien.", "why": "Activa infraespinoso y redondo menor, que mantienen la cabeza del húmero centrada durante los presses.", "tempo": "2-1-2", "hold": ""}, {"key": "facepull", "name": "Face pull ligero", "dose": "1 × 15 con carga muy ligera", "how": "Cuerda a la altura de la cara, carga mínima. Jala separando las manos hasta las orejas con los codos altos; pausa 1 s; regresa en 2 s.", "why": "Calienta deltoide posterior y manguito rotador con carga baja.", "tempo": "2-1-2", "hold": ""}], "ramp": {"t": "Aproximación · Dominadas", "steps": [["Colgado", "20 s"], ["Dominadas fáciles", "×3"], ["Dominadas", "×5 sin acercarte al fallo"], ["Serie de trabajo", ""]], "n": "Si aún no llegas a 5 con comodidad, cambia las aproximaciones por jalón ligero ×10."}}, "viernes": {"title": "Calentamiento de pierna", "mins": "≈ 10 min", "intro": "Cadera, glúteo y estabilidad del tronco antes de cargar. El bird dog va aquí para proteger la espalda baja, que ya te avisó.", "items": [{"key": "jj", "name": "Jumping jacks", "dose": "2 × 30 s", "how": "Salta abriendo piernas y llevando los brazos por encima de la cabeza; cierra al aterrizar. Ritmo ligero, aterriza suave sobre la punta de los pies. Si el hombro molesta, sube los brazos solo hasta la altura de los hombros.", "why": "Sube temperatura y frecuencia cardiaca antes de mover articulaciones.", "tempo": "1-0-1", "hold": ""}, {"key": "hipswing", "name": "Balanceo de pierna", "dose": "10 por pierna", "how": "Apoyado en una pared o poste, balancea la pierna libre adelante y atrás, aumentando poco a poco la amplitud, con el torso erguido.", "why": "Moviliza la cadera y calienta isquiotibiales y flexores de cadera.", "tempo": "1-0-1", "hold": ""}, {"key": "glutebridge", "name": "Puente de glúteo", "dose": "2 × 12", "how": "Boca arriba, rodillas ~90° y pies planos. Sube la cadera hasta alinear hombros–rodillas apretando los glúteos; baja en 2 s.", "why": "Despierta el glúteo para que la sentadilla no se haga con la lumbar.", "tempo": "2-1-2", "hold": ""}, {"key": "birddog", "name": "Bird dog", "dose": "2 × 6 por lado", "how": "En cuatro apoyos, extiende un brazo y la pierna contraria hasta quedar horizontales sin girar la cadera; regresa y alterna. Movimiento lento.", "why": "Activa glúteo, abdomen y músculos profundos de la espalda con muy poca carga lumbar.", "tempo": "2-2-2", "hold": ""}, {"key": "hinge", "name": "Bisagra de cadera", "dose": "2 × 8", "how": "Manos en la cadera. Lleva la cadera atrás con las rodillas casi rectas hasta sentir los isquios (torso ~60° inclinado), espalda neutra; regresa empujando la cadera.", "why": "Ensaya el peso muerto rumano sin carga antes de poner la barra.", "tempo": "3-1-1", "hold": ""}], "ramp": {"t": "Series de aproximación · Sentadilla goblet", "steps": [["Mancuerna 8 kg", "×10"], ["14 kg", "×6"], ["20 kg", "×3"], ["Serie de trabajo", "24 kg"]], "n": "Descansa 45–60 s entre aproximaciones. En el peso muerto rumano usa 2 aproximaciones (barra vacía ×10 y 60 % ×5)."}}, "sabado": {"title": "Calentamiento de hombro y brazo", "mins": "≈ 8 min", "intro": "El mismo protocolo de hombro que el martes. Hoy trabajas el deltoide con el press y los laterales: no te lo saltes.", "items": [{"key": "jj", "name": "Jumping jacks", "dose": "2 × 30 s", "how": "Salta abriendo piernas y llevando los brazos por encima de la cabeza; cierra al aterrizar. Ritmo ligero, aterriza suave sobre la punta de los pies. Si el hombro molesta, sube los brazos solo hasta la altura de los hombros.", "why": "Sube temperatura y frecuencia cardiaca antes de mover articulaciones.", "tempo": "1-0-1", "hold": ""}, {"key": "armcircles", "name": "Círculos de brazo", "dose": "2 × (10 adelante + 10 atrás)", "how": "Brazos extendidos, círculos de ~55 cm de radio desde el hombro. Empieza pequeños y agrándalos con cada vuelta; luego invierte el sentido.", "why": "Lubrica el hombro y sube el flujo sanguíneo al manguito rotador y al deltoide.", "tempo": "", "hold": "20"}, {"key": "wallslide", "name": "Wall slide", "dose": "2 × 10", "how": "Frente a la pared, antebrazos y muñecas pegados formando una \"W\" (codos ~90°). Desliza hacia arriba hasta una \"Y\" sin despegar los antebrazos ni arquear la lumbar; baja a la \"W\".", "why": "Activa serrato anterior y trapecio inferior, que giran la escápula al elevar el brazo.", "tempo": "2-1-2", "hold": ""}, {"key": "extrot", "name": "Rotación externa en polea", "dose": "2 × 12–15 por lado, carga mínima", "how": "Polea a la altura del codo, de lado. Codo pegado a la costilla con una toalla enrollada entre ambos, antebrazo a 90°. Rota el antebrazo hacia afuera ~45–55° y regresa en 2 s. Si no se mueve la toalla, vas bien.", "why": "Activa infraespinoso y redondo menor, que mantienen la cabeza del húmero centrada durante los presses.", "tempo": "2-1-2", "hold": ""}, {"key": "facepull", "name": "Face pull ligero", "dose": "1 × 15 con carga muy ligera", "how": "Cuerda a la altura de la cara, carga mínima. Jala separando las manos hasta las orejas con los codos altos; pausa 1 s; regresa en 2 s.", "why": "Calienta deltoide posterior y manguito rotador con carga baja.", "tempo": "2-1-2", "hold": ""}], "ramp": {"t": "Aproximación · Press militar", "steps": [["Mancuernas ~40 %", "×10"], ["~60 %", "×6"], ["~80 %", "×3"], ["Serie de trabajo", ""]], "n": "Primero las del press; en los laterales y el face pull basta con la primera serie ligera."}}, "abdomen": {"title": "Calentamiento de abdomen", "mins": "≈ 2 min", "intro": "Es una sesión corta de noche, pero la espalda baja agradece moverse antes.", "items": [{"key": "catcow", "name": "Gato–vaca", "dose": "8–10 repeticiones lentas", "how": "En cuatro apoyos, manos bajo los hombros y rodillas bajo la cadera. Redondea toda la espalda (2 s), luego arquea mirando al frente (2 s). Mueve sobre todo la parte alta de la espalda.", "why": "Movilidad de la columna torácica: si no se mueve, el hombro compensa en cada press.", "tempo": "2-1-2", "hold": ""}, {"key": "birddog", "name": "Bird dog", "dose": "2 × 6 por lado", "how": "En cuatro apoyos, extiende un brazo y la pierna contraria hasta quedar horizontales sin girar la cadera; regresa y alterna. Movimiento lento.", "why": "Activa glúteo, abdomen y músculos profundos de la espalda con muy poca carga lumbar.", "tempo": "2-2-2", "hold": ""}], "ramp": null}}, "P": {"pre": ["Plátano y colágeno", "1 plátano y 10 g de colágeno en agua. Sin café ni creatina en ayunas", 141, 10], "D1": ["Huevos a la mexicana", "3 huevos con jitomate, cebolla y chile; 2 tortillas; 100 g de frijoles; 1 taza de papaya; 30 g de aguacate", 585, 33], "D2": ["Avena proteica", "70 g de avena en agua, 1 scoop de whey, 1 plátano, 15 g de cacahuate", 575, 42], "D3": ["Hot cakes de avena", "2 huevos, 1 plátano y 60 g de avena licuados; 100 g de yogur griego y 10 g de cacahuate", 614, 36], "K1a": ["Yogur con manzana", "150 g de yogur griego natural y 1 manzana", 204, 16], "K1b": ["Yogur con naranja y avena", "150 g de yogur griego, 1 naranja y 20 g de avena", 249, 20], "K2a": ["Huevos con naranja", "2 huevos cocidos y 1 naranja", 206, 14], "K2b": ["Huevos con fruta y cacahuate", "2 huevos cocidos, 1 taza de fruta y 10 g de cacahuate", 262, 16], "com": ["Comida corrida", "Guisado con proteína doble, frijoles, verdura y una sola porción de arroz o pasta", 850, 40], "comR": ["Comida corrida (pollo o pescado)", "Hoy tu cena trae res: pide pollo o pescado, con proteína doble, frijoles y verdura", 850, 40], "Cpollo": ["Bowl de pollo", "180 g de pechuga, 200 g de arroz, 150 g de verdura, 30 g de aguacate + omega-3", 589, 50], "Cbistec": ["Bistec encebollado con papas y nopales", "160 g de bistec, 180 g de papa, 150 g de nopal y cebolla, 2 tortillas + omega-3", 621, 43], "Csalmon": ["Salmón con camote y brócoli", "150 g de salmón, 220 g de camote, 150 g de brócoli + omega-3", 575, 37], "Ctilapia": ["Tilapia con arroz y ensalada", "200 g de tilapia, 180 g de arroz, 120 g de ensalada + omega-3", 542, 47], "Cpasta": ["Pasta con carne molida", "90 g de pasta cruda, 120 g de molida 90/10, 150 g de salsa, 80 g de verdura + omega-3", 620, 40], "Catun": ["Medallón de atún con arroz", "150 g de atún, 200 g de arroz, 150 g de ensalada, 30 g de aguacate + omega-3", 596, 45], "Wpollo": ["Pechuga con papas y verdura", "200 g de pechuga, 250 g de papa, 150 g de verdura, 40 g de aguacate, 2 tortillas", 746, 58], "Wpic": ["Picadillo de res con frijoles", "140 g de molida 90/10, 220 g de papa, 100 g de verdura, 100 g de frijoles, 2 tortillas", 715, 46], "S1": ["Requesón con fruta", "120 g de requesón y 1 taza de fruta", 178, 14], "S2": ["Yogur con crema de cacahuate", "150 g de yogur griego y 1 cda de crema de cacahuate", 204, 19]}, "SLOTS": [["pre", "5:05", "Pre-entreno"], ["des", "7:45", "Desayuno"], ["c1", "11:30", "Colación 1"], ["com", "14:00", "Comida"], ["c2", "17:00", "Colación 2"], ["cena", "19:45", "Cena"], ["pres", "20:30", "Pre-sueño"]], "DAYS": {"1": ["pre", "D1", "K1a", "com", "K2a", "Cpollo", "S1"], "2": ["pre", "D2", "K1b", "comR", "K2b", "Cbistec", "S2"], "3": ["pre", "D1", "K1a", "com", "K2a", "Csalmon", "S1"], "4": ["pre", "D3", "K1b", "com", "K2b", "Ctilapia", "S2"], "5": ["pre", "D2", "K1a", "comR", "K2a", "Cpasta", "S1"], "6": ["pre", "D1", "K1b", "Wpollo", "K2b", "Catun", "S2"], "0": ["pre", "D3", "K1a", "Wpic", "K2a", "Cpollo", "S1"]}, "PLAN": {"0": {"train": null, "abs": "S2"}, "1": {"train": null, "abs": "S1"}, "2": {"train": "A", "abs": null}, "3": {"train": "B", "abs": "S2"}, "4": {"train": null, "abs": null}, "5": {"train": "C", "abs": "S1"}, "6": {"train": "D", "abs": null}}, "SHOP": [["Huevo", "30 piezas (1 tapa)", 90], ["Pechuga de pollo sin hueso", "600 g", 78], ["Bistec de res (diezmillo o bola)", "160 g", 34], ["Carne molida de res 90/10", "260 g", 52], ["Filete de salmón", "150 g", 75], ["Filete de tilapia (congelado)", "200 g", 28], ["Medallón de atún aleta amarilla", "150 g", 52], ["Yogur griego natural sin azúcar", "1.7 kg (2 botes)", 150], ["Requesón", "500 g", 40], ["Fruta: 11 plátanos, 4 manzanas, 7 naranjas, papaya o melón (10 tazas)", "", 110], ["Verdura: brócoli, calabacita, zanahoria, nopal, lechuga, pepino", "1.5 kg", 45], ["Aguacate", "220 g", 30], ["Jitomate, cebolla, chile, ajo y limón", "", 35], ["Tortilla de maíz", "12 piezas", 13], ["Papa y camote", "650 g y 220 g", 25]], "PANTRY": [["Avena", "1.4 kg"], ["Arroz", "1.2 kg"], ["Frijol", "1 kg"], ["Pasta", "400 g"], ["Cacahuate", "350 g"], ["Crema de cacahuate", "1 frasco"], ["Aceite, sal y especias", ""], ["Creatina, whey, omega-3 y colágeno", "revisa lo que queda"]], "SAT": [["5:30 a 7:30", "Rutina D y caminata"], ["9:30 a 11:30", "Compra con la lista"], ["11:30 a 12:15", "Porciona con nombre y fecha. Congelador: bistec 160 g (mar), salmón 150 g (mié), tilapia 200 g (jue). Refrigerador: atún (cena de hoy), pechuga y molida (se cocinan mañana). Lava, desinfecta y seca fruta y verdura."], ["12:15 a 12:35", "14 huevos en agua fría; al hervir, 10 min; 5 min en agua con hielo. Con cáscara al refrigerador (duran una semana)."], ["13:00 a 14:00", "Pechuga con papas: papa en cubos hervida 12 min; pechuga aplanada a 2 cm con sal, pimienta, ajo y ½ limón, freidora 190 °C de 16 a 18 min (74 °C dentro); últimos 8 min con la papa y la verdura con ½ cda de aceite."], ["19:30", "Atún: sartén muy caliente con ½ cda de aceite, 2 a 3 min por lado hasta que el centro quede opaco (63 °C)."]], "SUN": [["Frijoles (min 0)", "250 g remojados desde el sábado, olla exprés con ¼ de cebolla y sal, 35 min de presión."], ["Arroz (min 0)", "2 tazas con 4 de agua, ajo y sal; al hervir, tapa y fuego bajo 18 min. 200 g hoy, 200 g lunes; congela 180 g (jue) y 200 g (sáb)."], ["Papa y camote (min 5)", "400 g de papa hervida 12 min (220 g hoy, 180 g martes). 220 g de camote en freidora 200 °C 20 min (miércoles)."], ["Pechuga (min 10)", "360 g con limón, ajo, orégano, sal y 1 cdita de aceite; freidora 190 °C de 16 a 18 min, 74 °C. Dos de 180 g: hoy y lunes."], ["Carne molida (min 25)", "Sofríe cebolla y ajo 3 min, dora 260 g de 6 a 8 min. 120 g + salsa licuada de 2 jitomates, hervida 10 min: boloñesa congelada (viernes). 140 g + papa, zanahoria, calabacita y comino 5 min: picadillo de hoy."], ["Verdura (min 45)", "Brócoli, calabacita y zanahoria al vapor 5 min o asadas 10 min; 4 recipientes."], ["Armar (min 60)", "Recipiente del lunes. Al congelador: arroces y boloñesa. 4 frascos de yogur de 150 g, bolsitas de cacahuate de 10 g y verdura picada para los huevos."]], "DIN": {"1": "19:30 abdomen (S1) 15 min. Calienta pollo, arroz y verdura 2 a 3 min en el micro; aguacate. Saca el bistec al refrigerador.", "2": "Sartén muy caliente, 1 cdita de aceite; bistec 2 a 3 min por lado. En el mismo sartén: cebolla 3 min, nopales 4 min, papa 4 min. Tortillas al comal. Saca el salmón al refrigerador.", "3": "Salmón con sal, ajo y limón, piel abajo, freidora 200 °C de 10 a 12 min (63 °C). Mientras: abdomen (S2). Camote 2 min en el micro, brócoli al vapor 3 min. Saca tilapia y arroz al refrigerador.", "4": "Tilapia con paprika, ajo, sal y limón, freidora 190 °C de 10 a 12 min. Arroz 2 a 3 min en el micro con 1 cda de agua. Ensalada con limón. Saca la boloñesa al refrigerador.", "5": "Agua a hervir; 90 g de pasta de 9 a 11 min. Mientras: abdomen (S1). Boloñesa 4 min y verdura.", "6": "Atún sellado 2 a 3 min por lado (63 °C). Arroz al micro, ensalada y aguacate.", "0": "Bowl con el pollo que cocinaste hoy. Abdomen (S2) antes de cenar."}, "BRK": {"D1": "Sartén antiadherente: verdura picada 2 min y 3 huevos batidos 3 min. Frijoles, tortillas, papaya y aguacate. 10 min.", "D2": "70 g de avena con 300 ml de agua, 2½ min en el micro. Reposa 1 min, luego el whey (hirviendo se hace grumos). Plátano y cacahuate. 5 min.", "D3": "Licúa 2 huevos, 1 plátano y 60 g de avena. 3 hot cakes, 2 min por lado a fuego medio. Yogur y cacahuate encima. 12 min."}, "SUPPS": [["creatina", "Creatina", "3–5 g", "7:45 con el desayuno, en 250 ml de agua o mezclada en la avena o el yogur. Nunca en ayunas"], ["colageno", "Colágeno", "10 g", "5:05 con el pre-entreno"], ["whey", "Proteína whey", "1 scoop", "En la avena (mar y vie) o si te falta proteína"], ["omega", "Omega-3", "1–2 cápsulas", "Con la cena"]]};
+/* 366 reflexiones estoicas: una por día del año, agrupadas por tema mensual.
+   Las que llevan autor son ideas de ese autor en traducción libre; las demás son reflexiones escritas en su espíritu. */
+var STOIC_THEMES=['Disciplina','Lo que depende de ti','El tiempo','La adversidad','El cuerpo y la templanza','El carácter','Las emociones','El deber y el servicio','Aprender y la humildad','La muerte y la gratitud','La perseverancia','El examen de uno mismo'];
+var STOIC=[
+/* Enero · Disciplina */[
+'Al amanecer, cuando te cueste levantarte, ten presente: me levanto para hacer la obra de un ser humano. — Marco Aurelio',
+'La disciplina es elegir lo que quieres más por encima de lo que quieres ahora.',
+'No esperes las ganas. Las ganas llegan a mitad de la primera serie.',
+'El hábito es una promesa que cumples sin discutirla cada mañana.',
+'Quien se manda a sí mismo no necesita que nadie más lo mande.',
+'Hoy no tienes que hacerlo perfecto; tienes que hacerlo.',
+'La motivación es el clima; la disciplina es la ropa que te pones haga el tiempo que haga.',
+'Cada repetición limpia es un voto a favor de quien quieres ser.',
+'Algunas cosas no las hacemos porque son difíciles; son difíciles porque no las hacemos. — Séneca',
+'Lo pequeño, repetido, se vuelve enorme. Lo enorme, aplazado, se vuelve nada.',
+'Tu cuerpo escucha lo que haces, no lo que prometes.',
+'Si hoy cuesta, es que hoy cuenta.',
+'Hazlo a la hora acordada. La puntualidad con uno mismo es la primera forma de respeto.',
+'No negocies con el cansancio a las 5:00. Gana la discusión levantándote.',
+'Primero dite qué quieres ser; luego haz lo que tengas que hacer. — Epicteto',
+'La constancia es aburrida para los demás y transformadora para ti.',
+'Un día flojo no rompe nada. Dos seguidos empiezan un hábito nuevo. Vuelve hoy.',
+'El orden de tu mañana es el orden de tu día.',
+'La fuerza se construye en el gimnasio, pero se decide en la cama, cuando suena la alarma.',
+'Haz la parte que te toca aunque nadie la vea. Sobre todo si nadie la ve.',
+'Cumplir lo que te propusiste es la forma más callada de autoestima.',
+'No te pidas sentirte listo. Pídete empezar.',
+'La disciplina no es castigo; es cuidar a tu yo de mañana.',
+'La tentación siempre ofrece algo ahora y cobra después.',
+'Lo que haces cada día pesa más que lo que haces de vez en cuando.',
+'Si fallaste ayer, hoy no tienes que compensar: tienes que cumplir.',
+'Un plan sencillo cumplido vale más que un plan perfecto abandonado.',
+'No te compares con nadie. Compárate con el que eras hace un mes.',
+'El que domina sus mañanas domina buena parte de su vida.',
+'Eres libre en la medida en que tus deseos no te arrastran.',
+'Cierra enero como lo empezaste: cumpliendo, sin hacer ruido.'],
+/* Febrero · Lo que depende de ti */[
+'Unas cosas dependen de nosotros y otras no. Ahí empieza toda la serenidad. — Epicteto',
+'No controlas el resultado de hoy; controlas el esfuerzo, la técnica y la actitud.',
+'No nos perturban las cosas, sino las opiniones que tenemos sobre ellas. — Epicteto',
+'El tráfico, el clima y el humor de otros no dependen de ti. Tu respuesta, sí.',
+'Gasta tu energía donde tienes poder. Lo demás, obsérvalo con calma.',
+'La báscula sube y baja; tu constancia es lo único que de verdad puedes mover.',
+'No pidas que las cosas pasen como quieres; quiere que pasen como pasan, y responde bien.',
+'Preocuparte por lo que no controlas es pagar dos veces por algo que quizá ni llegue.',
+'Tu juicio sobre un hecho es tuyo. Puedes cambiarlo cuando quieras.',
+'Si algo no está en tus manos, suéltalo con las manos abiertas.',
+'Lo que piensen de ti no depende de ti. Lo que hagas, sí.',
+'El mal día lo trae la vida; el mal humor lo eliges tú.',
+'Elige bien tus batallas: casi todas se ganan no entrando en ellas.',
+'Hoy haz tu parte con cuidado y deja el resto al curso de las cosas.',
+'No te quejes de la carga: ajusta la técnica.',
+'Nadie puede quitarte la manera en que decides enfrentar el día.',
+'La ansiedad mira al futuro; la acción vive en el presente. Elige la acción.',
+'Lo que te pasó no es tu identidad; lo que haces con ello, sí.',
+'Puedes perder el control de la situación sin perder el control de ti.',
+'Concéntrate en la siguiente serie, no en las veinte que faltan.',
+'Pregúntate ante cada molestia: ¿esto depende de mí? Si no, déjalo pasar.',
+'La paz no es que todo salga bien; es no depender de que todo salga bien.',
+'Tu voluntad es una fortaleza que nadie puede tomar si tú no la entregas.',
+'No esperes que el mundo sea justo para comportarte con justicia.',
+'Las circunstancias son el material; tú eres el escultor.',
+'Hoy no podrás evitar todos los obstáculos, pero sí elegir cómo cruzarlos.',
+'Si la comida corrida no fue la ideal, la cena sí depende de ti.',
+'Deja de pelear con el pasado: ya no depende de nadie.',
+'Lo único verdaderamente tuyo es lo que haces con este momento.'],
+/* Marzo · El tiempo */[
+'No es que tengamos poco tiempo, es que perdemos mucho. — Séneca',
+'Mientras aplazamos, la vida pasa.',
+'Empieza ya a vivir y cuenta cada día como una vida aparte. — Séneca',
+'El tiempo es lo único que no se recupera. Inviértelo como si fuera dinero, porque vale más.',
+'Una hora de sueño antes de las once vale más que una hora de pantalla después.',
+'Hoy no es un ensayo de la vida: es la vida.',
+'El mañana no está garantizado; el ahora sí está en tus manos.',
+'No digas que no tienes tiempo. Di que hoy no fue tu prioridad, y decide si eso está bien.',
+'Ninguna mañana regresa. Úsala para algo que tu yo del futuro agradezca.',
+'Quien pierde la primera hora del día suele pasarse el resto persiguiéndola.',
+'Lo urgente grita, lo importante espera en silencio. Atiende lo importante.',
+'Un año son 52 semanas de entrenamiento. Cada una cuenta.',
+'El tiempo que pasas en el celular sin propósito también es tiempo de tu vida.',
+'Haz cada cosa como si fuera la última que harás, sin prisa y sin desgano. — Marco Aurelio',
+'Respetar los descansos entre series también es respetar el tiempo.',
+'Las grandes obras se construyen con minutos bien usados.',
+'No mates el tiempo: él te está matando a ti, poco a poco.',
+'El que llega temprano a sí mismo no vive corriendo detrás de la vida.',
+'La paciencia es saber que el tiempo trabaja para quien es constante.',
+'Hoy tienes 24 horas, igual que cualquiera. La diferencia es qué haces con ellas.',
+'Dormir a tiempo no es perder la noche; es ganar la mañana.',
+'Reserva tiempo para lo que importa antes de que otros lo llenen por ti.',
+'El progreso muscular se mide en meses; la disciplina, en días.',
+'No te apresures a llegar; apresúrate a empezar.',
+'Un día bien vivido es un buen día para morir, decían los antiguos. Vívelo bien.',
+'Haz hoy la tarea que mañana pesará el doble.',
+'La vida no es corta si sabes usarla.',
+'Pregúntate al final del día: ¿en qué se fue mi tiempo?',
+'La prisa es enemiga de la técnica. Ve lento donde importa.',
+'Cada mañana el reloj te ofrece un comienzo nuevo. Tómalo.',
+'Cierra marzo sin deudas de tiempo contigo mismo.'],
+/* Abril · La adversidad */[
+'Lo que impide la acción hace avanzar la acción; lo que se interpone en el camino se vuelve el camino. — Marco Aurelio',
+'El fuego prueba al oro; la adversidad, a los hombres fuertes. — Séneca',
+'Sufrimos más a menudo en la imaginación que en la realidad. — Séneca',
+'El músculo crece porque se rompe un poco. Tú también.',
+'Un obstáculo es una pregunta: ¿qué tanto lo quieres?',
+'No pidas una vida fácil; pide ser más fuerte.',
+'Las molestias de hoy son entrenamiento para las de mañana.',
+'El dolor de la disciplina pesa gramos; el del arrepentimiento, toneladas.',
+'Si te lesionas, adapta. Si te cansas, descansa. Pero no abandones.',
+'La adversidad no construye el carácter: lo revela.',
+'Cuando todo sale mal, todavía puedes hacer bien lo siguiente.',
+'Agradece al problema difícil: te está enseñando algo que la comodidad no te enseñaría.',
+'Nadie se vuelve fuerte levantando lo que ya puede levantar.',
+'Ensaya en tu mente lo que puede salir mal; así, cuando llegue, ya lo conoces.',
+'No eres desafortunado: eres alguien a quien la vida está poniendo a prueba.',
+'El viento en contra también ayuda a despegar.',
+'Un mal día no es una mala vida.',
+'Hay más valor en volver a empezar que en no haber caído nunca.',
+'Las raíces más profundas crecen en los inviernos más duros.',
+'Que la dificultad te encuentre preparado, no sorprendido.',
+'No te preguntes por qué a ti; pregúntate qué vas a hacer con esto.',
+'Las cosas difíciles hechas con calma te dan una calma que nada te quita.',
+'La incomodidad es el precio de entrada a casi todo lo que vale la pena.',
+'Lo que hoy te duele, mañana te hará fuerte, si no huyes de ello.',
+'El mar en calma no hace buenos marineros.',
+'La serenidad no es ausencia de tormenta, sino timón firme en medio de ella.',
+'Cada rechazo, cada error y cada derrota es material de trabajo.',
+'Piensa en lo peor que puede pasar hoy. Ahora sonríe: puedes con ello.',
+'Tu historia no la escriben los golpes, sino cómo te levantas de ellos.',
+'Cierra abril agradeciendo una dificultad que te hizo mejor.'],
+/* Mayo · El cuerpo y la templanza */[
+'Trata tu cuerpo como un caballo noble: ni lo maltrates ni lo consientas.',
+'Come para servir a tu propósito, no para calmar un impulso.',
+'La templanza no es privarte: es elegir.',
+'El sueño es la parte del entrenamiento que se hace con los ojos cerrados.',
+'Un cuerpo cuidado es una herramienta al servicio de una mente clara.',
+'Si haces algo bueno con esfuerzo, el esfuerzo pasa y lo bueno queda; si haces algo vergonzoso con placer, el placer pasa y la vergüenza queda. — Musonio Rufo',
+'La proteína de hoy es el músculo de dentro de tres meses.',
+'No necesitas mucho: comida sencilla, agua, movimiento y sueño suficiente.',
+'Lo que comes a escondidas de ti mismo también cuenta.',
+'Disfruta la comida sin dejar que la comida te gobierne.',
+'Muy poco se necesita para una vida feliz; todo está en tu manera de pensar. — Marco Aurelio',
+'El agua antes que el antojo. El plato servido antes que el bote abierto.',
+'Respeta los descansos de tu cuerpo: ahí ocurre el crecimiento.',
+'El exceso promete placer y entrega pesadez.',
+'Escucha al dolor articular; ignora a la flojera.',
+'Un buen plato no necesita azúcar para ser bueno.',
+'Caminar es la forma más sencilla de cuidar el cuerpo y aclarar la mente.',
+'Pon a dormir el celular antes que a ti.',
+'La fuerza sin control es solo peligro. Controla cada repetición.',
+'El cuerpo sigue a la mente; la mente se educa con hábitos.',
+'Comer bien no es una dieta: es una forma de respetarte.',
+'Hoy elige la opción que tu cuerpo de mañana te agradezca.',
+'La salud no se nota cuando está; procúrala para que no se note cuando falte.',
+'Prepara la comida el domingo y te habrás ahorrado cinco malas decisiones.',
+'Sé moderado incluso en la disciplina: el exceso de entrenamiento también es desorden.',
+'El antojo dura minutos. El objetivo, años.',
+'Un cuerpo fuerte es mejor compañero en la vejez que cualquier lujo.',
+'No te premies con comida; prémiate con el progreso.',
+'Sentirte con energía es un resultado, no una casualidad.',
+'Respira hondo antes de la serie pesada y antes de la decisión difícil.',
+'Cierra mayo revisando tus hábitos de sueño: ahí está tu ventaja.'],
+/* Junio · El carácter */[
+'No pierdas más tiempo discutiendo cómo debe ser un hombre bueno. Sé uno. — Marco Aurelio',
+'Tu carácter es lo que haces cuando nadie te pide cuentas.',
+'Di menos, haz más.',
+'La reputación es lo que otros creen de ti; el carácter, lo que eres.',
+'Sé firme en los principios y flexible en los métodos.',
+'Cumple tu palabra, aunque sea la palabra que solo te diste a ti.',
+'La integridad es hacer lo correcto aunque cueste y nadie lo note.',
+'No busques aplausos; busca no tener nada de qué avergonzarte.',
+'Sé el mismo en el trabajo, en casa y frente al espejo.',
+'El carácter se forja en las pequeñas decisiones que nadie celebra.',
+'Habla con la verdad, sobre todo cuando cuesta.',
+'Tu manera de tratar a quien no puede hacer nada por ti dice quién eres.',
+'Sé exigente contigo y comprensivo con los demás.',
+'No hay atajo para la confianza: se gana cumpliendo.',
+'Lo que toleras en ti, lo repites.',
+'Ser constante también es una forma de honestidad.',
+'No necesitas parecer fuerte; necesitas serlo cuando haga falta.',
+'Una persona íntegra duerme tranquila.',
+'Deja que tus actos hablen; las palabras se gastan.',
+'El valor no es no tener miedo, sino actuar bien a pesar de él.',
+'Sé justo aun con quien no lo es contigo.',
+'La humildad no es pensar menos de ti, sino pensar menos en ti.',
+'El carácter es el músculo que entrenas cada vez que cumples sin ganas.',
+'Si no está bien, no lo hagas. Si no es verdad, no lo digas.',
+'Elige la acción correcta sobre la cómoda.',
+'Sé paciente con los procesos y firme con los compromisos.',
+'Tu nombre vale lo que vale tu palabra.',
+'No cambies tus valores por comodidad ni por aprobación.',
+'Una vida ordenada es la base de un carácter sereno.',
+'Cierra junio preguntándote: ¿mis actos coinciden con mis principios?'],
+/* Julio · Las emociones */[
+'La mejor venganza es no parecerte a quien te ofendió. — Marco Aurelio',
+'Entre el estímulo y tu respuesta hay un espacio. En ese espacio está tu libertad.',
+'La ira es un ácido que daña más el recipiente que lo contiene.',
+'Antes de responder con enojo, respira tres veces y cuenta tu siguiente repetición.',
+'Siente la emoción, nómbrala y luego decide. No al revés.',
+'No eres tu enojo; eres quien lo observa.',
+'La impaciencia exige resultados que el tiempo todavía no ha madurado.',
+'Si algo te irrita, pregúntate qué opinión tuya lo está volviendo insoportable.',
+'Las emociones son buenas mensajeras y malas jefas.',
+'Una respuesta suave apaga más fuegos que un grito.',
+'No tomes decisiones grandes en días de emociones grandes.',
+'El miedo exagera; la calma mide.',
+'La tristeza también pasa. Mientras tanto, cuida tus hábitos básicos.',
+'Hoy no dejes que el mal humor de otro decida el tuyo.',
+'El ejercicio es una forma de convertir la tensión en fuerza.',
+'Quien se enoja con facilidad le entrega su paz a cualquiera.',
+'Ser sereno no es ser frío: es tener el corazón caliente y la cabeza fría.',
+'La envidia mira el escaparate ajeno y olvida su propio trabajo.',
+'Agradece las emociones difíciles: te muestran dónde todavía puedes crecer.',
+'No alimentes el resentimiento: es tomar veneno y esperar que el otro enferme.',
+'Una caminata a tiempo evita muchas palabras a destiempo.',
+'Puedes estar molesto y aun así actuar con justicia.',
+'Tu paz vale más que tener la razón.',
+'Las preocupaciones se encogen cuando las escribes y las conviertes en acciones.',
+'Cuida lo que te dices en silencio: es la voz que más escuchas.',
+'No reacciones; responde.',
+'Lo que te altera te domina. Elige qué te altera.',
+'El buen humor también se entrena.',
+'Hoy perdona algo pequeño. Es entrenamiento para lo grande.',
+'Duerme bien: casi todas las emociones se ven más grandes con cansancio.',
+'Cierra julio notando qué te sacó de calma y cómo responderías ahora.'],
+/* Agosto · El deber y el servicio */[
+'Hacer bien tu trabajo es una forma de servir a los demás.',
+'El servicio público es un honor que se demuestra con esmero, no con discursos.',
+'Haz tu deber con alegría; el que lo hace a regañadientes lo hace dos veces.',
+'Lo que no es bueno para la colmena no es bueno para la abeja. — Marco Aurelio',
+'Trabaja como si cada ciudadano fuera a revisar tu labor.',
+'El deber cumplido no necesita testigos para ser valioso.',
+'Ayudar sin esperar nada es la manera más pura de ser útil.',
+'Haz bien lo pequeño: es lo que sostiene lo grande.',
+'Tu energía física también es una herramienta para servir mejor.',
+'Sé confiable. Es la virtud que más se nota cuando falta.',
+'El liderazgo empieza por cumplir lo que pides a otros.',
+'Explica con paciencia; enseña con el ejemplo.',
+'Cuando el trabajo sea pesado, recuerda para quién lo haces.',
+'No hagas lo mínimo; haz lo debido.',
+'La excelencia es un hábito de detalles bien cuidados.',
+'Sirve primero, opina después.',
+'Hoy facilita la tarea de alguien más.',
+'La justicia empieza en cómo tratas a quien depende de ti.',
+'Un deber difícil hecho temprano libera todo el resto del día.',
+'Tu cansancio es real, pero tu compromiso también.',
+'La democracia se cuida con miles de manos que hacen bien su parte.',
+'Haz tu parte aunque otros no hagan la suya.',
+'Ser útil es la mejor respuesta a la pregunta de para qué vivir.',
+'El orden de tus papeles es respeto por el tiempo de los demás.',
+'No esperes reconocimiento: busca hacer lo correcto.',
+'El buen funcionario es el que deja las cosas mejor de como las encontró.',
+'Cuida tu salud: el deber largo se cumple con cuerpo y mente fuertes.',
+'Cumplir con calma vale más que cumplir con prisa y errores.',
+'Recuerda que eres parte de algo más grande que tú.',
+'Agradece a quien trabaja contigo; nadie sirve solo.',
+'Cierra agosto pensando a quién sirvió tu esfuerzo este mes.'],
+/* Septiembre · Aprender y la humildad */[
+'Si quieres progresar, acepta parecer tonto en las cosas externas. — Epicteto',
+'Es imposible aprender lo que crees que ya sabes. — Epicteto',
+'Mientras enseñamos, aprendemos. — Séneca',
+'Cada error de técnica es una lección gratuita si le pones atención.',
+'Pide consejo; corrige; vuelve a intentar.',
+'El principiante que practica a diario supera al experto que no practica.',
+'La curiosidad es la juventud de la mente.',
+'No te avergüences de preguntar; avergüénzate de no querer saber.',
+'Lee algo que te haga mejor, aunque sean diez minutos.',
+'La humildad es la puerta por la que entra todo aprendizaje.',
+'Aprende de quien sabe más y enseña a quien sabe menos.',
+'El conocimiento sin práctica es como el músculo sin movimiento.',
+'Anotar tus series es aprender de ti mismo.',
+'Cambiar de opinión ante una mejor razón es fortaleza, no debilidad.',
+'Escucha más de lo que hablas: tienes dos oídos y una boca.',
+'El ego quiere tener razón; la sabiduría quiere encontrar la verdad.',
+'Cada día puedes saber un poco más que ayer.',
+'No te creas tus primeros pensamientos: revísalos.',
+'Rodéate de personas que te hagan pensar, no solo de las que te den la razón.',
+'Aprender algo difícil es la mejor prueba de disciplina mental.',
+'Estudia como entrenas: poco cada día, con constancia.',
+'Ser alumno toda la vida es la forma más digna de ser maestro.',
+'Lo que no entiendes, pregúntalo hoy. Mañana te costará más.',
+'La crítica justa es un regalo, aunque venga mal envuelta.',
+'Reconocer un error a tiempo ahorra muchos errores después.',
+'La paciencia del aprendizaje es la misma que la del músculo.',
+'Enseña con el ejemplo antes que con las palabras.',
+'No hay maestro mejor que la práctica diaria.',
+'Duda de tus certezas y confía en tu constancia.',
+'Cierra septiembre anotando tres cosas que aprendiste.'],
+/* Octubre · La muerte y la gratitud */[
+'Recuerda que vas a morir. No para tener miedo, sino para vivir hoy con intención.',
+'Agradece el cuerpo que te permite entrenar: muchos quisieran poder hacerlo.',
+'Piensa en lo que tienes como si lo hubieras perdido: verás cuánto vale.',
+'Vive cada día como un día completo, con principio, desarrollo y cierre.',
+'La gratitud convierte lo que tienes en suficiente.',
+'Despídete bien de las personas: no sabes cuál será la última vez.',
+'Hoy es un regalo que no estaba garantizado.',
+'La muerte no le quita valor a la vida: le da urgencia.',
+'Agradece el techo, el desayuno y la caminata. Son riquezas cotidianas.',
+'No dejes palabras importantes sin decir.',
+'Lo que más importa no se compra: tiempo, salud y afecto.',
+'Una vida larga no es mejor que una vida bien vivida.',
+'Agradece incluso el cansancio: es la prueba de que hiciste algo.',
+'Recuerda a quienes ya no están imitando lo mejor de ellos.',
+'Cada mañana es una oportunidad que alguien no tuvo.',
+'No vivas como si tuvieras mil años por delante.',
+'La gratitud es la memoria del corazón.',
+'Agradece a tu cuerpo después de entrenar: te sostuvo una vez más.',
+'Pensar en el final aclara qué vale la pena hacer hoy.',
+'Lo que des en vida es lo que de verdad dejas.',
+'Agradece las personas difíciles: te enseñan paciencia.',
+'No esperes a perder algo para valorarlo.',
+'Que la muerte te encuentre ocupado en algo bueno.',
+'Agradece lo simple: un plato caliente, una cama limpia, un día más.',
+'La vida es préstamo, no propiedad. Úsala bien y devuélvela sin queja.',
+'Sé amable hoy: todos cargan algo que no ves.',
+'Agradece haber despertado con la oportunidad de mejorar.',
+'Cada día bien vivido es una pequeña obra terminada.',
+'Lo efímero de las cosas es lo que las hace valiosas.',
+'Haz que tus días tengan sentido y tu vida tendrá sentido.',
+'Cierra octubre escribiendo tres cosas que agradeces de este mes.'],
+/* Noviembre · La perseverancia */[
+'¿Hasta cuándo esperarás para exigirte lo mejor? — Epicteto',
+'Cae siete veces, levántate ocho.',
+'El progreso lento sigue siendo progreso.',
+'Los resultados llegan después de que casi todos se rindieron.',
+'Cuando quieras parar, haz una repetición más con buena técnica.',
+'La perseverancia es seguir cuando la emoción del inicio ya se fue.',
+'No cuentes los días: haz que los días cuenten.',
+'Las montañas se suben paso a paso, no de un salto.',
+'La gota horada la piedra no por su fuerza, sino por su constancia.',
+'Si no ves cambios todavía, sigue: están ocurriendo por dentro.',
+'Un año de constancia vence a diez años de intentos aislados.',
+'Rendirse es fácil; por eso no es para ti.',
+'El cansancio te pide parar; el propósito te pide seguir. Escucha al propósito.',
+'Mantén el rumbo aunque el viento cambie.',
+'Ningún viento es favorable para quien no sabe a qué puerto se dirige. — Séneca',
+'Cada semana completa es un ladrillo de la casa que estás construyendo.',
+'Persistir no es repetir lo mismo sin pensar: es ajustar sin abandonar.',
+'Las insignias más difíciles son las que se ganan día a día.',
+'Si hoy solo puedes hacer la mitad, haz la mitad bien.',
+'La constancia convierte lo difícil en normal.',
+'Sigue aunque nadie aplauda: el aplauso no levanta pesas.',
+'El que persevera no siempre gana; el que abandona nunca.',
+'No te detengas por miedo a avanzar despacio.',
+'Hoy vuelve a elegir tu meta, como si fuera el primer día.',
+'Tu yo del futuro está hecho de las decisiones que tomas hoy.',
+'Paciencia: los árboles fuertes crecen lento.',
+'La disciplina de hoy es la libertad de mañana.',
+'Termina lo que empiezas, aunque sea con menos peso.',
+'Recuerda por qué empezaste.',
+'Cierra noviembre fuerte: el último mes del año se gana desde hoy.'],
+/* Diciembre · El examen de uno mismo */[
+'Pregúntate cada noche: ¿qué hice bien, qué hice mal, qué me faltó hacer? — inspirado en Séneca',
+'Revisa tu día sin culpa y sin excusas: solo para mejorar mañana.',
+'Conócete a ti mismo: tus excusas favoritas y tus mejores momentos.',
+'Mira tus registros: ahí está la verdad de tu año.',
+'El examen honesto es el primer paso de todo cambio.',
+'Anota una cosa que harás mejor la próxima semana.',
+'No midas tu año por un mes malo ni por un mes bueno: mira la tendencia.',
+'Celebra tus avances con la misma seriedad con que corriges tus fallas.',
+'Pregúntate qué hábito te acercó a tu meta y cuál te alejó.',
+'Sé tu propio juez justo: ni cruel ni complaciente.',
+'Lo que no se revisa, se repite.',
+'Mira cuántas mañanas cumpliste. Eso es lo que eres.',
+'Corrige el rumbo sin dramatismo: un ajuste pequeño cambia el destino.',
+'Haz las paces con lo que no salió y prepárate para lo que viene.',
+'Revisa tu sueño, tu comida y tu entrenamiento: los tres pilares.',
+'Pregúntate a quién ayudaste este año.',
+'La autocrítica útil termina en un plan, no en un lamento.',
+'Agradece al que fuiste en enero: empezó lo que hoy cosechas.',
+'Escribe la meta del año que viene antes de que empiece.',
+'Revisa tus compromisos: cumple, renegocia o suelta.',
+'La quietud de diciembre es buena para pensar con claridad.',
+'Disfruta las fiestas con templanza: que no se lleven tu progreso.',
+'Comparte tu tiempo con los tuyos: también es parte del bienestar.',
+'Recuerda la frase que te repites cada mañana y comprueba si la viviste.',
+'Hoy sé generoso: con tu tiempo, con tu paciencia, con tus palabras.',
+'Lo que fuiste este año es punto de partida, no destino.',
+'Decide qué dejarás atrás para entrar más ligero al nuevo año.',
+'Revisa tus insignias: cada una es un recordatorio de lo que eres capaz.',
+'Prepara enero desde hoy: horario, menú y plan de entrenamiento.',
+'Agradece a tu cuerpo, a tu mente y a tu voluntad por este año.',
+'Cierra el año con la conciencia tranquila y la disciplina intacta.']
+];
+
 (function(){
 'use strict';
 var D=DATA;
@@ -987,7 +1409,16 @@ function restSecs(r){var m=String(r).match(/\d+/g);return m?+m[m.length-1]:60}
 
 /* ---------- estado ---------- */
 var S={tab:'hoy',date:today(),days:{},settings:clone(DEF_SET),shop:{},routine:null,menuDow:null,chartEx:null,range:28,open:{}};
-try{var t0=sessionStorage.getItem('bit:tab');if(t0)S.tab=t0}catch(e){}
+var UIKEY='bit:ui';
+function loadUI(){try{var u=JSON.parse(localStorage.getItem(UIKEY)||'null');if(!u)return;
+  S.tab=u.tab||'hoy';S.routine=u.routine||null;S.menuDow=u.menuDow==null?null:u.menuDow;S.wr=u.wr||null;S.wsrc=u.wsrc||null;S.chartEx=u.chartEx||null;S.scroll=u.scroll||{};
+  if(u.date&&Date.now()-(u.t||0)<6*3600e3)S.date=u.date;S.pendingTimer=u.timer||null}catch(e){}}
+function saveUI(){try{localStorage.setItem(UIKEY,JSON.stringify({tab:S.tab,date:S.date,routine:S.routine,menuDow:S.menuDow,wr:S.wr,wsrc:S.wsrc,chartEx:S.chartEx,scroll:S.scroll||{},t:Date.now(),
+  timer:(typeof T!=='undefined'&&T.end>Date.now()-60000&&!document.getElementById('timer').hidden)?{end:T.end,name:T.name}:null}))}catch(e){}}
+S.scroll={};loadUI();
+var scrollT=null;window.addEventListener('scroll',function(){clearTimeout(scrollT);scrollT=setTimeout(function(){S.scroll[S.tab]=Math.round(window.scrollY);saveUI()},200)},{passive:true});
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'){S.scroll[S.tab]=Math.round(window.scrollY);saveUI()}else if(T&&T.end){tick()}});
+window.addEventListener('pagehide',function(){S.scroll[S.tab]=Math.round(window.scrollY);saveUI()});
 function day(d){return S.days[d||S.date]||{}}
 function wi(d){
   var w=Math.floor(dayDiff(S.settings.start||DEF_SET.start,d)/7)+1;
@@ -1117,6 +1548,7 @@ function googleSub(){
         if(!l||(r._t||0)>=(l._t||0))local()[d.id]=r;
       });
       if(first){first=false;var L=local();Object.keys(L).forEach(function(k){var r=remote[k];if(!r||(L[k]._t||0)>(r._t||0))fbWrite(coll+'/'+k,L[k])})}
+      if(coll==='days')setTimeout(checkBadges,300);
       Store.saveLocal();soon();
     };
   };
@@ -1169,6 +1601,7 @@ function vHoy(){
   if(p.abs)chips+='<span class="chip teal">Abdomen '+(p.abs==='S1'?'sesión 1':'sesión 2')+' en la noche</span>';
   h+='<section class="dayhero"><div><h1>'+DOW[dw]+'</h1><div class="sub">'+esc(routineLabel(p))+(p.train?' · '+esc(D.R[p.train].focus):' · caminata y movilidad')+'</div><div class="chips">'+chips+'</div></div>'+ring(sc.pct)+'</section>';
   if(w.deload)h+='<div class="banner">Semana de descarga: haz el 60 % de las series con el 90 % de tu carga. En Entreno ya están ajustadas.</div>';
+  var sq=stoicFor(d);if(sq.text)h+='<button type="button" class="qcard" id="openquote"><span class="qk">Reflexión del día · '+esc(sq.theme)+'</span><span class="qt">'+esc(sq.text)+'</span>'+(sq.author?'<span class="qa">'+esc(sq.author)+'</span>':'')+'</button>';
 
   // sueño
   var sl=o.sleep||{},hrs=sleepHours(sl);
@@ -1184,10 +1617,11 @@ function vHoy(){
      '<div class="grid2" style="margin-top:10px"><label class="f" for="wkg">Peso (kg)<input class="inp" id="wkg" inputmode="decimal" placeholder="67.9" value="'+(o.weight!=null?esc(o.weight):'')+'" data-f="weight"></label>'+
      '<label class="f" for="wcin">Cintura (cm), cada 2 semanas<input class="inp" id="wcin" inputmode="decimal" placeholder="opcional" value="'+(o.waist!=null?esc(o.waist):'')+'" data-f="waist"></label></div>'+
      '<div class="p muted">Después de ir al baño y antes de comer. La de la noche marca ~1.2 kg más.</div></section>';
-  var goal=S.settings.stepGoal||8000,st=o.steps||0;
+  var goal=S.settings.stepGoal||8000,st=o.steps||0,sAM=o.stepsAM!=null?o.stepsAM:(o.stepsPM==null&&o.steps!=null?o.steps:null);
   h+='<section class="card"><div class="cardhead"><h2>Pasos</h2><span class="meta'+(st>=goal?' good':'')+'">meta '+goal.toLocaleString('es-MX')+'</span></div>'+
-     '<div class="grid2" style="margin-top:10px;align-items:end"><label class="f" for="steps">Pasos del día<input class="inp" id="steps" inputmode="numeric" placeholder="0" value="'+(o.steps!=null?esc(o.steps):'')+'" data-f="steps"></label>'+
-     '<div class="seg"><button type="button" class="chipbtn" data-addsteps="1000">+1,000</button><button type="button" class="chipbtn" data-addsteps="5000">+5,000</button></div></div>'+
+     '<div class="grid2" style="margin-top:10px"><label class="f" for="stepsam">Mañana · caminata<input class="inp" id="stepsam" inputmode="numeric" placeholder="4,500" value="'+(sAM!=null?esc(sAM):'')+'" data-steps="stepsAM"></label>'+
+     '<label class="f" for="stepspm">Tarde y noche<input class="inp" id="stepspm" inputmode="numeric" placeholder="oficina y extra" value="'+(o.stepsPM!=null?esc(o.stepsPM):'')+'" data-steps="stepsPM"></label></div>'+
+     '<div class="steptot"><span>Pasos totales de hoy</span><b>'+st.toLocaleString('es-MX')+'</b></div>'+
      '<div class="bar"><i style="width:'+Math.min(100,st*100/goal)+'%"></i></div>'+
      '<div class="row" style="margin-top:8px">'+chk(o.walk,'data-flag="walk"','Caminata hecha')+'<div class="txt"><div class="t1">Caminata de 40 min</div><div class="t2">6:50 a 7:30 · unos 5,000 pasos</div></div></div></section>';
 
@@ -1321,14 +1755,41 @@ function vComida(){
     '<details><summary>Cenas de la semana</summary><ul>'+order.map(function(i){return '<li><b>'+DOWS[i]+' · '+esc(D.P[D.DAYS[i][5]][0])+'.</b> '+esc(D.DIN[i])+'</li>'}).join('')+'</ul></details>'+
     '<details><summary>Pre-entreno sin café</summary><div class="p">El plátano basta. Las semillas de cacao no ayudan si el café te arde: el cacao trae teobromina y algo de cafeína, y el chocolate suele empeorar la acidez. Si quieres café, tómalo con el desayuno; a las 5:00 puedes tomar té de manzanilla o de jengibre.</div></details></section>';
   // compras
-  var ws=weekStart(S.date),sh=S.shop[ws]||{},items=sh.items||{},got=0,all=0;
-  D.SHOP.forEach(function(x,i){all+=x[2];if(items['s'+i])got+=x[2]});
-  h+='<div class="section-title">Compras de la semana del '+fmtShort(ws)+'</div><section class="card"><div class="cardhead"><h2>Lista del sábado</h2><span class="meta">$'+got+' de $'+all+'</span></div>'+
-    D.SHOP.map(function(x,i){return '<div class="row">'+chk(items['s'+i],'data-shop="s'+i+'"',x[0]+' comprado')+'<div class="txt"><div class="t1">'+esc(x[0])+'</div><div class="t2">'+esc(x[1])+'</div></div><span class="mono muted">$'+x[2]+'</span></div>'}).join('')+
-    '<div class="p" style="font-weight:700;margin-top:10px">Despensa (primer sábado del mes)</div>'+
-    D.PANTRY.map(function(x,i){return '<div class="row">'+chk(items['p'+i],'data-shop="p'+i+'"',x[0]+' revisado')+'<div class="txt"><div class="t1">'+esc(x[0])+'</div><div class="t2">'+esc(x[1])+'</div></div></div>'}).join('')+
-    '<div class="p muted">Precios estimados del centro del país (Puebla). Comida: unos $4,370 al mes.</div></section>';
+  var ws=weekStart(S.date),sh=S.shop[ws]||{},items=sh.items||{},cost=sh.cost||{},extra=sh.extra||[],all=0;
+  D.SHOP.forEach(function(x){all+=x[2]});
+  var costIn=function(k,ph){return '<input class="inp costin" inputmode="decimal" aria-label="Costo" placeholder="'+(ph!=null?'$'+ph:'$')+'" value="'+(cost[k]!=null?esc(cost[k]):'')+'" data-cost="'+k+'">'};
+  h+='<div class="section-title">Compras de la semana del '+fmtShort(ws)+'</div><section class="card"><div class="cardhead"><h2>Lista del sábado</h2><span class="meta">estimado $'+all+'</span></div>'+
+    '<div class="p muted">Palomea lo que compraste y escribe lo que pagaste. El número gris es el precio estimado.</div>'+
+    D.SHOP.map(function(x,i){return '<div class="row">'+chk(items['s'+i],'data-shop="s'+i+'"',x[0]+' comprado')+'<div class="txt"><div class="t1">'+esc(x[0])+'</div><div class="t2">'+esc(x[1])+'</div></div>'+costIn('s'+i,x[2])+'</div>'}).join('')+
+    '<div class="p" style="font-weight:700;margin-top:12px">Despensa (primer sábado del mes)</div>'+
+    D.PANTRY.map(function(x,i){return '<div class="row">'+chk(items['p'+i],'data-shop="p'+i+'"',x[0]+' revisado')+'<div class="txt"><div class="t1">'+esc(x[0])+'</div><div class="t2">'+esc(x[1])+'</div></div>'+costIn('p'+i,null)+'</div>'}).join('')+
+    '<div class="p" style="font-weight:700;margin-top:12px">Otros gastos de comida</div>'+
+    extra.map(function(x,i){return '<div class="row"><input class="inp" style="flex:1" aria-label="Concepto" placeholder="Concepto" value="'+esc(x.n||'')+'" data-extra-n="'+i+'"><input class="inp costin" inputmode="decimal" aria-label="Costo" placeholder="$" value="'+(x.c!=null?esc(x.c):'')+'" data-extra-c="'+i+'"><button type="button" class="iconbtn" data-delextra="'+i+'" aria-label="Quitar gasto">✕</button></div>'}).join('')+
+    '<button type="button" class="btn ghost full" data-addextra="1" style="margin-top:8px">+ Agregar otro gasto</button></section>';
+  var wk=weekSpend(ws),mo=monthSpend(S.date);
+  h+='<section class="card spend"><div class="cardhead"><h2>Gasto de la semana en alimentación</h2></div><div class="wtop"><div><span class="wbig">$'+money(wk.total)+'</span></div>'+
+    (wk.total?'<span class="pill'+(wk.total<=all?' up':' down')+'">'+(wk.total<=all?'$'+money(all-wk.total)+' abajo':'$'+money(wk.total-all)+' arriba')+' del estimado</span>':'')+'</div>'+
+    '<div class="wdate">Súper $'+money(wk.list)+' · despensa $'+money(wk.pantry)+' · otros $'+money(wk.extra)+'</div></section>';
+  h+='<section class="card spend"><div class="cardhead"><h2>Gasto del mes en alimentación</h2><span class="meta">'+MESL2[parse(S.date).getMonth()]+'</span></div><div class="wtop"><div><span class="wbig">$'+money(mo.total)+'</span><span class="wunit">de $5,000</span></div></div>'+
+    '<div class="bar"><i style="width:'+Math.min(100,mo.total*100/5000)+'%;'+(mo.total>5000?'background:var(--warn)':'')+'"></i></div>'+
+    '<table class="tbl"><tbody>'+mo.weeks.map(function(x){return '<tr'+(x.ws===ws?' class="cur"':'')+'><td>Semana del '+fmtShort(x.ws)+'</td><td class="num">'+(x.total?'$'+money(x.total):'<span class="muted">sin registro</span>')+'</td></tr>'}).join('')+'</tbody></table>'+
+    '<div class="p muted">'+mo.reg+' de '+mo.weeks.length+' semanas registradas. '+(mo.total<=5000?'Te quedan $'+money(5000-mo.total)+' del presupuesto.':'Te pasaste $'+money(mo.total-5000)+' del presupuesto.')+'</div></section>';
   return h;
+}
+
+/* ---------- gastos ---------- */
+function money(n){var v=Math.round((n||0)*100)/100;return v.toLocaleString('es-MX',{minimumFractionDigits:v%1?2:0,maximumFractionDigits:2})}
+function weekSpend(ws){
+  var sh=S.shop[ws]||{},c=sh.cost||{},r={list:0,pantry:0,extra:0,total:0};
+  Object.keys(c).forEach(function(k){var v=num(c[k])||0;if(k.charAt(0)==='p')r.pantry+=v;else r.list+=v});
+  (sh.extra||[]).forEach(function(x){r.extra+=num(x.c)||0});
+  r.total=r.list+r.pantry+r.extra;return r;
+}
+function monthSpend(d){
+  var dt=parse(d),y=dt.getFullYear(),m=dt.getMonth(),first=iso(new Date(y,m,1)),w=weekStart(first),weeks=[],tot=0,reg=0;
+  if(parse(w).getMonth()!==m)w=addDays(w,7);
+  while(parse(w).getMonth()===m&&parse(w).getFullYear()===y){var s=weekSpend(w).total;weeks.push({ws:w,total:s});tot+=s;if(s)reg++;w=addDays(w,7)}
+  return {weeks:weeks,total:tot,reg:reg};
 }
 
 /* ---------- PROGRESO ---------- */
@@ -1428,6 +1889,7 @@ function vProgreso(){
   if(a1&&a3){var ch=(a1-a3)/2;rec=ch<0.05?'Sube 200 kcal: agrega yogur con avena y un plátano a media tarde, o 100 g más de arroz en la cena.':ch<=0.35?'Vas en el rango: mantén todo igual.':'Baja 150 kcal: quita la crema de cacahuate o reduce el arroz de la cena.';
     rec='<div class="banner"><b class="mono">'+(ch>=0?'+':'')+ch.toFixed(2)+' kg por semana</b> (promedio de 2 semanas). '+rec+'</div>'}
   else rec='<div class="banner">Para ver la tendencia necesito al menos 2 pesos en ayunas en esta semana y en la de hace dos semanas.</div>';
+  h+=badgesCard();
   h+=weightCard().replace(/<\/section>$/,rec+'</section>');
   var d14=series(addDays(to,-13),to);
   var sl=d14.map(function(d){return sleepHours((S.days[d]||{}).sleep)}),slv=sl.filter(Boolean);
@@ -1522,7 +1984,7 @@ function r1(x){return x==null?null:Math.round(x*10)/10}
 function buildMonth(ym){
   var p=ym.split('-'),first=ym+'-01',last=iso(new Date(+p[0],+p[1],0)),t=today();if(last>t)last=t;
   var dates=first<=last?series(first,last):[],diario=[],sets=[];
-  var H=['Fecha','Día','Semana','Descarga','Rutina','Acostado','Despertó','Horas en cama','Calidad sueño (1-5)','Peso ayunas (kg)','Peso noche (kg)','Cintura (cm)','Pasos','Meta pasos (1/0)','Caminata (1/0)','Agua (L)','Comidas (de 7)'].concat(D.SLOTS.map(function(s){return s[2]+' (1/0)'})).concat(['kcal estimadas','Proteína estimada (g)']).concat(D.SUPPS.map(function(s){return s[1]+' (1/0)'})).concat(['Calentamiento (1/0)','Entrenamiento (1/0)','Abdomen (1/0)','Dolor hombro (0-10)','Dolor espalda (0-10)','Cumplimiento del día (%)','Notas']);
+  var H=['Fecha','Día','Semana','Descarga','Rutina','Acostado','Despertó','Horas en cama','Calidad sueño (1-5)','Peso ayunas (kg)','Peso noche (kg)','Cintura (cm)','Pasos mañana','Pasos tarde y noche','Pasos totales','Meta pasos (1/0)','Caminata (1/0)','Agua (L)','Comidas (de 7)'].concat(D.SLOTS.map(function(s){return s[2]+' (1/0)'})).concat(['kcal estimadas','Proteína estimada (g)']).concat(D.SUPPS.map(function(s){return s[1]+' (1/0)'})).concat(['Calentamiento (1/0)','Entrenamiento (1/0)','Abdomen (1/0)','Dolor hombro (0-10)','Dolor espalda (0-10)','Cumplimiento del día (%)','Notas']);
   diario.push(H);
   var A={reg:0,sc:0,sl:[],sl75:0,bed:0,bedn:0,st:[],stg:0,walk:0,wat:[],mealsAll:0,slot:{},sup:{},trP:0,trD:0,wuD:0,abP:0,abD:0,ph:[],pe:[],pain4:0,w:[],dl:{}};
   dates.forEach(function(d){
@@ -1539,7 +2001,7 @@ function buildMonth(ym){
     if(pl.abs){A.abP++;if(o.absDone)A.abD++}
     var pn=o.pain||{};if(pn.hombro!=null)A.ph.push(pn.hombro);if(pn.espalda!=null)A.pe.push(pn.espalda);if((pn.hombro||0)>=4||(pn.espalda||0)>=4)A.pain4++;
     if(o.weight)A.w.push([d,+o.weight]);if(w.deload)A.dl[w.ws]=1;
-    diario.push([d,DOW[dw],w.w>0?w.w:'',w.deload?'Sí':'',pl.train?D.R[pl.train].title:'Descanso',sl.bed||'',sl.wake||'',hrs?r1(hrs):'',sl.q||'',o.weight||'',o.weightPM||'',o.waist||'',o.steps||'',o.steps>=goal?1:0,o.walk?1:0,o.water?o.water*0.25:'',mc].concat(mrow).concat([kc,pr]).concat(srow).concat([pl.train?(o.warmDone?1:0):'',pl.train?(o.workout?1:0):'',pl.abs?(o.absDone?1:0):'',pn.hombro!=null?pn.hombro:'',pn.espalda!=null?pn.espalda:'',sc,o.notes||'']));
+    diario.push([d,DOW[dw],w.w>0?w.w:'',w.deload?'Sí':'',pl.train?D.R[pl.train].title:'Descanso',sl.bed||'',sl.wake||'',hrs?r1(hrs):'',sl.q||'',o.weight||'',o.weightPM||'',o.waist||'',o.stepsAM||'',o.stepsPM||'',o.steps||'',o.steps>=goal?1:0,o.walk?1:0,o.water?o.water*0.25:'',mc].concat(mrow).concat([kc,pr]).concat(srow).concat([pl.train?(o.warmDone?1:0):'',pl.train?(o.workout?1:0):'',pl.abs?(o.absDone?1:0):'',pn.hombro!=null?pn.hombro:'',pn.espalda!=null?pn.espalda:'',sc,o.notes||'']));
     var L=o.lifts||{};Object.keys(L).forEach(function(id){L[id].forEach(function(s,i){if(s.r===''&&s.kg==='')return;var kg=num(s.kg),r=num(s.r);sets.push([d,exRoutine(id),exName(id),i+1,kg==null?'':kg,r==null?'':r,s.ok?1:0,kg&&r?r1(kg*(1+r/30)):''])})});
   });
   var n=dates.length,avg=function(a){return a.length?a.reduce(function(x,y){return x+y},0)/a.length:null};
@@ -1553,7 +2015,7 @@ function buildMonth(ym){
   D.SLOTS.forEach(function(s){R.push([s[2]+' (%)',pct(A.slot[s[0]]||0,n),s[1]])});
   D.SUPPS.forEach(function(s){R.push([s[1]+' (%)',pct(A.sup[s[0]]||0,n),s[2]])});
   R.push(['Entrenamientos hechos',A.trD,'de '+A.trP+' programados ('+(pct(A.trD,A.trP)||0)+' %)'],['Calentamientos hechos',A.wuD,'de '+A.trP+' días de pesas'],['Sesiones de abdomen',A.abD,'de '+A.abP+' programadas'],
-    ['Dolor de hombro promedio (0-10)',r1(avg(A.ph)),''],['Dolor de espalda promedio (0-10)',r1(avg(A.pe)),''],['Días con dolor de 4 o más',A.pain4,''],['Semanas de descarga en el mes',Object.keys(A.dl).length,''],['Series registradas',sets.length,'Detalle en la hoja Series']);
+    ['Dolor de hombro promedio (0-10)',r1(avg(A.ph)),''],['Dolor de espalda promedio (0-10)',r1(avg(A.pe)),''],['Días con dolor de 4 o más',A.pain4,''],['Semanas de descarga en el mes',Object.keys(A.dl).length,''],['Series registradas',sets.length,'Detalle en la hoja Series'],['Gasto del mes en alimentación ($)',Math.round(monthSpend(first).total*100)/100,monthSpend(first).reg+' semanas registradas · presupuesto $5,000']);
   sets.unshift(['Fecha','Rutina','Ejercicio','Serie','Kg','Reps o segundos','Hecha (1/0)','Fuerza estimada (kg)']);
   return {R:R,diario:diario,sets:sets};
 }
@@ -1619,16 +2081,101 @@ function openTech(src){
 }
 function closeTech(){var sh=document.getElementById('sheet');sh.hidden=true;document.getElementById('shbody').innerHTML=''}
 
+/* ---------- reflexión del día ---------- */
+var MY_PHRASE='No siempre estarás motivado, debes ser disciplinado.';
+var MESL2=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+function stoicFor(d){var dt=parse(d),m=dt.getMonth(),arr=(window.STOIC&&STOIC[m])||[],t=arr.length?arr[(dt.getDate()-1)%arr.length]:'',p=t.split(' — ');return {text:p[0],author:p[1]||'',theme:(window.STOIC_THEMES&&STOIC_THEMES[m])||''}}
+function greet(){var h=new Date().getHours();return h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches'}
+function welcomeHTML(d){
+  var q=stoicFor(d),dt=parse(d),p=plan(d),sk=streakInfo();
+  return '<div class="welcome"><div class="sh"><div class="wk">'+DOW[dt.getDay()]+' '+dt.getDate()+' de '+MESL2[dt.getMonth()]+'</div><button type="button" class="iconbtn" id="shclose" aria-label="Cerrar">✕</button></div>'+
+    '<h2 id="shtitle" class="wg">'+greet()+', Miguel.</h2>'+
+    '<div class="wtheme">Tema del mes · '+esc(q.theme)+'</div>'+
+    '<blockquote class="wq">'+esc(q.text)+(q.author?'<cite>'+esc(q.author)+'</cite>':'')+'</blockquote>'+
+    '<div class="wmine"><span>Tu frase de cada mañana</span>'+esc(MY_PHRASE)+'</div>'+
+    '<div class="wplan"><b>Hoy:</b> '+esc(routineLabel(p))+(p.abs?' · abdomen en la noche':'')+(sk.cur?' · llevas <b>'+sk.cur+' '+(sk.cur===1?'día':'días')+'</b> de constancia':'')+'</div>'+
+    '<button type="button" class="btn full" id="shok" style="margin-top:18px">Empezar el día</button></div>';
+}
+function openSheet(html){var sh=document.getElementById('sheet'),b=document.getElementById('shbody');b.innerHTML=html;sh.hidden=false;var c=document.getElementById('shclose');if(c)c.focus()}
+function maybeWelcome(){
+  var t=today(),last=null;try{last=localStorage.getItem('bit:welcome')}catch(e){}
+  if(last===t)return false;try{localStorage.setItem('bit:welcome',t)}catch(e){}
+  openSheet(welcomeHTML(t));return true;
+}
+
+/* ---------- constancia e insignias ---------- */
+var BADGES=[[5,'Constancia','5 días'],[15,'Quincena firme','15 días'],[30,'Mes disciplinado','30 días'],[60,'Dos meses de hierro','2 meses'],[180,'Medio año','6 meses'],[365,'Estoico','1 año']];
+function dayReq(d){var p=plan(d),o=S.days[d]||{},ok=true;if(p.train&&!o.workout)ok=false;if(p.abs&&!o.absDone)ok=false;return ok}
+function trackStart(){
+  var skip={date:1,source:1,weight:1,weightPM:1,_t:1};
+  var ks=Object.keys(S.days).filter(function(k){var o=S.days[k];return Object.keys(o).some(function(x){return !skip[x]})}).sort();
+  return ks[0]||today();
+}
+function streakInfo(){
+  var st=trackStart(),t=today(),run=0,best=0,d=st;
+  while(d<t){if(dayReq(d)){run++;if(run>best)best=run}else run=0;d=addDays(d,1)}
+  var cur=run;if(dayReq(t)){cur++}if(cur>best)best=cur;
+  return {cur:cur,best:best,todayDone:dayReq(t),start:st};
+}
+function medal(b,earned,size){
+  var s=size||74,n=b[0]>=365?'1':b[0]>=180?'6':b[0]>=60?'2':String(b[0]),u=b[0]>=60?(b[0]>=365?'AÑO':'MESES'):'DÍAS';
+  return '<svg class="medal'+(earned?' on':'')+'" width="'+s+'" height="'+s+'" viewBox="0 0 80 80" aria-hidden="true">'+
+    '<path class="rb" d="M26 4 L36 30 L28 32 Z M54 4 L44 30 L52 32 Z"/>'+
+    '<circle class="o" cx="40" cy="46" r="30"/><circle class="i" cx="40" cy="46" r="23"/>'+
+    '<text class="n" x="40" y="'+(b[0]>=60?50:52)+'" text-anchor="middle">'+n+'</text><text class="u" x="40" y="'+(b[0]>=60?62:63)+'" text-anchor="middle">'+u+'</text></svg>';
+}
+function badgeHTML(b){
+  var q=stoicFor(today());
+  return '<div class="welcome"><div class="sh"><div class="wk">Insignia desbloqueada</div><button type="button" class="iconbtn" id="shclose" aria-label="Cerrar">✕</button></div>'+
+    '<div class="bigmedal">'+medal(b,true,132)+'</div><h2 id="shtitle" class="wg" style="text-align:center">'+esc(b[1])+'</h2>'+
+    '<p class="p" style="text-align:center">'+esc(b[2])+' seguidos cumpliendo tu rutina. '+(b[0]>=365?'La más difícil: un año completo sin fallar.':'Sigue así: la siguiente se gana igual, un día a la vez.')+'</p>'+
+    '<div class="wmine"><span>Recuerda</span>'+esc(MY_PHRASE)+'</div><button type="button" class="btn full" id="shok" style="margin-top:18px">Seguir</button></div>';
+}
+var badgeQueue=[];
+function checkBadges(){
+  var sk=streakInfo(),got=(S.settings.badges)||{},nw=BADGES.filter(function(b){return Math.max(sk.cur,sk.best)>=b[0]&&!got[b[0]]});
+  if(!nw.length)return;
+  setSettings(function(o){o.badges=o.badges||{};nw.forEach(function(b){o.badges[b[0]]=today()})});
+  badgeQueue=badgeQueue.concat(nw.slice(-1));
+  if(document.getElementById('sheet').hidden)showNextBadge();
+}
+function showNextBadge(){var b=badgeQueue.shift();if(b)openSheet(badgeHTML(b))}
+function badgesCard(){
+  var sk=streakInfo(),got=(S.settings.badges)||{},next=BADGES.filter(function(b){return !got[b[0]]})[0];
+  var h='<section class="card"><div class="cardhead"><h2>Constancia</h2><span class="meta">mejor racha: '+sk.best+' '+(sk.best===1?'día':'días')+'</span></div>'+
+    '<div class="wtop"><div><span class="wbig">'+sk.cur+'</span><span class="wunit">'+(sk.cur===1?'día seguido':'días seguidos')+'</span></div></div>'+
+    '<div class="wdate">'+(sk.todayDone?'Hoy ya cuenta.':'Hoy cuenta en cuanto completes tu rutina.')+' Cuenta cada día en que cumples lo que toca: pesas los días de entreno y abdomen las noches que corresponde.</div>';
+  if(next){var pr=Math.min(100,sk.cur*100/next[0]);h+='<div class="p" style="margin-top:12px"><b>Siguiente:</b> '+esc(next[1])+' · faltan '+Math.max(0,next[0]-sk.cur)+' días</div><div class="bar"><i style="width:'+pr+'%"></i></div>'}
+  h+='<div class="medals">'+BADGES.map(function(b){var e=got[b[0]];return '<div class="mcell'+(e?' on':'')+'">'+medal(b,!!e)+'<b>'+esc(b[1])+'</b><span>'+(e?'ganada '+fmtShort(e):esc(b[2]))+'</span></div>'}).join('')+'</div></section>';
+  return h;
+}
+
 /* ---------- temporizador ---------- */
 var T={end:0,iv:null,name:'',beeped:false};
-function startTimer(secs,name){
-  T.end=Date.now()+secs*1000;T.name=name;T.beeped=false;document.getElementById('timer').hidden=false;
-  clearInterval(T.iv);T.iv=setInterval(tick,250);tick();
+function startTimer(secs,name,end){
+  T.end=end||Date.now()+secs*1000;T.name=name;T.beeped=!!end&&end<Date.now();document.getElementById('timer').hidden=false;
+  clearInterval(T.iv);T.iv=setInterval(tick,250);clearTimeout(T.to);T.to=setTimeout(tick,Math.max(0,T.end-Date.now()+50));tick();saveUI();
+  if(!end)askNotify();
+}
+function askNotify(){
+  try{
+    if(!('Notification' in window)||!('serviceWorker' in navigator))return;
+    if(Notification.permission==='default'&&!S.askedNotif){S.askedNotif=true;
+      Notification.requestPermission().then(function(p){if(p==='granted')toast('Listo: te aviso al terminar el descanso aunque salgas de la app');else toast('Sin permiso de notificaciones solo te aviso con la app abierta')});
+    }
+  }catch(e){}
+}
+function restNotify(){
+  try{
+    if(document.visibilityState==='visible')return;
+    if(!('Notification' in window)||Notification.permission!=='granted'||!('serviceWorker' in navigator))return;
+    navigator.serviceWorker.ready.then(function(reg){reg.showNotification('Es hora de la siguiente serie',{body:(T.name?T.name+' · ':'')+'tu descanso terminó',tag:'descanso',renotify:true,vibrate:[300,120,300,120,300],icon:'icon-192.png',badge:'icon-192.png',data:{url:'./'}})});
+  }catch(e){}
 }
 function tick(){
   var r=Math.round((T.end-Date.now())/1000),c=document.getElementById('tclock');
   document.getElementById('tlab').textContent='Descanso · '+T.name;
-  if(r<=0){c.textContent='¡Siguiente serie!';c.className='clock end';if(!T.beeped){T.beeped=true;beep();try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}return}
+  if(r<=0){c.textContent='¡Siguiente serie!';c.className='clock end';if(!T.beeped){T.beeped=true;beep();try{navigator.vibrate&&navigator.vibrate([300,120,300,120,300])}catch(e){}restNotify()}return}
   c.className='clock';c.textContent=Math.floor(r/60)+':'+pad(r%60);
 }
 var AC=null;
@@ -1640,8 +2187,9 @@ function render(){
   v.innerHTML=fn();
   var t=S.date===today();document.getElementById('dlabel').textContent=t?'Hoy · '+fmtShort(S.date):fmtDate(S.date);
   [].forEach.call(document.querySelectorAll('nav.tabs button'),function(b){if(b.getAttribute('data-tab')===S.tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  saveUI();
 }
-function go(tab){S.tab=tab;try{sessionStorage.setItem('bit:tab',tab)}catch(e){}render();window.scrollTo(0,0)}
+function go(tab){S.scroll[S.tab]=Math.round(window.scrollY);S.tab=tab;render();window.scrollTo(0,0);S.scroll[tab]=0;saveUI()}
 
 /* ---------- eventos ---------- */
 document.addEventListener('click',function(ev){
@@ -1651,8 +2199,9 @@ document.addEventListener('click',function(ev){
   if(b.id==='prev'){S.date=addDays(S.date,-1);S.menuDow=null;render();return}
   if(b.id==='next'){S.date=addDays(S.date,1);S.menuDow=null;render();return}
   if(b.id==='dlabel'){S.date=today();S.menuDow=null;render();return}
-  if(b.id==='shclose'){closeTech();return}
-  if(b.id==='tstop'){clearInterval(T.iv);document.getElementById('timer').hidden=true;return}
+  if(b.id==='shclose'||b.id==='shok'){closeTech();if(badgeQueue.length)setTimeout(showNextBadge,250);return}
+  if(b.id==='openquote'){openSheet(welcomeHTML(S.date));return}
+  if(b.id==='tstop'){clearInterval(T.iv);clearTimeout(T.to);T.end=0;document.getElementById('timer').hidden=true;saveUI();return}
   if(b.id==='tplus'){T.end+=15000;T.beeped=false;tick();return}
   if(b.id==='tminus'){T.end-=15000;tick();return}
   if(b.id==='exportxls'){var sel=document.getElementById('expmonth');exportMonth(sel?sel.value:today().slice(0,7));return}
@@ -1662,12 +2211,12 @@ document.addEventListener('click',function(ev){
   if(b.id==='copytsv'){var sm=document.getElementById('expmonth'),bm=buildMonth(sm?sm.value:today().slice(0,7));copyText(tsv(bm.R)+'\n\n'+tsv(bm.diario)+'\n\n'+tsv(bm.sets),'Mes copiado: pégalo en la celda A1 de una hoja de Excel');return}
   if(a('data-go')){go(a('data-go'));return}
   if(a('data-q')){var q=+a('data-q');setDay(function(o){o.sleep=o.sleep||{};o.sleep.q=o.sleep.q===q?null:q});render();return}
-  if(a('data-addsteps')){var n=+a('data-addsteps');setDay(function(o){o.steps=(o.steps||0)+n});render();return}
-  if(a('data-flag')){var f=a('data-flag');setDay(function(o){o[f]=!o[f]});render();return}
+
+  if(a('data-flag')){var f=a('data-flag');setDay(function(o){o[f]=!o[f]});render();if(f==='workout')checkBadges();return}
   if(a('data-meal')){var m=a('data-meal');setDay(function(o){o.meals=o.meals||{};o.meals[m]=!o.meals[m]});render();return}
   if(a('data-sup')){var s=a('data-sup');setDay(function(o){o.sup=o.sup||{};o.sup[s]=!o.sup[s]});render();return}
   if(a('data-water')){var g=+a('data-water');setDay(function(o){o.water=(o.water===g)?g-1:g});render();return}
-  if(a('data-abs')){var x=a('data-abs');setDay(function(o){o.abs=o.abs||{};o.abs[x]=!o.abs[x];var A=D.AB[plan(S.date).abs];if(A)o.absDone=A.ex.every(function(e){return o.abs[e.id]})});render();return}
+  if(a('data-abs')){var x=a('data-abs');setDay(function(o){o.abs=o.abs||{};o.abs[x]=!o.abs[x];var A=D.AB[plan(S.date).abs];if(A)o.absDone=A.ex.every(function(e){return o.abs[e.id]})});render();checkBadges();return}
   if(a('data-open')){var k=a('data-open');S.open[k]=!S.open[k];render();return}
   if(a('data-tech')){openTech(a('data-src'));return}
   if(a('data-routine')){S.routine=a('data-routine');render();return}
@@ -1675,10 +2224,12 @@ document.addEventListener('click',function(ev){
   if(a('data-ok')){var pr=a('data-ok').split(':'),id=pr[0],i=+pr[1],was;
     setDay(function(o){o.lifts=o.lifts||{};var L=o.lifts[id]=o.lifts[id]||[];while(L.length<=i)L.push({kg:'',r:'',ok:false});was=L[i].ok;L[i].ok=!L[i].ok});
     if(!was)startTimer(+a('data-rest'),a('data-name'));render();return}
-  if(a('data-finish')){var ff=a('data-finish');setDay(function(o){o[ff]=!o[ff]});render();if(day()[ff])toast('Entrenamiento guardado');return}
+  if(a('data-finish')){var ff=a('data-finish');setDay(function(o){o[ff]=!o[ff]});render();if(day()[ff]){toast('Entrenamiento guardado');checkBadges()}return}
   if(a('data-mdow')){S.menuDow=+a('data-mdow');render();return}
   if(a('data-shop')){var it=a('data-shop'),ws=weekStart(S.date);setShop(ws,function(o){o.items=o.items||{};o.items[it]=!o.items[it];o.week=ws});render();return}
   if(a('data-wr')){S.wr=a('data-wr');render();return}
+  if(a('data-addextra')){var w0=weekStart(S.date);setShop(w0,function(o){o.extra=o.extra||[];o.extra.push({n:'',c:null});o.week=w0});render();var ins=document.querySelectorAll('[data-extra-n]');if(ins.length)ins[ins.length-1].focus();return}
+  if(a('data-delextra')){var w1=weekStart(S.date),di=+a('data-delextra');setShop(w1,function(o){o.extra=(o.extra||[]).filter(function(x,j){return j!==di})});render();return}
   if(a('data-wsrc')){S.wsrc=a('data-wsrc');render();return}
   if(b.id==='gsignin'){googleSignIn();return}
   if(b.id==='gsignout'){googleSignOut();return}
@@ -1690,6 +2241,12 @@ document.addEventListener('change',function(ev){
   if(a('data-f')){var f=a('data-f'),v=el.value.trim();setDay(function(o){if(f==='notes')o.notes=v;else{var n=num(v);if(n==null)delete o[f];else o[f]=f==='steps'?Math.round(n):n}});soon();return}
   if(a('data-set')){var p=a('data-set').split(':'),id=p[0],i=+p[1],fld=p[2],val=el.value.trim();
     setDay(function(o){o.lifts=o.lifts||{};var L=o.lifts[id]=o.lifts[id]||[];while(L.length<=i)L.push({kg:'',r:'',ok:false});L[i][fld]=val});return}
+  if(a('data-cost')){var ck=a('data-cost'),cv=num(el.value),w2=weekStart(S.date);setShop(w2,function(o){o.cost=o.cost||{};if(cv==null)delete o.cost[ck];else o.cost[ck]=cv;o.week=w2});soon();return}
+  if(a('data-extra-n')!=null||a('data-extra-c')!=null){var w3=weekStart(S.date),isN=a('data-extra-n')!=null,ei=+(isN?a('data-extra-n'):a('data-extra-c'));setShop(w3,function(o){o.extra=o.extra||[];o.extra[ei]=o.extra[ei]||{n:'',c:null};if(isN)o.extra[ei].n=el.value.trim();else o.extra[ei].c=num(el.value)});soon();return}
+  if(a('data-steps')){var sk2=a('data-steps'),nv=num(el.value);setDay(function(o){
+      if(o.stepsAM==null&&o.stepsPM==null&&o.steps!=null&&sk2==='stepsPM')o.stepsAM=o.steps;
+      if(nv==null)delete o[sk2];else o[sk2]=Math.round(nv);
+      var t=(o.stepsAM||0)+(o.stepsPM||0);if(t)o.steps=t;else delete o.steps});soon();return}
   if(a('data-pain')){var pk=a('data-pain');setDay(function(o){o.pain=o.pain||{};o.pain[pk]=+el.value});soon();return}
   if(el.id==='exsel'){S.chartEx=el.value;render();return}
   if(el.id==='expmonth'){S.expMonth=el.value;return}
@@ -1701,6 +2258,8 @@ document.getElementById('sheet').addEventListener('click',function(ev){if(ev.tar
 document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&!document.getElementById('sheet').hidden)closeTech()});
 
 render();status();Store.init();googleInit();
+if(S.pendingTimer&&S.pendingTimer.end>Date.now()-60000)startTimer(0,S.pendingTimer.name,S.pendingTimer.end);
+setTimeout(function(){if(S.scroll&&S.scroll[S.tab])window.scrollTo(0,S.scroll[S.tab]);maybeWelcome();checkBadges()},350);
 })();
 
 </script>

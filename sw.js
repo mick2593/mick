@@ -1,8 +1,15 @@
 /* Bitácora: funciona sin internet. Archivos propios: red primero y copia de respaldo; librerías y fuentes: copia primero. */
-var CACHE='bitacora-v3';
+var CACHE='bitacora-v4';
 var CORE=['./','index.html','guia.html','config.js','manifest.webmanifest','icon-192.png','icon-512.png'];
 self.addEventListener('install',function(e){e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(CORE)}).then(function(){return self.skipWaiting()}))});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE}).map(function(k){return caches.delete(k)}))}).then(function(){return self.clients.claim()}))});
+self.addEventListener('notificationclick',function(e){
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(function(cs){
+    for(var i=0;i<cs.length;i++){if('focus' in cs[i])return cs[i].focus()}
+    return self.clients.openWindow('./');
+  }));
+});
 self.addEventListener('fetch',function(e){
   var r=e.request;if(r.method!=='GET')return;
   var u=new URL(r.url);
