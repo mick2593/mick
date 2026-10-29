@@ -1144,90 +1144,89 @@ details.card summary{cursor:pointer;font-weight:700}
   .promo .art{width:90px;height:90px}
 }
 
-/* ---------- Mi agenda (Vocal) ---------- */
-.agenda{display:flex;flex-direction:column;gap:16px}
+/* ---------- Agenda (Vocal y espacio de cada persona) ---------- */
+.agenda{display:flex;flex-direction:column;gap:14px;font-family:Arial,Helvetica,sans-serif}
+.agenda button,.agenda input{font-family:Arial,Helvetica,sans-serif}
+.ag-card{padding:18px}
 .ag-top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px}
 .ag-kick{display:block;font-size:11.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
-.ag-ttl h1{margin:2px 0 0;font-size:26px;font-weight:800;letter-spacing:-.3px;line-height:1.15}
+.ag-ttl h1,.ag-ttl h2{margin:2px 0 0;font-size:24px;font-weight:700;line-height:1.15}
+.ag-ttl h2{font-size:20px}
 .ag-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.ag-week{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.ag-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;font-weight:700}
+.ag-legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:currentColor;margin-right:6px;vertical-align:-1px}
+.as-verde{color:#12844A}.as-amarillo{color:#A86800}.as-rojo{color:#D6363F}.as-vencida{color:#8E1B1B}.as-concluida{color:#7D8187}
+.ag-week{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .ag-week.one{grid-template-columns:minmax(0,1fr)}
-.ag-day{background:#fff;border:1px solid var(--rim);border-radius:18px;display:flex;flex-direction:column;min-height:300px;overflow:hidden;box-shadow:var(--shadow)}
-.ag-day.past{background:#FBFBFC}
-.ag-dh{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;background:var(--soft2);padding:12px 16px 10px;border-bottom:1px solid var(--rim)}
-.ag-dn{font-size:17px;font-weight:700;text-transform:capitalize;color:var(--coal2);display:flex;flex-direction:column;line-height:1.1}
+.ag-day{background:#fff;border:1px solid var(--rim);border-radius:16px;display:flex;flex-direction:column;min-height:220px;overflow:hidden}
+.ag-dh{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;background:var(--soft2);padding:10px 14px 8px;border-bottom:1px solid var(--rim)}
+.ag-dn{font-size:16px;font-weight:700;text-transform:capitalize;color:var(--coal2);display:flex;flex-direction:column;line-height:1.1}
 .ag-dn.nocap{text-transform:none}
 .ag-dn small{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
-.ag-num{font-size:44px;font-weight:300;line-height:.9;color:var(--coal)}
-.ag-num.sm{font-size:22px;font-weight:600}
-.ag-day.today{border-color:var(--coal);box-shadow:0 0 0 2px var(--coal),var(--shadow)}
+.ag-num{font-size:38px;line-height:.9;color:var(--coal)}
+.ag-day.today{border-color:var(--coal);box-shadow:0 0 0 2px var(--coal)}
 .ag-day.today .ag-dh{background:var(--coal);border-color:var(--coal)}
 .ag-day.today .ag-dn,.ag-day.today .ag-num{color:#fff}
-.ag-body{flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:12px;background-image:radial-gradient(circle,#D3D6DB 1px,transparent 1.3px);background-size:16px 16px;background-position:8px 8px}
-.ag-sec{display:flex;flex-direction:column;gap:6px}
-.ag-lbl{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);background:#fff;align-self:flex-start;padding:0 4px 0 0}
-.ag-lbl.bad{color:var(--bad)}
-.ag-task{display:flex;flex-direction:column;gap:2px;text-align:left;font:inherit;color:inherit;cursor:pointer;background:#fff;border:1px solid var(--rim);border-left:5px solid var(--silver);border-radius:10px;padding:7px 10px}
-.ag-task:hover{border-color:var(--silver)}
-.ag-task.as-verde{border-left-color:var(--sv)}.ag-task.as-amarillo{border-left-color:var(--sa)}.ag-task.as-rojo{border-left-color:var(--sr)}.ag-task.as-vencida{border-left-color:var(--sx)}.ag-task.as-concluida{border-left-color:var(--sc);opacity:.65}
-.ag-tt{font-weight:600;font-size:13.5px;line-height:1.3}
-.ag-tm{font-size:12px;color:var(--muted)}
-.ag-note{display:flex;align-items:flex-start;gap:8px;background:#fff;border-radius:8px;padding:2px 2px 2px 0}
-.ag-chk{flex:none;width:22px;height:22px;border-radius:7px;border:1.6px solid var(--silver);background:#fff;display:grid;place-items:center;cursor:pointer;margin-top:1px;padding:0;color:#fff}
+.ag-day.past:not(.today) .ag-dh{opacity:.7}
+.ag-body{flex:1;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.ag-task{display:flex;flex-direction:column;gap:3px;text-align:left;cursor:pointer;background:#fff;border:1px solid var(--line2);border-left:5px solid currentColor;border-radius:10px;padding:8px 10px}
+.ag-task:hover{background:var(--paper)}
+.ag-tt{font-weight:700;font-size:14px;line-height:1.3;color:inherit}
+.ag-tm{font-size:12.5px;color:inherit;opacity:.85}
+.ag-task.as-concluida .ag-tt{text-decoration:line-through}
+.ag-note{display:flex;align-items:flex-start;gap:8px}
+.ag-chk{flex:none;width:20px;height:20px;border-radius:6px;border:1.6px solid var(--silver);background:#fff;display:grid;place-items:center;cursor:pointer;padding:0;color:#fff}
 .ag-note.done .ag-chk{background:var(--coal);border-color:var(--coal)}
-.ag-nt{flex:1;min-width:0;border:0;background:transparent;text-align:left;font:inherit;font-size:15px;line-height:1.35;color:#1D3A8A;cursor:pointer;padding:1px 0;overflow-wrap:anywhere;font-family:"Segoe Print","Bradley Hand","Comic Neue",var(--font)}
+.ag-nt{flex:1;min-width:0;border:0;background:transparent;text-align:left;font-size:14px;line-height:1.35;color:var(--ink);cursor:pointer;padding:1px 0;overflow-wrap:anywhere}
 .ag-note.done .ag-nt{text-decoration:line-through;color:var(--steel)}
-.ag-h{display:inline-block;font-family:var(--font);font-size:11.5px;font-weight:700;color:var(--coal);background:var(--soft2);border-radius:6px;padding:1px 6px;margin-right:6px;vertical-align:1px}
-.ag-carry{display:flex;align-items:flex-start;gap:6px}.ag-carry .ag-note{flex:1}
-.ag-from{font-size:11px;color:var(--muted);white-space:nowrap;margin-top:4px}
-.ag-empty{color:var(--steel);font-size:13px;background:#fff;align-self:flex-start;padding:0 4px}
-.ag-total{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 14px;border-top:2px solid #1D3A8A;margin:0 14px;font-size:12px;color:var(--muted);font-weight:600}
-.ag-total mark{background:#FF8FC7;color:#1D3A8A;font-weight:800;font-size:16px;padding:1px 8px;border-radius:4px}
-.ag-add{display:flex;gap:6px;padding:10px 12px 12px;border-top:1px solid var(--line2)}
-.ag-add input{flex:1;min-width:0;border:1px solid var(--rim);border-radius:10px;padding:9px 11px;font-size:14px;background:var(--paper)}
-.ag-add input:focus{outline:2px solid var(--coal);outline-offset:-1px;background:#fff}
-.ag-plus{flex:none;width:38px;border-radius:10px;border:0;background:var(--coal);color:#fff;display:grid;place-items:center;cursor:pointer}
+.ag-h{font-size:12px;font-weight:700;margin-right:6px}
+.ag-empty{color:var(--steel);font-size:13px}
+.ag-lbl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--muted)}
+.ag-lbl.bad{color:#8E1B1B}
+.ag-assign{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 12px 12px;border:1px dashed var(--silver);background:#fff;border-radius:10px;padding:9px;font-size:13.5px;font-weight:700;color:var(--coal2);cursor:pointer}
+.ag-assign:hover{background:var(--coal);color:#fff;border-style:solid;border-color:var(--coal)}
 .ag-side .ag-dh{background:var(--mist)}
-.ag-kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px}
-.ag-kp div{background:#fff;border:1px solid var(--rim);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column}
-.ag-kp b{font-size:18px;line-height:1.2}.ag-kp span{font-size:11.5px;color:var(--muted)}
-.ag-month{background:#fff;border:1px solid var(--rim);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.ag-kp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ag-kp div{border:1px solid var(--rim);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column}
+.ag-kp b{font-size:20px;line-height:1.2}.ag-kp span{font-size:12px;color:var(--muted)}
+.ag-month{background:#fff;border:1px solid var(--rim);border-radius:16px;overflow:hidden}
 .ag-mh{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:var(--soft2);border-bottom:1px solid var(--rim)}
-.ag-mh span{padding:9px 10px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.ag-mh span{padding:8px 10px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase}
 .ag-mg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
-.ag-mc{min-height:118px;border:0;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2);background:#fff;text-align:left;font:inherit;color:inherit;padding:8px;display:flex;flex-direction:column;gap:4px;cursor:pointer;min-width:0}
+.ag-mc{min-height:104px;border:0;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2);background:#fff;text-align:left;color:inherit;padding:7px;display:flex;flex-direction:column;gap:4px;cursor:pointer;min-width:0}
 .ag-mc:nth-child(7n){border-right:0}
 .ag-mc:hover{background:var(--paper)}
 .ag-mc.out{background:#FAFAFB;color:var(--steel)}
-.ag-mc .mn{font-size:15px;font-weight:700;width:28px;height:28px;border-radius:50%;display:grid;place-items:center}
+.ag-mc .mn{font-size:14px;font-weight:700;width:26px;height:26px;border-radius:50%;display:grid;place-items:center}
 .ag-mc.today .mn{background:var(--coal);color:#fff}
 .ag-mc.sel{box-shadow:inset 0 0 0 2px var(--coal)}
 .ag-mc .mls{display:flex;flex-direction:column;gap:3px;min-width:0}
-.mline{display:flex;align-items:center;gap:5px;font-size:12px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.mline i{flex:none;width:7px;height:7px;border-radius:50%}
-.mline.note{color:#1D3A8A}.mline.note i{background:#1D3A8A}
-.mline.done{text-decoration:line-through;color:var(--steel)}
-.mmore{font-size:11.5px;color:var(--muted);font-weight:600}
-.ag-mc .mdots{display:none;gap:3px}.ag-mc .mdots i{width:6px;height:6px;border-radius:50%;display:block}.ag-mc .mdots i.nd{background:#1D3A8A}
-.ag-foot{display:flex;gap:6px;align-items:flex-start;margin:0}
-.cal-open{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:12px;border:1px solid var(--rim);background:var(--coal);color:#fff;border-radius:12px;padding:10px;font:inherit;font-weight:600;cursor:pointer}
+.mline{font-size:12px;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.mline.note{color:var(--ink);font-weight:400}
+.mmore{font-size:11.5px;color:var(--muted);font-weight:700}
+.ag-mc .mdots{display:none;gap:3px}.ag-mc .mdots i{width:6px;height:6px;border-radius:50%;display:block}
+.cal-open{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:12px;border:0;background:var(--coal);color:#fff;border-radius:12px;padding:10px;font:inherit;font-weight:600;cursor:pointer}
+/* foto de perfil */
+.avatar.foto{background:#fff;overflow:hidden;padding:0}
+.avatar.foto img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+.cv-avwrap{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
+.cv-photo{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
 @media (max-width:1300px){.ag-week{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:1000px){.ag-week{grid-template-columns:repeat(2,minmax(0,1fr))}.ag-mc{min-height:92px}}
+@media (max-width:1000px){.ag-week{grid-template-columns:repeat(2,minmax(0,1fr))}.ag-mc{min-height:88px}}
 @media (max-width:760px){
-  .ag-ttl h1{font-size:21px}
+  .ag-card{padding:14px}
+  .ag-ttl h1{font-size:20px}.ag-ttl h2{font-size:18px}
   .ag-ctrl{width:100%}
   .ag-ctrl .seg{margin-left:auto}
-  .ag-ctrl .lbl-long{display:none}
-  .ag-week{grid-template-columns:minmax(0,1fr);gap:12px}
+  .ag-week{grid-template-columns:minmax(0,1fr);gap:10px}
   .ag-day{min-height:0;scroll-margin-top:12px}
-  .ag-day.past:not(.today){opacity:.85}
-  .ag-num{font-size:36px}
-  .ag-add input{font-size:16px}
-  .ag-nt{font-size:16px}
-  .ag-mc{min-height:58px;padding:6px 2px;align-items:center}
+  .ag-num{font-size:32px}
+  .ag-tt{font-size:15px}
+  .ag-mc{min-height:54px;padding:6px 2px;align-items:center}
   .ag-mc .mls{display:none}
   .ag-mc .mdots{display:flex;flex-wrap:wrap;justify-content:center}
   .ag-mh span{padding:8px 0;text-align:center;font-size:11px}
+  .cv-avwrap{align-items:flex-start}
 }
 </style>
 </head>
@@ -2303,6 +2302,7 @@ function areaCode(p) {
 }
 function avatarHTML(p, cls) {
   if (!p) return '<span class="avatar vacante ' + (cls || '') + '">?</span>';
+  if (p.foto && /^data:image\/(jpeg|png|webp);base64,/.test(p.foto)) return '<span class="avatar foto ' + (cls || '') + '" title="' + esc(pname(p)) + '"><img src="' + p.foto + '" alt=""></span>';
   return '<span class="avatar a-' + esc(p.area || '') + ' ' + (p.nombre ? '' : 'vacante ') + (cls || '') + '" title="' + esc(pname(p)) + '">' + esc(p.nombre ? initials(p.nombre) : areaCode(p) + p.num) + '</span>';
 }
 
@@ -3004,6 +3004,7 @@ ACT.newItem = function (el) {
   var base = (dow(T) === 6 || dow(T) === 0) ? addDays(weekStart(T), 7) : T;
   var lim = g === 'sem' ? fridayOf(base) : monthEnd(T);
   if (g === 'men' && daysBetween(T, lim) < 3) lim = monthEnd(addDays(lim, 1));
+  var L = el.getAttribute('data-lim'); if (validISO(L)) { lim = L; base = toUTC(T) <= toUTC(L) ? T : L; }
   editing = { id: null, mode: el.getAttribute('data-mode') === 'team' ? 'team' : 'one', picks: {}, draft: { id: uid('t'), grupo: g, titulo: '', descripcion: '', responsable: el.getAttribute('data-p') || ui.filters.persona || '', asignadoPor: (actorPerson() || vocal()).id, objetivo: '', meta: 0, unidad: '', avance: 0, inicio: base, limite: lim, estado: 'sin', prioridad: 'Media', enlace: '', subitems: [], updates: [], creado: nowISO(), lastSem: null } };
   itemModal();
 };
@@ -3066,12 +3067,12 @@ function itemModal() {
     '<div class="fgrid">' + (team ? '' : '<div class="field"><label>Responsable</label><select name="responsable"' + dis(E) + '><option value="">Seleccione…</option>' + people.map(function (p) { return '<option value="' + p.id + '"' + (it.responsable === p.id ? ' selected' : '') + '>' + esc(pname(p)) + ' — ' + esc(shortCargo(p.cargo)) + '</option>'; }).join('') + '</select></div>') +
     '<div class="field"><label>Periodicidad del objetivo</label><select name="grupo"' + dis(E) + '>' + GROUPS.map(function (g) { return '<option value="' + g.id + '"' + (it.grupo === g.id ? ' selected' : '') + '>' + g.periodo + ' (' + g.nombre.toLowerCase() + ')</option>'; }).join('') + '</select></div></div>' +
     '<div class="field"><label>Objetivo del periodo</label><input name="objetivo" type="text" value="' + esc(it.objetivo) + '" placeholder="Resultado verificable que se espera al cierre del periodo"' + dis(E) + '></div>' +
-    '<div class="fgrid3"><div class="field"><label>' + (team || it.equipo ? 'Meta por persona' : 'Meta (cantidad)') + '</label><input name="meta" type="number" min="0" step="1" value="' + num(it.meta) + '"' + dis(E) + '></div><div class="field"><label>Unidad</label><input name="unidad" type="text" value="' + esc(it.unidad) + '" placeholder="registros, visitas…"' + dis(E) + '></div><div class="field"><label>Avance logrado</label><input name="avance" type="number" min="0" step="1" value="' + num(it.avance) + '"' + dis(S && !team) + '></div></div>' +
+    (isNew || !(num(it.meta) > 0) ? '' : '<div class="fgrid3"><div class="field"><label>' + (team || it.equipo ? 'Meta por persona' : 'Meta (cantidad)') + '</label><input name="meta" type="number" min="0" step="1" value="' + num(it.meta) + '"' + dis(E) + '></div><div class="field"><label>Unidad</label><input name="unidad" type="text" value="' + esc(it.unidad) + '" placeholder="registros, visitas…"' + dis(E) + '></div><div class="field"><label>Avance logrado</label><input name="avance" type="number" min="0" step="1" value="' + num(it.avance) + '"' + dis(S && !team) + '></div></div>') +
     '<div class="fgrid"><div class="field"><label>Inicio</label><input name="inicio" type="date" value="' + esc(it.inicio) + '"' + dis(E) + '></div><div class="field"><label>Fecha límite</label><input name="limite" type="date" value="' + esc(it.limite) + '"' + dis(E) + '>' +
     (E ? '<div class="row" style="gap:6px"><button type="button" class="btn sm ghost" data-act="quickDate" data-q="vie">Viernes de esta semana</button><button type="button" class="btn sm ghost" data-act="quickDate" data-q="mes">Fin de mes</button></div>' : '') + '</div></div>' +
     '<div class="fgrid"><div class="field"><label>Estado</label><select name="estado"' + dis(S) + '>' + STATUSES.map(function (s) { return '<option value="' + s.id + '"' + (it.estado === s.id ? ' selected' : '') + '>' + s.label + '</option>'; }).join('') + '</select></div>' +
     '<div class="field"><label>Prioridad</label><select name="prioridad"' + dis(E) + '>' + PRIORIDADES.map(function (p) { return '<option' + (it.prioridad === p ? ' selected' : '') + '>' + p + '</option>'; }).join('') + '</select></div></div>' +
-    '<div class="field"><label>Enlace a la evidencia</label><input name="enlace" type="url" value="' + esc(it.enlace) + '" placeholder="https://… (carpeta compartida, acta, reporte)"' + dis(S) + '></div>' +
+    (isNew ? '' : '<div class="field"><label>Enlace a la evidencia</label><input name="enlace" type="url" value="' + esc(it.enlace) + '" placeholder="https://… (carpeta compartida, acta, reporte)"' + dis(S) + '></div>') +
     '<div class="field"><label>Indicaciones del Vocal</label><textarea name="descripcion" rows="2"' + dis(E) + '>' + esc(it.descripcion) + '</textarea></div></form>';
   if (!isNew) {
     body += '<div class="calc"><div><span class="lbl">Semáforo</span>' + semBadge(it) + '</div><div><span class="lbl">Días restantes</span><b>' + (sm.dias == null ? '—' : sm.dias) + '</b> <span class="tiny muted">' + diasTxt(sm) + '</span></div><div><span class="lbl">Avance</span><b>' + pct(it) + '%</b></div><div><span class="lbl">Prioridad</span><b>' + esc(it.prioridad) + '</b></div></div>' + timelineHTML(it);
@@ -3079,7 +3080,7 @@ function itemModal() {
     if (can('crearTareas')) body += '<div><button type="button" class="btn sm' + (editing.adding ? ' dark' : '') + '" data-act="teamAdd">' + ic('userplus', 'sm') + (it.equipo ? 'Agregar personas a esta tarea de equipo' : 'Asignar también a otras personas') + '</button>' +
       (editing.adding ? '<div id="addBox" style="margin-top:10px">' + pickerHTML(editing.addPicks, (function () { var ex = {}; (it.equipo ? teamItems(it.equipo) : [cur]).forEach(function (o) { if (o) ex[o.responsable] = true; }); return ex; })(), 'add') + '</div>' : '') + '</div>';
   }
-  body += '<div><div class="lbl" style="margin-bottom:6px">Sub-elementos' + (team ? ' (cada persona recibe la misma lista)' : '') + '</div><div id="subsBox">' + subsHTML(it, E || S) + '</div></div>';
+  if (!isNew && it.subitems.length) body += '<div><div class="lbl" style="margin-bottom:6px">Sub-elementos' + (team ? ' (cada persona recibe la misma lista)' : '') + '</div><div id="subsBox">' + subsHTML(it, E || S) + '</div></div>';
   if (!isNew) body += '<div><div class="lbl" style="margin-bottom:6px">Actualizaciones</div><div class="updates">' + (it.updates.length ? it.updates.slice().reverse().map(function (u) { return '<div class="upd"><div class="uh">' + esc(u.autor === 'auto' ? 'Automatización' : pname(personBy(u.autor))) + ' · ' + fmtTS(u.ts) + '</div>' + esc(u.texto) + '</div>'; }).join('') : '<div class="tiny muted">Sin actualizaciones.</div>') + '</div>' +
     (isEdit() ? '<div class="row" style="margin-top:8px;flex-wrap:nowrap"><input type="text" id="updText" placeholder="Escribir una actualización para el equipo…" data-enter="postUpdate"><button class="btn" data-act="postUpdate">' + ic('send', 'sm') + 'Publicar</button></div>' : '') + '</div>';
   var foot = '';
@@ -3150,7 +3151,7 @@ ACT.saveItem = function () {
   var team = isNew && editing.mode === 'team';
   var v = {};
   ['titulo', 'responsable', 'grupo', 'objetivo', 'unidad', 'inicio', 'limite', 'estado', 'prioridad', 'enlace', 'descripcion'].forEach(function (k) { v[k] = f[k] ? (f[k].value || '').trim() : d[k]; });
-  v.meta = Math.max(0, num(f.meta.value)); v.avance = Math.max(0, num(f.avance.value));
+  v.meta = f.meta ? Math.max(0, num(f.meta.value)) : num(d.meta); v.avance = f.avance ? Math.max(0, num(f.avance.value)) : num(d.avance);
   if (!E) ['titulo', 'responsable', 'grupo', 'objetivo', 'unidad', 'inicio', 'limite', 'prioridad', 'descripcion', 'meta'].forEach(function (k) { v[k] = d[k]; });
   if (!v.titulo) return toast('Escriba el nombre de la tarea');
   var picked = team ? assignable().filter(function (p) { return editing.picks[p.id]; }).map(function (p) { return p.id; }) : [];
@@ -4244,7 +4245,7 @@ VIEWS.persona = function () {
   var btns = (!sup ? '<button class="btn" data-act="gotoPerson" data-id="' + p.id + '">' + ic('table', 'sm') + 'Ver en el tablero</button>' : '<button class="btn" data-act="tab" data-tab="tablero">' + ic('table', 'sm') + 'Ver el tablero</button>') +
     (can('crearTareas') && !sup && p.activo !== false ? '<button class="btn primary" data-act="newItem" data-g="sem" data-p="' + p.id + '">' + ic('plus', 'sm') + 'Asignar tarea</button>' : '') +
     (can('gestionarEquipo') ? '<button class="iconbtn" data-act="editPerson" data-id="' + p.id + '" data-tip="Editar datos" aria-label="Editar datos">' + ic('edit', 'sm') + '</button>' : '');
-  var cover = '<div class="card cover" id="spaceCover"><div class="cv-band">' + artBallot('cvf') + '</div><div class="cv-body">' + avatarBare(p, 'xl') +
+  var cover = '<div class="card cover" id="spaceCover"><div class="cv-band">' + artBallot('cvf') + '</div><div class="cv-body"><div class="cv-avwrap">' + avatarBare(p, 'xl') + photoCtlHTML(p) + '</div>' +
     '<div class="cv-id"><h2>' + esc(p.nombre || 'Por designar') + '</h2><div class="cv-sub">' + esc(p.cargo + (p.rol === 'colaborador' ? ' ' + p.num : '')) + ' · ' + esc(areaName(p)) + '</div><div class="cv-meta">' +
     (p.email ? '<span>' + ic('mail', 'sm') + ' ' + esc(p.email) + '</span>' : '') + (p.tel ? '<span>' + esc(p.tel) + '</span>' : '') + (mineP ? '<span>' + ic('unlock', 'sm') + ' Sesión iniciada</span>' : '') + '</div></div>' +
     '<div class="row cv-act">' + statusPillHTML(st) + btns + '</div></div></div>';
@@ -4266,8 +4267,8 @@ VIEWS.persona = function () {
       (open.length ? '<div class="mytasks">' + open.map(myTaskCard).join('') + '</div>' : '<div class="empty">' + (list.length ? 'No tiene tareas pendientes.' : 'Todavía no tiene tareas asignadas.') + '</div>') +
       (done.length ? '<details class="donelist"><summary>' + plural(done.length, 'tarea concluida', 'tareas concluidas') + '</summary><div class="alist2">' + done.slice(0, 20).map(function (it) { return compactRowHTML(it, false); }).join('') + '</div></details>' : '') + '</div>';
   }
-  return '<h1 class="sr">' + esc(mineP ? 'Mi espacio' : 'Espacio de ' + pname(p)) + '</h1>' + picker + cover + tiles +
-    '<div class="space2"><div class="col2">' + tasks + activityCardHTML(p) + '</div><div class="col2">' + focusCardHTML(p, sup ? state.items : list, sup) + matesCardHTML(p) + '</div></div>';
+  return '<h1 class="sr">' + esc(mineP ? 'Mi espacio' : 'Espacio de ' + pname(p)) + '</h1>' + picker + cover + tiles + (sup ? '' : personAgendaHTML(p, mineP)) +
+    '<div class="space2"><div class="col2">' + tasks + activityCardHTML(p) + '</div><div class="col2">' + (sup ? focusCardHTML(p, state.items, true) : '') + matesCardHTML(p) + '</div></div>';
 };
 
 /* =====================================================================
@@ -4983,181 +4984,180 @@ document.addEventListener('keydown', function (ev) {
 }, true);
 
 /* =====================================================================
-   MI AGENDA · planeador del Vocal
-   Vista grande tipo agenda de papel: cada día muestra las tareas que
-   vencen y las anotaciones propias del Vocal (con hora opcional).
-   Solo aparece en la sesión del Vocal; sus anotaciones viajan con la
-   sincronización para que las vea también desde su celular.
+   AGENDA · vista tipo agenda de papel con las tareas asignadas
+   - «Mi agenda» del Vocal: todas las tareas del equipo; desde cada día
+     puede asignar una tarea nueva con esa fecha límite.
+   - Agenda en el espacio de cada colaborador: solo sus tareas (incluye
+     las de equipo, porque cada persona recibe su propia copia).
+   Cada tarea aparece en el día de su fecha límite y su texto toma el
+   color del semáforo según el tiempo que le queda.
    ===================================================================== */
 function agendaOK() { return session.role === 'vocal'; }
-function agMode() { return ui.agMode || prefGet('agMode', 'semana'); }
-function agDay() { return validISO(ui.agDay) ? ui.agDay : TODAY(); }
+/* Dos agendas independientes: «v» (Vocal) y «p» (espacio de una persona). */
+function agKey(sc, k) { return (sc === 'p' ? 'pag' : 'ag') + k; }
+function agMode(sc) { return ui[agKey(sc, 'Mode')] || prefGet(agKey(sc, 'Mode'), 'semana'); }
+function agDay(sc) { var d = ui[agKey(sc, 'Day')]; return validISO(d) ? d : TODAY(); }
+function agTasks(pool, d) { return sortItems(pool.filter(function (it) { return it.limite === d; })); }
+/* Anotaciones que el Vocal haya hecho con la versión anterior de la agenda (ya no se agregan nuevas). */
 function agNotes(d) {
   return (state.agenda || []).filter(function (n) { return n.fecha === d; }).sort(function (a, b) {
-    var ha = a.hora || '99:99', hb = b.hora || '99:99';
-    return ha < hb ? -1 : ha > hb ? 1 : String(a.ts || '') < String(b.ts || '') ? -1 : 1;
+    var ha = a.hora || '99:99', hb = b.hora || '99:99'; return ha < hb ? -1 : ha > hb ? 1 : 0;
   });
 }
-function agTasks(d) { return sortItems(state.items.filter(function (it) { return it.limite === d; })); }
-/* Suma las cantidades con signo de pesos que aparezcan en las anotaciones del día ($1,250.50). */
-function agMoney(list) {
-  var t = 0, any = false;
-  list.forEach(function (n) {
-    String(n.texto || '').replace(/\$\s?(\d[\d,]*(?:\.\d{1,2})?)/g, function (m, v) { t += parseFloat(v.replace(/,/g, '')) || 0; any = true; return m; });
-  });
-  return any ? t : null;
-}
-function fmtMoney(v) { return '$' + v.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-function fmtHora(h) {
-  if (!h) return '';
-  var p = h.split(':'), H = +p[0], ap = H < 12 ? 'a. m.' : 'p. m.', h12 = H % 12 || 12;
-  return h12 + ':' + p[1] + ' ' + ap;
-}
+function fmtHora(h) { if (!h) return ''; var p = h.split(':'), H = +p[0]; return (H % 12 || 12) + ':' + p[1] + (H < 12 ? ' a. m.' : ' p. m.'); }
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-function agTaskHTML(it) {
+function agTaskHTML(it, showP) {
   var s = semaforo(it), p = personBy(it.responsable);
-  return '<button class="ag-task as-' + s.k + '" data-act="openItem" data-id="' + it.id + '" data-tip="' + esc(it.titulo + '\n' + s.label + ' · ' + pname(p) + ' · avance ' + pct(it) + '%') + '">' +
-    '<span class="ag-tt">' + esc(it.titulo) + '</span><span class="ag-tm">' + esc(firstName(p)) + ' · ' + pct(it) + '%</span></button>';
+  var when = s.k === 'concluida' ? 'Concluida' : s.label + (s.dias != null && s.k !== 'rojo' ? ' · ' + diasTxt(s) : '');
+  return '<button class="ag-task as-' + s.k + '" data-act="openItem" data-id="' + it.id + '">' +
+    '<span class="ag-tt">' + esc(it.titulo) + '</span>' +
+    '<span class="ag-tm">' + (showP ? esc(pshort(p)) + ' · ' : '') + esc(when) + (it.equipo ? ' · equipo' : '') + '</span></button>';
 }
 function agNoteHTML(n) {
-  return '<div class="ag-note' + (n.hecho ? ' done' : '') + '">' +
-    '<button class="ag-chk" data-act="agToggle" data-id="' + n.id + '" aria-pressed="' + !!n.hecho + '" aria-label="' + (n.hecho ? 'Marcar como pendiente' : 'Marcar como hecho') + '">' + (n.hecho ? ic('check', 'sm') : '') + '</button>' +
+  return '<div class="ag-note' + (n.hecho ? ' done' : '') + '"><button class="ag-chk" data-act="agToggle" data-id="' + n.id + '" aria-pressed="' + !!n.hecho + '" aria-label="' + (n.hecho ? 'Marcar como pendiente' : 'Marcar como hecho') + '">' + (n.hecho ? ic('check', 'sm') : '') + '</button>' +
     '<button class="ag-nt" data-act="agEdit" data-id="' + n.id + '">' + (n.hora ? '<b class="ag-h">' + esc(fmtHora(n.hora)) + '</b>' : '') + esc(n.texto) + '</button></div>';
 }
-function agDayHTML(d, T) {
-  var tasks = agTasks(d), notes = agNotes(d), money = agMoney(notes), open = tasks.filter(function (it) { return it.estado !== 'listo'; }).length;
-  return '<section class="ag-day' + (d === T ? ' today' : '') + (d < T ? ' past' : '') + '" id="ag-' + d + '" aria-label="' + esc(DIAS[dow(d)] + ' ' + fmtLong(d)) + '">' +
+function agDayHTML(d, T, o) {
+  var tasks = agTasks(o.pool, d), notes = o.notes ? agNotes(d) : [];
+  return '<section class="ag-day' + (d === T ? ' today' : '') + (d < T ? ' past' : '') + '" id="' + o.sc + 'ag-' + d + '" aria-label="' + esc(DIAS[dow(d)] + ' ' + fmtLong(d)) + '">' +
     '<header class="ag-dh"><span class="ag-dn">' + DIAS[dow(d)] + (d === T ? '<small>hoy</small>' : '') + '</span><span class="ag-num">' + (+d.slice(8)) + '</span></header>' +
-    '<div class="ag-body">' +
-    (tasks.length ? '<div class="ag-sec"><div class="ag-lbl">' + ic('table', 'sm') + (open ? (open === 1 ? 'Vence 1 tarea' : 'Vencen ' + open + ' tareas') : 'Tareas concluidas') + '</div>' + tasks.map(agTaskHTML).join('') + '</div>' : '') +
-    (notes.length ? '<div class="ag-sec">' + notes.map(agNoteHTML).join('') + '</div>' : '') +
-    (!tasks.length && !notes.length ? '<div class="ag-empty">Sin pendientes</div>' : '') +
-    '</div>' +
-    (money != null ? '<div class="ag-total"><span>Total del día</span><mark>' + fmtMoney(money) + '</mark></div>' : '') +
-    '<div class="ag-add"><input type="text" placeholder="Anotar… (ej. 10:00 Reunión)" data-enter="agAdd" data-d="' + d + '" aria-label="Nueva anotación para el ' + esc(DIAS[dow(d)] + ' ' + fmtShort(d)) + '"><button class="ag-plus" data-act="agAddBtn" data-d="' + d + '" aria-label="Agregar">' + ic('plus', 'sm') + '</button></div>' +
+    '<div class="ag-body">' + tasks.map(function (it) { return agTaskHTML(it, o.showP); }).join('') + notes.map(agNoteHTML).join('') +
+    (!tasks.length && !notes.length ? '<div class="ag-empty">Sin tareas</div>' : '') + '</div>' +
+    (o.assign ? '<button class="ag-assign" data-act="newItem" data-g="sem" data-lim="' + d + '"' + (o.pid ? ' data-p="' + o.pid + '"' : '') + '>' + ic('plus', 'sm') + 'Asignar tarea</button>' : '') +
     '</section>';
 }
-function agWeekSideHTML(ws, T) {
-  var we = addDays(ws, 6);
-  var overdue = sortItems(state.items.filter(function (it) { return it.estado !== 'listo' && validISO(it.limite) && it.limite < T; }));
-  var undated = (state.agenda || []).filter(function (n) { return !n.hecho && n.fecha < T && n.fecha >= addDays(T, -30); }).sort(function (a, b) { return a.fecha < b.fecha ? -1 : 1; });
-  var wk = [], wm = 0, anyM = false;
-  for (var i = 0; i < 7; i++) { var nn = agNotes(addDays(ws, i)); wk = wk.concat(nn); var m = agMoney(nn); if (m != null) { wm += m; anyM = true; } }
-  var hechas = wk.filter(function (n) { return n.hecho; }).length;
-  return '<section class="ag-day ag-side"><header class="ag-dh"><span class="ag-dn nocap">Resumen de la semana</span><span class="ag-num sm">' + (+ws.slice(8)) + '–' + (+we.slice(8)) + '</span></header><div class="ag-body">' +
-    '<div class="ag-kp"><div><b>' + wk.length + '</b><span>anotaciones</span></div><div><b>' + hechas + '</b><span>hechas</span></div>' + (anyM ? '<div><b>' + fmtMoney(wm) + '</b><span>total</span></div>' : '') + '</div>' +
-    (overdue.length ? '<div class="ag-sec"><div class="ag-lbl bad">' + ic('alert', 'sm') + (overdue.length === 1 ? '1 tarea vencida sin concluir' : overdue.length + ' tareas vencidas sin concluir') + '</div>' + overdue.slice(0, 5).map(agTaskHTML).join('') + (overdue.length > 5 ? '<button class="btn sm ghost" data-act="gotoSem" data-sem="vencida">Ver las ' + overdue.length + ' ' + ic('arrow', 'sm') + '</button>' : '') + '</div>' : '') +
-    (undated.length ? '<div class="ag-sec"><div class="ag-lbl">' + ic('clock', 'sm') + 'Anotaciones atrasadas</div>' + undated.slice(0, 5).map(function (n) { return '<div class="ag-carry">' + agNoteHTML(n) + '<span class="ag-from">' + esc(DIA3[dow(n.fecha)] + ' ' + (+n.fecha.slice(8))) + '</span></div>'; }).join('') + '</div>' : '') +
-    (!overdue.length && !undated.length ? '<div class="ag-empty">Nada atrasado. Todo al día.</div>' : '') +
+function agSideHTML(ws, T, o) {
+  var overdue = sortItems(o.pool.filter(function (it) { return it.estado !== 'listo' && validISO(it.limite) && it.limite < T; }));
+  var week = o.pool.filter(function (it) { return it.limite >= ws && it.limite <= addDays(ws, 6); });
+  var listas = week.filter(function (it) { return it.estado === 'listo'; }).length;
+  return '<section class="ag-day ag-side"><header class="ag-dh"><span class="ag-dn nocap">Resumen de la semana</span></header><div class="ag-body">' +
+    '<div class="ag-kp"><div><b>' + week.length + '</b><span>vencen en la semana</span></div><div><b>' + listas + '</b><span>concluidas</span></div></div>' +
+    (overdue.length ? '<div class="ag-lbl bad">' + ic('alert', 'sm') + (overdue.length === 1 ? '1 tarea vencida sin concluir' : overdue.length + ' tareas vencidas sin concluir') + '</div>' + overdue.slice(0, 5).map(function (it) { return agTaskHTML(it, o.showP); }).join('') : '<div class="ag-empty">Nada vencido. Todo al día.</div>') +
     '</div></section>';
 }
-function agMonthHTML(sel, T) {
-  var first = sel.slice(0, 8) + '01', start = weekStart(first), mo = sel.slice(5, 7), cells = '';
+function agMonthHTML(sel, T, o) {
+  var mo = sel.slice(5, 7), start = weekStart(sel.slice(0, 8) + '01'), cells = '';
   for (var i = 0; i < 42; i++) {
     var d = addDays(start, i);
     if (i === 35 && d.slice(5, 7) !== mo) break;
-    var tasks = agTasks(d), notes = agNotes(d), all = tasks.length + notes.length;
-    var lines = tasks.slice(0, 3).map(function (it) { return '<span class="mline"><i class="k-' + semaforo(it).k + '-bg"></i>' + esc(it.titulo) + '</span>'; })
-      .concat(notes.slice(0, Math.max(0, 3 - tasks.length)).map(function (n) { return '<span class="mline note' + (n.hecho ? ' done' : '') + '"><i></i>' + esc((n.hora ? n.hora + ' ' : '') + n.texto) + '</span>'; }));
-    var dots = tasks.slice(0, 4).map(function (it) { return '<i class="k-' + semaforo(it).k + '-bg"></i>'; }).join('') + (notes.length ? '<i class="nd"></i>' : '');
-    cells += '<button class="ag-mc' + (d.slice(5, 7) !== mo ? ' out' : '') + (d === T ? ' today' : '') + (d === sel ? ' sel' : '') + '" data-act="agPick" data-d="' + d + '" aria-label="' + esc(DIAS[dow(d)] + ' ' + fmtLong(d) + (all ? ', ' + plural(all, 'pendiente') : '')) + '">' +
+    var tasks = agTasks(o.pool, d), notes = o.notes ? agNotes(d) : [], all = tasks.length + notes.length;
+    var lines = tasks.slice(0, 3).map(function (it) { return '<span class="mline as-' + semaforo(it).k + '">' + esc(it.titulo) + '</span>'; })
+      .concat(notes.slice(0, Math.max(0, 3 - tasks.length)).map(function (n) { return '<span class="mline note">' + esc(n.texto) + '</span>'; }));
+    var dots = tasks.slice(0, 4).map(function (it) { return '<i class="k-' + semaforo(it).k + '-bg"></i>'; }).join('');
+    cells += '<button class="ag-mc' + (d.slice(5, 7) !== mo ? ' out' : '') + (d === T ? ' today' : '') + (d === sel ? ' sel' : '') + '" data-act="agPick" data-sc="' + o.sc + '" data-d="' + d + '" aria-label="' + esc(DIAS[dow(d)] + ' ' + fmtLong(d) + (all ? ', ' + plural(all, 'tarea') : '')) + '">' +
       '<span class="mn">' + (+d.slice(8)) + '</span><span class="mls">' + lines.join('') + (all > 3 ? '<span class="mmore">+' + (all - 3) + ' más</span>' : '') + '</span><span class="mdots">' + dots + '</span></button>';
   }
   return '<div class="ag-month"><div class="ag-mh">' + ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map(function (x) { return '<span>' + x + '</span>'; }).join('') + '</div><div class="ag-mg">' + cells + '</div></div>';
 }
-
-VIEWS.agenda = function () {
-  if (!agendaOK()) return '<div class="empty">Esta sección es exclusiva del Vocal.</div>';
-  var T = TODAY(), sel = agDay(), mode = agMode(), ws = weekStart(sel), we = addDays(ws, 6);
+var AG_LEGEND = '<div class="ag-legend"><span class="as-verde">En tiempo</span><span class="as-amarillo">Por vencer</span><span class="as-rojo">Vence hoy</span><span class="as-vencida">Vencida</span><span class="as-concluida">Concluida</span></div>';
+/* Agenda completa (encabezado + semana o mes). o = { sc, pool, showP, assign, pid, notes, kicker, h } */
+function agendaHTML(o) {
+  var T = TODAY(), sel = agDay(o.sc), mode = agMode(o.sc), ws = weekStart(sel), we = addDays(ws, 6);
   var title = mode === 'mes' ? cap(MESES[+sel.slice(5, 7) - 1]) + ' ' + sel.slice(0, 4)
     : (ws.slice(5, 7) === we.slice(5, 7) ? (+ws.slice(8)) + ' al ' + (+we.slice(8)) + ' de ' + MESES[+we.slice(5, 7) - 1] : (+ws.slice(8)) + ' de ' + MESES[+ws.slice(5, 7) - 1] + ' al ' + (+we.slice(8)) + ' de ' + MESES[+we.slice(5, 7) - 1]) + ' ' + we.slice(0, 4);
   var isNow = mode === 'mes' ? sel.slice(0, 7) === T.slice(0, 7) : ws === weekStart(T);
-  var head = '<div class="ag-top"><div class="ag-ttl"><span class="ag-kick">Mi agenda · solo visible para usted</span><h1>' + esc(title) + '</h1></div><span class="spacer"></span>' +
-    '<div class="ag-ctrl">' + (isNow ? '' : '<button class="btn sm" data-act="agToday">Hoy</button>') +
-    '<button class="cal-nav" data-act="agNav" data-d="-1" aria-label="Anterior">' + ic('left', 'sm') + '</button><button class="cal-nav" data-act="agNav" data-d="1" aria-label="Siguiente">' + ic('right', 'sm') + '</button>' +
-    '<div class="seg" role="tablist" aria-label="Vista"><button class="' + (mode === 'semana' ? 'on' : '') + '" data-act="agMode" data-m="semana">Semana</button><button class="' + (mode === 'mes' ? 'on' : '') + '" data-act="agMode" data-m="mes">Mes</button></div>' +
-    '<button class="btn sm primary" data-act="agNew">' + ic('plus', 'sm') + '<span class="lbl-long">Anotación</span></button></div></div>';
+  var head = '<div class="ag-top"><div class="ag-ttl"><span class="ag-kick">' + esc(o.kicker) + '</span><' + o.h + '>' + esc(title) + '</' + o.h + '></div><span class="spacer"></span>' +
+    '<div class="ag-ctrl">' + (isNow ? '' : '<button class="btn sm" data-act="agToday" data-sc="' + o.sc + '">Hoy</button>') +
+    '<button class="cal-nav" data-act="agNav" data-sc="' + o.sc + '" data-d="-1" aria-label="Anterior">' + ic('left', 'sm') + '</button><button class="cal-nav" data-act="agNav" data-sc="' + o.sc + '" data-d="1" aria-label="Siguiente">' + ic('right', 'sm') + '</button>' +
+    '<div class="seg" role="tablist" aria-label="Vista"><button class="' + (mode === 'semana' ? 'on' : '') + '" data-act="agMode" data-sc="' + o.sc + '" data-m="semana">Semana</button><button class="' + (mode === 'mes' ? 'on' : '') + '" data-act="agMode" data-sc="' + o.sc + '" data-m="mes">Mes</button></div></div></div>';
   var body;
-  if (mode === 'mes') body = agMonthHTML(sel, T) + '<div class="ag-week one">' + agDayHTML(sel, T) + '</div>';
+  if (mode === 'mes') body = agMonthHTML(sel, T, o) + '<div class="ag-week one">' + agDayHTML(sel, T, o) + '</div>';
   else {
     var days = '';
-    for (var i = 0; i < 7; i++) days += agDayHTML(addDays(ws, i), T);
-    body = '<div class="ag-week">' + days + agWeekSideHTML(ws, T) + '</div>';
+    for (var i = 0; i < 7; i++) days += agDayHTML(addDays(ws, i), T, o);
+    body = '<div class="ag-week">' + days + agSideHTML(ws, T, o) + '</div>';
   }
-  return '<div class="agenda">' + head + body + '<p class="ag-foot small muted">' + ic('lock', 'sm') + '<span>Sus anotaciones solo se muestran en la sesión del Vocal y se sincronizan con sus otros dispositivos. Las tareas del equipo aparecen en el día de su fecha límite. Si escribe cantidades con signo de pesos (<b>$250</b>), la agenda suma el total del día.</span></p></div>';
+  return '<div class="agenda" id="agenda-' + o.sc + '">' + head + AG_LEGEND + body + '</div>';
+}
+
+VIEWS.agenda = function () {
+  if (!agendaOK()) return '<div class="empty">Esta sección es exclusiva del Vocal.</div>';
+  return agendaHTML({ sc: 'v', pool: state.items, showP: true, assign: can('crearTareas'), notes: true, kicker: 'Mi agenda · solo visible para usted', h: 'h1' });
 };
-VIEWS.agenda_after = function () {
-  if (ui.agFocus) { var el = $('.ag-add input[data-d="' + ui.agFocus + '"]'); ui.agFocus = null; if (el) try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } }
-  if (ui.agScroll && window.innerWidth <= 760) { var t = $('#ag-' + ui.agScroll); ui.agScroll = null; if (t) setTimeout(function () { var y = t.getBoundingClientRect().top + window.scrollY - 12; window.scrollTo(0, Math.max(0, y)); }, 60); }
-};
-function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+/* Agenda en el espacio de cada colaborador: solo sus tareas. */
+function personAgendaHTML(p, mineP) {
+  return '<div class="card ag-card">' + agendaHTML({ sc: 'p', pool: itemsOf(p.id), showP: false, assign: can('crearTareas') && p.activo !== false, pid: p.id, notes: false, kicker: mineP ? 'Mi agenda' : 'Agenda de ' + (p.nombre ? firstName(p) : cargoCorto(p)), h: 'h2' }) + '</div>';
+}
+function agAfter(sc) {
+  var key = agKey(sc, 'Scroll');
+  if (ui[key] && window.innerWidth <= 760) {
+    var t = $('#' + sc + 'ag-' + ui[key]);
+    if (t) setTimeout(function () { var y = t.getBoundingClientRect().top + window.scrollY - 12; window.scrollTo(0, Math.max(0, y)); }, 60);
+  }
+  ui[key] = null;
+}
+VIEWS.agenda_after = function () { agAfter('v'); };
 
 /* ---------- acciones ---------- */
-function agParse(txt) {
-  var m = /^(\d{1,2})(?::(\d{2}))?\s*(am|a\.?\s?m\.?|pm|p\.?\s?m\.?|h|hrs?)?\s+(.+)$/i.exec(txt);
-  if (m && (m[2] || m[3])) {
-    var H = +m[1], M = m[2] ? +m[2] : 0, ap = (m[3] || '').toLowerCase().replace(/[\s.]/g, '');
-    if (ap.indexOf('p') === 0 && H < 12) H += 12;
-    if (ap.indexOf('a') === 0 && H === 12) H = 0;
-    if (H < 24 && M < 60) return { hora: pad2(H) + ':' + pad2(M), texto: m[4].trim() };
-  }
-  return { hora: '', texto: txt };
-}
-function agAddFrom(input) {
-  var v = String(input.value || '').trim(), d = input.getAttribute('data-d');
-  if (!v || !validISO(d) || !agendaOK()) return;
-  var p = agParse(v);
-  if (!Array.isArray(state.agenda)) state.agenda = [];
-  state.agenda.push({ id: uid('ag'), fecha: d, hora: p.hora, texto: p.texto.slice(0, 400), hecho: false, ts: nowISO() });
-  input.value = ''; ui.agFocus = d;
-  commit();
-}
-ACT.agAdd = function (el) { agAddFrom(el); };
-ACT.agAddBtn = function (el) { var i = el.parentNode.querySelector('input'); if (i && i.value.trim()) agAddFrom(i); else if (i) i.focus(); };
-ACT.agToggle = function (el) { var n = byId(state.agenda || [], el.getAttribute('data-id')); if (!n || !agendaOK()) return; n.hecho = !n.hecho; commit(); };
-ACT.agMode = function (el) { ui.agMode = el.getAttribute('data-m'); prefSet('agMode', ui.agMode); render(); };
-ACT.agToday = function () { ui.agDay = TODAY(); ui.agScroll = TODAY(); render(); };
-/* Al entrar desde el menú en el celular, la agenda baja sola al día de hoy. */
-var _agTab = ACT.tab; ACT.tab = function (el) { if (el.getAttribute('data-tab') === 'agenda') ui.agScroll = agDay(); _agTab(el); };
+function sc(el) { return el.getAttribute('data-sc') === 'p' ? 'p' : 'v'; }
+ACT.agMode = function (el) { var s = sc(el); ui[agKey(s, 'Mode')] = el.getAttribute('data-m'); prefSet(agKey(s, 'Mode'), ui[agKey(s, 'Mode')]); render(); };
+ACT.agToday = function (el) { var s = sc(el); ui[agKey(s, 'Day')] = TODAY(); ui[agKey(s, 'Scroll')] = TODAY(); render(); if (s === 'p') agAfter('p'); };
 ACT.agNav = function (el) {
-  var k = +el.getAttribute('data-d'), sel = agDay();
-  if (agMode() === 'mes') { var y = +sel.slice(0, 4), m = +sel.slice(5, 7) - 1 + k; y += Math.floor(m / 12); m = ((m % 12) + 12) % 12; ui.agDay = y + '-' + pad2(m + 1) + '-01'; }
-  else ui.agDay = addDays(sel, 7 * k);
-  var T = TODAY();
-  if (agMode() === 'mes' ? ui.agDay.slice(0, 7) === T.slice(0, 7) : weekStart(ui.agDay) === weekStart(T)) ui.agDay = T;
-  render();
+  var s = sc(el), k = +el.getAttribute('data-d'), cur = agDay(s), T = TODAY(), nd;
+  if (agMode(s) === 'mes') { var y = +cur.slice(0, 4), m = +cur.slice(5, 7) - 1 + k; y += Math.floor(m / 12); m = ((m % 12) + 12) % 12; nd = y + '-' + pad2(m + 1) + '-01'; if (nd.slice(0, 7) === T.slice(0, 7)) nd = T; }
+  else { nd = addDays(cur, 7 * k); if (weekStart(nd) === weekStart(T)) nd = T; }
+  ui[agKey(s, 'Day')] = nd; render();
 };
-ACT.agPick = function (el) { ui.agDay = el.getAttribute('data-d'); render(); var o = $('.ag-week.one'); if (o && window.innerWidth <= 1000) o.scrollIntoView({ block: 'start', behavior: 'smooth' }); };
-ACT.openAgenda = function (el) { ui.tab = 'agenda'; if (el && el.getAttribute('data-d')) ui.agDay = el.getAttribute('data-d'); ui.agScroll = agDay(); window.scrollTo(0, 0); render(); };
-function agForm(n) {
-  openModal({
-    title: n.id ? 'Editar anotación' : 'Nueva anotación', size: 'narrow',
-    body: '<div class="field"><label for="agTx">Anotación</label><textarea id="agTx" rows="3" maxlength="400" autofocus>' + esc(n.texto || '') + '</textarea></div>' +
-      '<div class="fgrid"><div class="field"><label for="agFe">Fecha</label><input type="date" id="agFe" value="' + esc(n.fecha) + '"></div><div class="field"><label for="agHo">Hora (opcional)</label><input type="time" id="agHo" value="' + esc(n.hora || '') + '"></div></div>' +
-      (n.id ? '<label class="row small" style="margin-top:8px"><input type="checkbox" id="agHe"' + (n.hecho ? ' checked' : '') + '> Hecho</label>' : ''),
-    foot: (n.id ? '<button class="btn danger" data-act="agDel" data-id="' + n.id + '">' + ic('trash', 'sm') + 'Eliminar</button>' : '') + '<span class="spacer"></span><button class="btn" data-act="closeModal">Cancelar</button><button class="btn primary" data-act="agSave" data-id="' + (n.id || '') + '">Guardar</button>'
-  });
-}
-ACT.agNew = function () { agForm({ fecha: agDay(), hora: '', texto: '' }); };
-ACT.agEdit = function (el) { var n = byId(state.agenda || [], el.getAttribute('data-id')); if (n) agForm(n); };
+ACT.agPick = function (el) { var s = sc(el); ui[agKey(s, 'Day')] = el.getAttribute('data-d'); render(); var o = $('#agenda-' + s + ' .ag-week.one'); if (o && window.innerWidth <= 1000) o.scrollIntoView({ block: 'start', behavior: 'smooth' }); };
+ACT.openAgenda = function (el) { ui.tab = 'agenda'; if (el && validISO(el.getAttribute('data-d'))) ui.agDay = el.getAttribute('data-d'); ui.agScroll = agDay('v'); window.scrollTo(0, 0); render(); };
+/* Al entrar desde el menú en el celular, la agenda baja sola al día de hoy. */
+var _agTab = ACT.tab; ACT.tab = function (el) { if (el.getAttribute('data-tab') === 'agenda') ui.agScroll = agDay('v'); _agTab(el); };
+
+/* Anotaciones anteriores: se pueden marcar, editar o borrar, ya no se crean nuevas. */
+ACT.agToggle = function (el) { var n = byId(state.agenda || [], el.getAttribute('data-id')); if (!n || !agendaOK()) return; n.hecho = !n.hecho; commit(); };
+ACT.agEdit = function (el) {
+  var n = byId(state.agenda || [], el.getAttribute('data-id')); if (!n || !agendaOK()) return;
+  openModal({ title: 'Anotación', size: 'narrow',
+    body: '<div class="field"><label for="agTx">Anotación</label><textarea id="agTx" rows="3" maxlength="400">' + esc(n.texto || '') + '</textarea></div><div class="fgrid"><div class="field"><label for="agFe">Fecha</label><input type="date" id="agFe" value="' + esc(n.fecha) + '"></div><div class="field"><label for="agHo">Hora</label><input type="time" id="agHo" value="' + esc(n.hora || '') + '"></div></div>',
+    foot: '<button class="btn danger" data-act="agDel" data-id="' + n.id + '">' + ic('trash', 'sm') + 'Eliminar</button><span class="spacer"></span><button class="btn" data-act="closeModal">Cancelar</button><button class="btn primary" data-act="agSave" data-id="' + n.id + '">Guardar</button>' });
+};
 ACT.agSave = function (el) {
-  if (!agendaOK()) return;
-  var tx = $('#agTx').value.trim(), fe = $('#agFe').value, ho = $('#agHo').value, he = $('#agHe');
-  if (!tx) { toast('Escriba la anotación'); return; }
-  if (!validISO(fe)) { toast('Elija una fecha válida'); return; }
-  if (!Array.isArray(state.agenda)) state.agenda = [];
-  var id = el.getAttribute('data-id'), n = id && byId(state.agenda, id);
-  if (n) { n.texto = tx.slice(0, 400); n.fecha = fe; n.hora = ho || ''; if (he) n.hecho = he.checked; }
-  else state.agenda.push({ id: uid('ag'), fecha: fe, hora: ho || '', texto: tx.slice(0, 400), hecho: false, ts: nowISO() });
-  ui.agDay = fe; closeModal(); commit();
+  var n = byId(state.agenda || [], el.getAttribute('data-id')); if (!n || !agendaOK()) return;
+  var tx = $('#agTx').value.trim(), fe = $('#agFe').value;
+  if (!tx) return toast('Escriba la anotación');
+  if (!validISO(fe)) return toast('Elija una fecha válida');
+  n.texto = tx.slice(0, 400); n.fecha = fe; n.hora = $('#agHo').value || ''; closeModal(); commit();
 };
 ACT.agDel = function (el) {
   var id = el.getAttribute('data-id');
-  confirmBox('Eliminar anotación', 'La anotación se borrará de su agenda en todos sus dispositivos.', 'Eliminar', function () {
-    state.agenda = (state.agenda || []).filter(function (n) { return n.id !== id; }); commit();
-  }, true);
+  confirmBox('Eliminar anotación', 'La anotación se borrará de su agenda en todos sus dispositivos.', 'Eliminar', function () { state.agenda = (state.agenda || []).filter(function (n) { return n.id !== id; }); commit(); }, true);
 };
-if (window.__WOS_TEST__) window.__wosAg = function (f) { return f({ session: session, state: function () { return state; }, setState: function (s) { state = s; }, ui: ui, render: render, TODAY: TODAY, addDays: addDays, SYNC_COLLS: SYNC_COLLS }); };
+
+/* =====================================================================
+   FOTO DE PERFIL · se reduce a 192×192 px (unos 15 KB) antes de guardarla
+   ===================================================================== */
+function canPhoto(p) { var me = actorPerson(); return !!p && (session.role === 'vocal' || (!!me && me.id === p.id)); }
+CHG.photoUp = function (el) {
+  var p = personBy(el.getAttribute('data-id')), f = el.files && el.files[0];
+  el.value = '';
+  if (!f || !canPhoto(p)) return;
+  if (!/^image\//.test(f.type)) return toast('Elija una imagen (JPG o PNG)');
+  if (f.size > 20 * 1024 * 1024) return toast('La imagen es muy grande (máximo 20 MB)');
+  var url = URL.createObjectURL(f), img = new Image();
+  img.onload = function () {
+    var S = 192, c = document.createElement('canvas'); c.width = S; c.height = S;
+    var s = Math.min(img.naturalWidth, img.naturalHeight), x = (img.naturalWidth - s) / 2, y = (img.naturalHeight - s) / 2;
+    var g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, S, S); g.drawImage(img, x, y, s, s, 0, 0, S, S);
+    URL.revokeObjectURL(url);
+    p.foto = c.toDataURL('image/jpeg', 0.85);
+    audit('Foto de perfil actualizada', pname(p), '');
+    commit(); toast('Foto actualizada');
+  };
+  img.onerror = function () { URL.revokeObjectURL(url); toast('No se pudo leer la imagen. Use JPG o PNG.'); };
+  img.src = url;
+};
+ACT.photoDel = function (el) {
+  var p = personBy(el.getAttribute('data-id')); if (!p || !canPhoto(p) || !p.foto) return;
+  confirmBox('Quitar foto', 'Se mostrarán de nuevo las iniciales.', 'Quitar foto', function () { delete p.foto; audit('Foto de perfil eliminada', pname(p), ''); commit(); });
+};
+function photoCtlHTML(p) {
+  if (!canPhoto(p)) return '';
+  return '<div class="cv-photo"><label class="btn sm">' + ic('upload', 'sm') + (p.foto ? 'Cambiar foto' : 'Subir foto') + '<input type="file" accept="image/*" data-chg="photoUp" data-id="' + p.id + '" hidden></label>' +
+    (p.foto ? '<button class="btn sm ghost" data-act="photoDel" data-id="' + p.id + '">Quitar</button>' : '') + '</div>';
+}
+
+if (window.__WOS_TEST__) window.__wosAg = function (f) { return f({ session: session, state: function () { return state; }, ui: ui, render: render, TODAY: TODAY, addDays: addDays, SYNC_COLLS: SYNC_COLLS }); };
 
 /* =====================================================================
    AUDITORÍA · CONFIGURACIÓN · DOCUMENTACIÓN · NOTIFICACIONES · ACCESO
