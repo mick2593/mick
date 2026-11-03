@@ -326,9 +326,9 @@ details ol,details ul{margin:8px 0 0; padding-left:20px; display:grid; gap:6px; 
 .h3dtip{position:absolute;right:8px;bottom:6px;font:600 11px var(--font-mono,monospace);color:#6fe8c0;opacity:.85;pointer-events:none}
 .pictile.is3dload svg.stage{opacity:.55}
 </style>
-<script>window.GX_H3D={set:{pulldown:1,goblet:1,gobletheel:1},src:"h3d.js?v=be91051d40",model:"body.glb?v=c91b3c1fe4"};</script><script src="config.js"></script>
+<script>window.GX_H3D={set:{pulldown:1,goblet:1,gobletheel:1,pullup_close:1,pullup_wide:1,pullneg:1,deadhang:1},src:"h3d.js?v=0c50254c08",model:"body.glb?v=c91b3c1fe4"};</script><script src="config.js"></script>
 <script>
-window.BITACORA_VER='20261103111429';
+window.BITACORA_VER='20261103112142';
 /* Actualización automática: compara la versión publicada con la que está abierta. */
 (function(){
   var V=window.BITACORA_VER,reg=null,hiddenAt=0;
@@ -867,8 +867,9 @@ pose:function(p){
   for(var i=0;i<2;i++){var g=sgn(i);
     arm.push({wr:[g*gx,215,4],pole:wide?[g,-1,0]:[g*0.2,-1,0.15]});
     leg.push({an:add(P,[g*5,-66,-22]),pole:[0,-0.2,1],dir:[0,-0.6,-0.4]});
-    eq.push(S([g*64,0,-22],[g*64,218,-22],5,'e'));eq.push(S([g*64,216,-22],[g*56,215,4],4,'e'));}
-  eq.push(S([-64,218,-22],[64,218,-22],5,'e'));eq.push(S([-56,215,4],[56,215,4],3.4,'bar'));
+    /* torre de poder: postes al frente, la persona mira hacia ellos; brazos de la barra salen hacia la persona */
+    eq.push(S([g*64,0,30],[g*64,218,30],5,'e'));eq.push(S([g*64,216,30],[g*56,215,4],4,'e'));eq.push(S([g*64,0,-34],[g*64,0,58],5,'e'));}
+  eq.push(S([-64,218,30],[64,218,30],5,'e'));eq.push(S([-64,26,30],[64,26,30],4,'e'));eq.push(S([-56,215,4],[56,215,4],3.4,'bar'));
   return {o:{P:P,lean:lean,nk:lerp(0,22,p),arm:arm,leg:leg},eq:eq,m:['el',0,'Codo']};
 }}}
 EX.pullup_close=pullup(false);EX.pullup_wide=pullup(true);
