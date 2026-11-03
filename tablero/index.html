@@ -675,7 +675,7 @@ function renderAlerts(r) {
   if (storageOK && (!ur || daysSince(ur) > 15)) out.push(`<div class="alert"><div><b>${ur ? 'Tu último respaldo es del ' + esc(fdate(ur)) : 'Aún no tienes respaldo'}.</b> Tus datos viven solo en este celular; si se borran los datos del navegador, se pierden.</div><div class="acts"><button class="btn small" data-act="respaldo">Respaldar</button></div></div>`);
   const lim = num(state.metas.diasPrecio) || 15;
   const stale = state.posiciones.filter(p => daysSince(p.precioFecha) > lim);
-  if (stale.length) out.push(`<div class="alert"><div><b>${stale.length} precio${stale.length > 1 ? 's' : ''} sin actualizar</b> en más de ${lim} días. El patrimonio y la plusvalía usan el último precio que capturaste.</div><div class="acts"><button class="btn small" data-act="precios">Actualizar</button></div></div>`);
+  if (stale.length) out.push(`<div class="alert"><div><b>${stale.length} precio${stale.length > 1 ? 's' : ''} sin actualizar</b> en más de ${lim} días (${esc(stale.slice(0, 5).map(p => p.simbolo).join(', '))}${stale.length > 5 ? '…' : ''}). El patrimonio y la plusvalía usan el último precio que capturaste.</div><div class="acts"><button class="btn small" data-act="precios">Actualizar</button></div></div>`);
   const cob = num(state.metas.coberturaSofipo);
   if (cob) for (const c of state.cuentas.filter(c => c.tipo === 'sofipo' && num(c.saldo) > cob))
     out.push(`<div class="alert bad"><div><b>${esc(c.nombre)}</b> tiene ${money0(c.saldo)}, arriba de la cobertura aproximada de PROSOFIPO (${money0(cob)}). Lo que excede no está protegido.</div></div>`);
@@ -991,15 +991,23 @@ function editMetas() {
   ], values: state.metas, onSave: v => { Object.assign(state.metas, v); commit('Metas actualizadas.'); } });
 }
 function precios() {
-  const list = state.posiciones.slice().sort((a, b) => GRUPOS.findIndex(g => g.test(a)) - GRUPOS.findIndex(g => g.test(b)) || a.simbolo.localeCompare(b.simbolo));
   const lim = num(state.metas.diasPrecio) || 15;
-  openSheet({ title: 'Actualizar precios', sub: 'Escribe el precio por título en la moneda de cada posición (las de la cuenta en dólares, en dólares). Solo se marcan con fecha de hoy los que cambies.',
-    html: `<div class="price-list">${list.map(p => `<div class="pr"><div><b>${esc(p.simbolo)}</b><div class="meta">${esc(CLASES[p.clase])}${p.clase === 'accion' ? ' · ' + esc(p.cuenta === 'USA' ? 'USA' : 'MX') : ''}${p.moneda === 'USD' ? ' · en dólares' : ''} · ${p.precioFecha ? (daysSince(p.precioFecha) > lim ? '<span style="color:var(--warn)">' : '<span>') + esc(fdate(p.precioFecha)) + '</span>' : 'sin fecha'}</div></div><input type="number" inputmode="decimal" step="any" id="pr_${esc(p.id)}" value="${esc(p.precio)}" aria-label="Precio de ${esc(p.simbolo)}"></div>`).join('')}</div>`,
+  const viejo = p => daysSince(p.precioFecha) > lim;
+  const list = state.posiciones.slice().sort((a, b) => (viejo(b) - viejo(a)) || GRUPOS.findIndex(g => g.test(a)) - GRUPOS.findIndex(g => g.test(b)) || a.simbolo.localeCompare(b.simbolo));
+  const nViejos = list.filter(viejo).length;
+  openSheet({ title: 'Actualizar precios', sub: 'Escribe el precio por título en la moneda de cada posición (las que están en dólares, en dólares).' + (nViejos ? ` Arriba están los ${nViejos} que llevan más de ${lim} días sin revisar.` : '') + ' Al guardar, todos quedan revisados con fecha de hoy, aunque su precio no haya cambiado.',
+    html: `<div class="price-list">${list.map(p => `<div class="pr"><div><b>${esc(p.simbolo)}</b><div class="meta">${esc(CLASES[p.clase])}${p.clase === 'accion' ? ' · ' + esc(p.cuenta === 'USA' ? 'USA' : 'MX') : ''}${p.moneda === 'USD' ? ' · en dólares' : ''} · ${p.precioFecha ? (viejo(p) ? '<span style="color:var(--warn)">' : '<span>') + esc(fdate(p.precioFecha)) + '</span>' : '<span style="color:var(--warn)">sin fecha</span>'}</div></div><input type="number" inputmode="decimal" step="any" id="pr_${esc(p.id)}" value="${esc(p.precio)}" aria-label="Precio de ${esc(p.simbolo)}"></div>`).join('')}</div>`,
     fields: [], saveLabel: 'Guardar precios',
     onSave: () => {
       let n = 0;
-      for (const p of state.posiciones) { const el = $('pr_' + p.id); if (!el) continue; const v = num(el.value); if (v > 0 && v !== num(p.precio)) { p.precio = v; p.precioFecha = today(); n++; } }
-      commit(n ? `${n} precio${n > 1 ? 's' : ''} actualizado${n > 1 ? 's' : ''}.` : 'Sin cambios.');
+      const hoy = today();
+      for (const p of state.posiciones) {
+        const el = $('pr_' + p.id); if (!el) continue;
+        const v = num(el.value); if (!(v > 0)) continue;
+        if (v !== num(p.precio)) { p.precio = v; n++; }
+        p.precioFecha = hoy;
+      }
+      commit(n ? `${n} precio${n > 1 ? 's' : ''} cambiado${n > 1 ? 's' : ''}; todos quedan revisados hoy.` : 'Precios revisados con fecha de hoy.');
     } });
 }
 function cerrarQuincena() {
