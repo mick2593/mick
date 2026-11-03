@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="icon" href="icon-192.png">
+<script>window.GX_H3D={set:{pulldown:1,goblet:1,gobletheel:1},src:"h3d.js?v=be91051d40",model:"body.glb?v=c91b3c1fe4"};</script>
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Ficha de Ejecución</title>
 <style>
@@ -134,6 +135,12 @@ svg.stage{display:block; width:100%; height:auto; aspect-ratio:260/240; touch-ac
 .stage .whl{fill:var(--eq);stroke:var(--eqd);stroke-width:1} .stage .knob{fill:var(--eqd)} .stage .jt{fill:var(--eqd)}
 .stage line.f{stroke:var(--accent-2);opacity:.12}
 .stage .arc{stroke:var(--accent)}
+
+/* visor 3D holográfico */
+.h3dbox{position:relative;width:100%;max-width:420px;margin:0 auto;border-radius:6px;overflow:hidden;background:#05080b}
+.h3dbox canvas{display:block;width:100%;height:auto;aspect-ratio:260/240;touch-action:pan-y}
+.h3dtip{position:absolute;right:8px;bottom:6px;font:600 11px var(--font-mono,monospace);color:#6fe8c0;opacity:.85;pointer-events:none}
+.pictile.is3dload svg.stage{opacity:.55}
 
 /* ---- v5: calentamiento, paso a paso, aviso de hombro ---- */
 .callout{background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:4px; padding:18px 20px; margin-top:20px}
@@ -481,10 +488,12 @@ function Tile(el){
   this.tempo=tp; this.hold=+el.getAttribute('data-hold')||0;
   this.view=this.def.view||'lat'; this.t=0; this.paused=reduce; this.vis=false; this.last=0; this.slow=false;
   this.svg=el.querySelector('svg.stage'); this.build(); this.draw(0,0,0);
+  if(G.H3D.set[key])this.try3d();
 }
 Tile.prototype.build=function(){
   var me=this,el=this.el,h='<div class="live"><b class="ph">&nbsp;</b><span class="tm"></span><span class="ang"></span></div><div class="ctl">';
   ['lat','fro','tri'].forEach(function(v){h+='<button type="button" data-v="'+v+'">'+VN[v]+'</button>'});
+  if(G.H3D.set[this.el.getAttribute('data-ex')])h+='<button type="button" data-a="3d" aria-pressed="false" aria-label="Ver en 3D">3D</button>';
   h+='<button type="button" data-a="pp" aria-label="Pausar o reproducir">'+(this.paused?'▶':'❚❚')+'</button><button type="button" data-a="slow" aria-label="Cámara lenta">×½</button></div>';
   var box=document.createElement('div');box.className='livebox';box.innerHTML=h;
   el.insertBefore(box,el.querySelector('.phase'));
@@ -492,6 +501,7 @@ Tile.prototype.build=function(){
   box.addEventListener('click',function(e){
     var b=e.target.closest('button');if(!b)return;
     if(b.getAttribute('data-v')){me.view=b.getAttribute('data-v');me.sync();me.redraw()}
+    else if(b.getAttribute('data-a')==='3d'){if(me.v3){me.off3d();me.want3d=false}else{me.want3d=true;me.try3d()}me.sync()}
     else if(b.getAttribute('data-a')==='pp'){me.paused=!me.paused;me.sync()}
     else{me.slow=!me.slow;me.sync()}
   });
@@ -503,6 +513,7 @@ Tile.prototype.sync=function(){
     if(v)b.setAttribute('aria-pressed',String(v===me.view));
     if(a==='pp'){b.textContent=me.paused?'▶':'❚❚'}
     if(a==='slow')b.setAttribute('aria-pressed',String(me.slow));
+    if(a==='3d'){b.setAttribute('aria-pressed',String(!!me.v3));b.textContent=me.loading3d?'3D…':'3D'}
   });
 };
 Tile.prototype.cycle=function(){
@@ -524,20 +535,60 @@ Tile.prototype.redraw=function(){var s=this.state();this.draw(s.p,s.rep,s.time,s
 Tile.prototype.draw=function(p,rep,time,st){
   var d=this.def,cfg=d.cam,cm=G.cam(this.view,cfg),s=cfg.s;
   var P=d.pose(p,rep,time),sk=G.rig(P.o),hot=d.hot||'';
+  if(this.v3){
+    try{this.v3.draw(sk,P.eq,this.view,time||0);this.v3.dirty=false}catch(err){this.off3d();this.fail3d=true}
+    if(P.m){var tr=G.J[P.m[0]](sk,P.m[1]),u1=G.nrm(G.sub(tr[0],tr[1])),u2=G.nrm(G.sub(tr[2],tr[1]));this.deg=Math.acos(clamp(G.dot(u1,u2),-1,1))*180/Math.PI;this.mlab=P.m[2]}
+    if(st)this.text(st);
+    if(this.v3)return;
+  }
   var ghosts='';
   [0,1].forEach(function(q){var gp=d.pose(q,rep,0),gs=G.rig(gp.o);ghosts+=G.render(G.bodyPrims(gs,'',true),cm,s)});
   var pr=G.floorPrims().concat(P.eq||[]).concat(G.bodyPrims(sk,hot,false));
   var meas='';
   if(P.m){var tr=G.J[P.m[0]](sk,P.m[1]),ar=G.arcFor(tr[0],tr[1],tr[2],cm,s);pr.push(ar);this.deg=ar.deg;this.mlab=P.m[2]}
   this.svg.innerHTML='<g class="ghostg">'+ghosts+'</g>'+G.render(pr,cm,s);
+  if(st)this.text(st);
+};
+Tile.prototype.text=function(st){var d=this.def;
   if(st){this.ph.textContent=(st.ph==='LISTO'?'':st.ph)||'INICIO';this.ph.className='ph '+st.ph.toLowerCase();
     this.tm.textContent=d.iso?st.tm:(st.ph==='LISTO'?'Rep '+(st.rep+1):st.tm+' · Rep '+(st.rep+1));
     this.ang.textContent=this.mlab?this.mlab+' '+Math.round(this.deg)+'°':''}
 };
 Tile.prototype.tick=function(now){
+  if(this.v3&&this.v3.dirty&&(this.paused||!this.vis)){this.redraw()}
   if(!this.vis||this.paused){this.last=now;return}
   var dt=Math.min(0.1,(now-this.last)/1000);this.last=now;
   this.t+=dt*(this.slow?0.5:1);this.redraw();
+};
+
+/* ---------- 3D holográfico (carga diferida) ---------- */
+G.H3D=window.GX_H3D||{set:{},src:'h3d.js',model:'body.glb'};G.H3D.p=null;
+function load3d(){
+  var H=G.H3D;if(H.p)return H.p;
+  H.p=new Promise(function(res,rej){
+    if(window.H3D)return res(window.H3D);
+    var sc=document.createElement('script');sc.src=H.src;sc.async=true;
+    sc.onload=function(){window.H3D&&window.H3D.ok?res(window.H3D):rej(new Error('sin WebGL'))};sc.onerror=function(){rej(new Error('no cargó'))};
+    document.head.appendChild(sc);
+  }).then(function(h){return h.load(H.model).then(function(){return h})});
+  H.p.catch(function(){H.p=null});
+  return H.p;
+}
+Tile.prototype.try3d=function(){
+  var me=this;if(this.v3||this.loading3d||this.fail3d||this.want3d===false)return;
+  this.loading3d=true;this.sync();this.el.classList.add('is3dload');
+  load3d().then(function(h){
+    me.loading3d=false;me.el.classList.remove('is3dload');if(!me.el.isConnected||me.want3d===false){me.sync();return}
+    var box=document.createElement('div');box.className='h3dbox';box.innerHTML='<span class="h3dtip">Desliza para girar</span>';
+    me.svg.parentNode.insertBefore(box,me.svg);
+    try{me.v3=h.create(box,me.def,me.el.getAttribute('data-ex'),function(){me.v3=null;if(me.box3){me.box3.remove();me.box3=null}me.svg.style.display='';me.el.classList.remove('is3d');me.sync()});me.box3=box;me.svg.style.display='none';me.el.classList.add('is3d');me.redraw()}catch(e){box.remove();me.v3=null;me.fail3d=true}
+    me.sync();
+  },function(){me.loading3d=false;me.fail3d=true;me.el.classList.remove('is3dload');me.sync()});
+};
+Tile.prototype.off3d=function(){
+  if(this.v3){try{this.v3.dispose()}catch(e){}this.v3=null}
+  if(this.box3){this.box3.remove();this.box3=null}
+  this.svg.style.display='';this.el.classList.remove('is3d');this.redraw();
 };
 
 function loop(now){
@@ -548,7 +599,7 @@ G.init=function(){
   [].forEach.call(document.querySelectorAll('.pictile[data-ex]'),function(el){var t=new Tile(el);if(t.def)tiles.push(t)});
   if('IntersectionObserver' in window){
     var io=new IntersectionObserver(function(es){es.forEach(function(e){
-      for(var i=0;i<tiles.length;i++)if(tiles[i].el===e.target){tiles[i].vis=e.isIntersecting;tiles[i].last=performance.now()}
+      for(var i=0;i<tiles.length;i++)if(tiles[i].el===e.target){tiles[i].vis=e.isIntersecting;tiles[i].last=performance.now();if(e.isIntersecting&&!tiles[i].v3&&G.H3D.set[tiles[i].el.getAttribute('data-ex')])tiles[i].try3d()}
     })},{threshold:0.25});
     tiles.forEach(function(t){io.observe(t.el)});
   }else tiles.forEach(function(t){t.vis=true});

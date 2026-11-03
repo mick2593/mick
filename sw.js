@@ -1,8 +1,8 @@
 /* Bitácora: funciona sin internet. Archivos propios: red primero y copia de respaldo; librerías y fuentes: copia primero. */
-var CACHE='bitacora-20261103102145';
+var CACHE='bitacora-20261103111429';
 var CORE=['./','index.html','guia.html','config.js','manifest.webmanifest','icon-192.png','icon-512.png'];
 self.addEventListener('install',function(e){e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(CORE)}).then(function(){return self.skipWaiting()}))});
-self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE}).map(function(k){return caches.delete(k)}))}).then(function(){return self.clients.claim()}))});
+self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE&&k!=='bitacora-3d'}).map(function(k){return caches.delete(k)}))}).then(function(){return self.clients.claim()}))});
 self.addEventListener('notificationclick',function(e){
   e.notification.close();
   e.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(function(cs){
@@ -14,6 +14,9 @@ self.addEventListener('fetch',function(e){
   var r=e.request;if(r.method!=='GET')return;
   var u=new URL(r.url);
   if(u.origin===location.origin&&/version\.json$/.test(u.pathname))return;
+  if(u.origin===location.origin&&/\/(h3d\.js|body\.glb)$/.test(u.pathname)&&u.search){
+    e.respondWith(caches.open('bitacora-3d').then(function(c){return c.match(r).then(function(m){return m||fetch(r).then(function(res){if(res.ok){c.keys().then(function(ks){ks.forEach(function(k){var ku=new URL(k.url);if(ku.pathname===u.pathname&&ku.search!==u.search)c.delete(k)})});c.put(r,res.clone())}return res})})}));return;
+  }
   if(u.origin===location.origin){
     e.respondWith(fetch(r.url,{cache:'no-cache',credentials:'same-origin'}).then(function(res){if(res.ok){var cp=res.clone();caches.open(CACHE).then(function(c){c.put(r,cp)})}return res}).catch(function(){return caches.match(r).then(function(m){return m||caches.match('index.html')})}));
   }else if(/cdnjs\.cloudflare\.com|fonts\.(googleapis|gstatic)\.com/.test(u.host)||/www\.gstatic\.com\/firebasejs\//.test(r.url)){
