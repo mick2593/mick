@@ -312,7 +312,7 @@ details ol,details ul{margin:8px 0 0; padding-left:20px; display:grid; gap:6px; 
 </style>
 <script src="config.js"></script>
 <script>
-window.BITACORA_VER='20261103100148';
+window.BITACORA_VER='20261103101146';
 /* Actualización automática: compara la versión publicada con la que está abierta. */
 (function(){
   var V=window.BITACORA_VER,reg=null,hiddenAt=0;
@@ -1853,6 +1853,14 @@ function hint(e,last,w,d){
   if(t1)return {t:'Llegaste al tope con '+fmtKg(kg)+' kg. Repite ese peso una sesión más; si vuelves a llegar, entonces sube.',up:false};
   return {t:'Mantén '+(kg?fmtKg(kg)+' kg':'el peso')+' y suma 1 repetición donde puedas hasta llegar a '+e.hi+' en todas las series. La vez pasada: '+tot+' repeticiones en total.',up:false};
 }
+function durBox(o,key){
+  var done=o.workout&&o.tStart&&o.tEnd,run=!o.workout&&o.tStart,b,sm;
+  if(done){b=fmtDur(o.tEnd-o.tStart);sm='Rutina '+esc(o.routineDone||key)+' terminada · desde que abriste la app'+(o.tSet1?' · '+fmtDur(o.tEnd-o.tSet1)+' desde la primera serie':'');}
+  else if(run){b=fmtDur(Date.now()-o.tStart);sm='En curso desde que abriste la app. Se guarda al tocar «Marcar entrenamiento completo» al final.';}
+  else{b='0 min';sm='Empieza a contar cuando marcas tu primera serie (toma en cuenta desde que abriste la app). Se guarda al tocar «Marcar entrenamiento completo» al final.';}
+  return '<div class="dur" id="durlive"'+(run?' data-t0="'+o.tStart+'"':'')+'><span>Tiempo de entreno</span><b>'+b+'</b><small>'+sm+'</small></div>';
+}
+setInterval(function(){var el=document.getElementById('durlive');if(!el||!el.getAttribute('data-t0'))return;var b=el.querySelector('b');if(b)b.textContent=fmtDur(Date.now()-(+el.getAttribute('data-t0')))},20000);
 function vEntreno(){
   var d=S.date,o=day(d),p=plan(d),w=wi(d),key=S.routine||p.train||p.next||p.abs||'A',h='';
   var opts=[['A','A · Empuje'],['B','B · Tirón'],['C','C · Pierna'],['D','D · Hombro'],['S1','Abdomen 1'],['S2','Abdomen 2']];
@@ -1861,6 +1869,7 @@ function vEntreno(){
   else if(key!==p.train&&key!==p.abs)h+='<div class="banner">Hoy, '+fmtDate(d)+', te toca '+esc(p.train?D.R[p.train].title:'descanso')+'. Si completas esta otra, las siguientes se recorren.</div>';
   if(w.deload)h+='<div class="banner">Semana de descarga: series reducidas al 60 % y 90 % de la carga.</div>';
   var isAb=key.charAt(0)==='S',R=isAb?D.AB[key]:D.R[key];
+  if(!isAb)h+=durBox(o,key);
   if(!isAb){
     var W=D.W[R.warm],wd=o.warm||{};
     h+='<div class="section-title">Calentamiento · '+esc(W.mins)+'</div><section class="card"><div class="cardhead"><h2>'+esc(W.title)+'</h2><span class="meta">'+W.items.filter(function(it){return wd[it.key]}).length+'/'+W.items.length+'</span></div>'+
@@ -2046,6 +2055,7 @@ function vProgreso(){
   else rec='<div class="banner">Para ver la tendencia necesito al menos 2 pesos en ayunas en esta semana y en la de hace dos semanas.</div>';
   h+=badgesCard();
   var ws2=Object.keys(S.days).filter(function(k){var o=S.days[k];return o.workout&&o.tStart&&o.tEnd&&o.tEnd>o.tStart}).sort().reverse().slice(0,12);
+  if(!ws2.length)h+='<section class="card"><div class="cardhead"><h2>Duración del entreno</h2><span class="meta">0 sesiones</span></div><div class="wdate">Aún no hay entrenos medidos. Aparecen aquí cuando tocas «Marcar entrenamiento completo» al final de la pestaña Entreno.</div></section>';
   if(ws2.length){var byR={};ws2.forEach(function(k){var o=S.days[k],r=o.routineDone||'?';(byR[r]=byR[r]||[]).push(o.tEnd-o.tStart)});
     var avg=ws2.reduce(function(s,k){return s+(S.days[k].tEnd-S.days[k].tStart)},0)/ws2.length;
     h+='<section class="card"><div class="cardhead"><h2>Duración del entreno</h2><span class="meta">'+ws2.length+' sesiones</span></div><div class="wtop"><div><span class="wbig">'+fmtDur(avg)+'</span></div></div><div class="wdate">Promedio desde que abres la app hasta que marcas el entrenamiento completo.</div>'+
