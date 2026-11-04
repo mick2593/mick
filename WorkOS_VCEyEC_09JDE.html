@@ -2113,8 +2113,6 @@ var PERMS = [
   ['cambiarEstado', 'Cambiar estado y avance'],
   ['eliminarTareas', 'Eliminar tareas'],
   ['gestionarEquipo', 'Agregar y editar colaboradores'],
-  ['comunicaciones', 'Generar y registrar recordatorios y apercibimientos'],
-  ['plantillas', 'Editar las plantillas de los oficios'],
   ['automatizaciones', 'Configurar automatizaciones'],
   ['auditoria', 'Consultar la bitácora de auditoría'],
   ['guardarVersion', 'Guardar versión del archivo'],
@@ -2201,7 +2199,7 @@ function buildSeed(emb) {
     automations: [
       { id: 'a_listo', nombre: 'Al marcar «Listo»: avisar al responsable y enviar webhook a Slack', activa: true, trigger: { type: 'status_change', to: 'listo' }, conditions: [], actions: [{ type: 'notify_owner' }, { type: 'webhook' }], runs: 0 },
       { id: 'a_alerta', nombre: 'Semáforo en «Por vencer» o «Vence hoy»: avisar al Vocal y al responsable', activa: true, trigger: { type: 'semaforo_change', to: 'alerta' }, conditions: [], actions: [{ type: 'notify_vocal' }, { type: 'notify_owner' }], runs: 0 },
-      { id: 'a_vencida', nombre: 'Tarea vencida: preparar apercibimiento para revisión del Vocal', activa: true, trigger: { type: 'semaforo_change', to: 'vencida' }, conditions: [], actions: [{ type: 'draft_warning' }, { type: 'notify_vocal' }], runs: 0 },
+      { id: 'a_vencida', nombre: 'Tarea vencida: avisar al Vocal y al responsable', activa: true, trigger: { type: 'semaforo_change', to: 'vencida' }, conditions: [], actions: [{ type: 'notify_vocal' }, { type: 'notify_owner' }], runs: 0 },
       { id: 'a_asig', nombre: 'Al asignar una tarea: avisar al responsable', activa: true, trigger: { type: 'assigned' }, conditions: [], actions: [{ type: 'notify_owner' }], runs: 0 },
       { id: 'a_meta', nombre: 'Meta alcanzada: pasar a «En revisión» (semanales)', activa: false, trigger: { type: 'progress_complete' }, conditions: [{ field: 'grupo', op: 'eq', value: 'sem' }], actions: [{ type: 'set_status', value: 'revision' }, { type: 'add_update', value: 'Meta alcanzada; pasa a revisión de la Vocalía.' }], runs: 0 }
     ],
@@ -2237,6 +2235,15 @@ function migrate(s) {
   if (!s.permsV2) { s.permisos.colaborador.editarTareas = false; s.permsV2 = true; }
   ['areas', 'people', 'items', 'automations', 'autoRuns', 'notifications', 'drafts', 'comms', 'audit'].forEach(function (k) { if (!Array.isArray(s[k])) s[k] = base[k]; });
   s.templates = s.templates || base.templates;
+  if (OFICIOS_OFF) s.automations.forEach(function (r) {
+    if (!r || !Array.isArray(r.actions)) return;
+    var had = r.actions.length;
+    r.actions = r.actions.filter(function (a) { return a && a.type !== 'draft_warning' && a.type !== 'draft_reminder'; });
+    if (r.actions.length !== had) {
+      if (r.id === 'a_vencida') { r.nombre = 'Tarea vencida: avisar al Vocal y al responsable'; if (!r.actions.some(function (a) { return a.type === 'notify_owner'; })) r.actions.push({ type: 'notify_owner' }); }
+      if (!r.actions.length) r.activa = false;
+    }
+  });
   if (!Array.isArray(s.agenda)) s.agenda = [];
   /* Cuentas incluidas en el archivo que un borrador anterior todavía no tenía. */
   var embSec = (EMBED && EMBED.security) || {};
@@ -2283,7 +2290,10 @@ function prefGet(k, d) { try { var v = localStorage.getItem('wos09.pref.' + k); 
 function prefSet(k, v) { try { localStorage.setItem('wos09.pref.' + k, JSON.stringify(v)); } catch (e) {} }
 
 function isEdit() { return !!session.role; }
+/* Los oficios (recordatorios y apercibimientos) están desactivados: el Work OS es solo para dar seguimiento a las tareas. */
+var OFICIOS_OFF = true;
 function can(p) {
+  if (OFICIOS_OFF && (p === 'comunicaciones' || p === 'plantillas')) return false;
   if (session.role === 'vocal') return true;
   if (session.role === 'asistente') return !!(state.permisos.asistente || {})[p];
   if (session.role === 'colaborador') return !!(state.permisos.colaborador || {})[p];
@@ -3298,7 +3308,7 @@ function pcardHTML(p) {
 VIEWS.equipo = function () {
   var v = vocal(), a = asistente(), sub = ui.eqTab || 'personas';
   if (!EQ_TABS.some(function (t) { return t[0] === sub; })) sub = 'personas';
-  var html = pageHead('Equipo y permisos', 'El Vocal tiene acceso total. El Asistente edita con los permisos que el Vocal le otorga. Cada colaborador entra con su cuenta para actualizar el estado y el avance de sus propias tareas, y recibe sus asignaciones, recordatorios y apercibimientos.',
+  var html = pageHead('Equipo y permisos', 'El Vocal tiene acceso total. El Asistente edita con los permisos que el Vocal le otorga. Cada colaborador entra con su cuenta para actualizar el estado y el avance de sus propias tareas, y recibe sus asignaciones y avisos.',
     can('gestionarEquipo') ? '<button class="btn primary" data-act="newPerson">' + ic('userplus', 'sm') + 'Agregar colaborador</button>' : '');
   html += '<div class="seg subtabs" role="tablist" aria-label="Secciones del equipo">' + EQ_TABS.map(function (t) { return '<button class="' + (sub === t[0] ? 'on' : '') + '" role="tab" aria-selected="' + (sub === t[0]) + '" data-act="eqTab" data-t="' + t[0] + '">' + ic(t[2], 'sm') + t[1] + '</button>'; }).join('') + '</div>';
 
@@ -3333,7 +3343,7 @@ VIEWS.equipo = function () {
       '<p class="small muted" style="margin:10px 0 0">Los cambios de permisos quedan registrados en la bitácora de auditoría con fecha, hora y quién los hizo.</p></div>';
     return html;
   }
-  html += '<div class="card"><h3>' + ic('mail') + 'Directorio<span class="sub">el correo se usa para los recordatorios y apercibimientos</span></h3><div class="tblwrap" style="box-shadow:none"><table class="tbl"><thead><tr><th>Nombre</th><th>Cargo</th><th>Correo institucional</th><th>Teléfono</th><th>Tareas</th><th>Estado</th></tr></thead><tbody>' +
+  html += '<div class="card"><h3>' + ic('mail') + 'Directorio<span class="sub">datos de contacto del equipo</span></h3><div class="tblwrap" style="box-shadow:none"><table class="tbl"><thead><tr><th>Nombre</th><th>Cargo</th><th>Correo institucional</th><th>Teléfono</th><th>Tareas</th><th>Estado</th></tr></thead><tbody>' +
     state.people.map(function (p) { return '<tr><td><span class="person">' + avatarHTML(p) + '<span class="nm">' + esc(p.nombre || 'Por designar') + '</span></span></td><td class="small">' + esc(p.cargo) + (p.rol === 'colaborador' ? ' ' + p.num : '') + '</td><td class="small">' + (p.email ? esc(p.email) : '<span class="muted">Sin registrar</span>') + '</td><td class="small">' + esc(p.tel || '—') + '</td><td>' + miniSem(p.id) + '</td><td>' + (p.activo === false ? '<span class="chip">Baja</span>' : '<span class="chip line">Activo</span>') + '</td></tr>'; }).join('') +
     '</tbody></table></div></div>';
   return html;
@@ -3617,8 +3627,6 @@ var ACTIONS = {
   notify_vocal: 'Notificar al Vocal',
   notify_asistente: 'Notificar al Asistente',
   webhook: 'Enviar webhook a Slack',
-  draft_reminder: 'Preparar recordatorio',
-  draft_warning: 'Preparar apercibimiento',
   set_status: 'Cambiar el estado a',
   add_update: 'Publicar una actualización'
 };
@@ -3693,8 +3701,7 @@ function runAction(a, p, r, type) {
     case 'notify_vocal': return notify(vocal().id, eventText(type, it, p) + ' Responsable: ' + pname(personBy(it.responsable)) + '.', r, it, key);
     case 'notify_asistente': return notify(asistente().id, eventText(type, it, p), r, it, key);
     case 'webhook': return sendWebhook(it, p, type);
-    case 'draft_reminder': return addDraft('recordatorio', it, r);
-    case 'draft_warning': return addDraft('apercibimiento', it, r);
+    case 'draft_reminder': case 'draft_warning': return 'Oficios desactivados';
     case 'set_status':
       if (!a.value || it.estado === a.value) return 'Estado sin cambio';
       var from = it.estado; it.estado = a.value;
@@ -5207,7 +5214,7 @@ VIEWS.config = function () {
     '</div><div class="row" style="margin-top:12px"><button class="btn primary" data-act="saveOrg">' + ic('check', 'sm') + 'Guardar datos</button></div></div>';
   html += '<div class="stack"><div class="card"><h3>' + ic('clock') + 'Semáforo y plazos</h3><div class="fgrid">' +
     fld('umbralSemanal', 'Semanales: «por vencer» a partir de (días)', s.umbralSemanal, 'number') + fld('umbralMensual', 'Mensuales: «por vencer» a partir de (días)', s.umbralMensual, 'number') +
-    '<div class="field full"><label>Plazo predeterminado del apercibimiento</label><select id="cfg_plazo">' + PLAZOS.concat(PLAZOS.indexOf(s.plazoApercibimiento) < 0 ? [s.plazoApercibimiento] : []).map(function (x) { return opt(x, x, s.plazoApercibimiento); }).join('') + '</select></div></div>' +
+    '<div class="field full"' + (OFICIOS_OFF ? ' hidden' : '') + '><label>Plazo predeterminado del apercibimiento</label><select id="cfg_plazo">' + PLAZOS.concat(PLAZOS.indexOf(s.plazoApercibimiento) < 0 ? [s.plazoApercibimiento] : []).map(function (x) { return opt(x, x, s.plazoApercibimiento); }).join('') + '</select></div></div>' +
     '<p class="small muted">Verde: más días que el umbral. Amarillo: dentro del umbral. Rojo: vence hoy. Rojo intenso: vencida. Se cuentan días naturales.</p><div class="row"><button class="btn primary" data-act="saveSem">' + ic('check', 'sm') + 'Guardar</button></div></div>' +
     '<div class="card"><h3>' + ic('link') + 'Integraciones</h3>' + fld('slack', 'URL del webhook de Slack', s.slackWebhook, 'url', 'Opcional. Si se deja vacío, la acción «Enviar webhook» se simula y queda registrada.') +
     '<div class="row" style="margin-top:10px"><button class="btn primary" data-act="saveInteg">' + ic('check', 'sm') + 'Guardar</button></div></div>' +
