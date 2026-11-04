@@ -1213,6 +1213,7 @@ details.card summary{cursor:pointer;font-weight:700}
 .avatar.foto{background:#fff;overflow:hidden;padding:0}
 .avatar.foto img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
 .cv-avwrap{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
+.cv-sound{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0 0 -10px}
 .cv-photo{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
 @media (max-width:1300px){.ag-week{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:1000px){.ag-week{grid-template-columns:repeat(2,minmax(0,1fr))}.ag-mc{min-height:88px}}
@@ -2560,6 +2561,7 @@ function tabVisible(t) { return !!t && !t.sep && (!t.perm || can(t.perm)) && (!t
 var VIEWS = {};
 function render() {
   if (!tabVisible(byId(TABS, ui.tab))) ui.tab = 'panel';
+  if (typeof checkAssignSound === 'function') checkAssignSound();
   renderChrome();
   var fn = VIEWS[ui.tab] || VIEWS.panel;
   var main = $('#view');
@@ -4257,7 +4259,8 @@ VIEWS.persona = function () {
     (can('gestionarEquipo') ? '<button class="iconbtn" data-act="editPerson" data-id="' + p.id + '" data-tip="Editar datos" aria-label="Editar datos">' + ic('edit', 'sm') + '</button>' : '');
   var cover = '<div class="card cover" id="spaceCover"><div class="cv-band">' + artBallot('cvf') + '</div><div class="cv-body"><div class="cv-avwrap">' + avatarBare(p, 'xl') + photoCtlHTML(p) + '</div>' +
     '<div class="cv-id"><h2>' + esc(p.nombre || 'Por designar') + '</h2><div class="cv-sub">' + esc(p.cargo + (p.rol === 'colaborador' ? ' ' + p.num : '')) + ' · ' + esc(areaName(p)) + '</div><div class="cv-meta">' +
-    (p.email ? '<span>' + ic('mail', 'sm') + ' ' + esc(p.email) + '</span>' : '') + (p.tel ? '<span>' + esc(p.tel) + '</span>' : '') + (mineP ? '<span>' + ic('unlock', 'sm') + ' Sesión iniciada</span>' : '') + '</div></div>' +
+    (p.email ? '<span>' + ic('mail', 'sm') + ' ' + esc(p.email) + '</span>' : '') + (p.tel ? '<span>' + esc(p.tel) + '</span>' : '') + (mineP ? '<span>' + ic('unlock', 'sm') + ' Sesión iniciada</span>' : '') + '</div>' +
+    (mineP ? '<div class="cv-sound"><button class="btn sm ghost" data-act="soundToggle" aria-pressed="' + soundOn() + '">' + ic('bell', 'sm') + (soundOn() ? 'Sonido de tareas nuevas: activado' : 'Sonido de tareas nuevas: silenciado') + '</button>' + (soundOn() ? '<button class="btn sm ghost" data-act="soundTest">Probar sonido</button>' : '') + '</div>' : '') + '</div>' +
     '<div class="row cv-act">' + statusPillHTML(st) + btns + '</div></div></div>';
   var who = sup ? '' : p.id;
   var tile = function (icon, v, k, d, sem, est) { return '<button class="card ptile" data-act="gotoStat" data-p="' + who + '" data-sem="' + (sem || '') + '" data-e="' + (est || '') + '"><span class="pk"><span class="pic">' + ic(icon, 'sm') + '</span>' + k + '</span><span class="pv">' + v + '</span><span class="pd">' + d + '</span></button>'; };
@@ -5167,6 +5170,59 @@ function photoCtlHTML(p) {
 }
 
 if (window.__WOS_TEST__) window.__wosAg = function (f) { return f({ session: session, state: function () { return state; }, ui: ui, render: render, TODAY: TODAY, addDays: addDays, SYNC_COLLS: SYNC_COLLS }); };
+
+/* =====================================================================
+   SONIDO DE NUEVA TAREA · campanita de dos notas generada con Web Audio
+   Suena una vez cuando a la persona con sesión iniciada le asignan una
+   tarea nueva (también si llega desde otra computadora). No suena por
+   las tareas que ya tenía ni por las que ella misma se asigna.
+   ===================================================================== */
+var Chime = (function () {
+  var ctx = null;
+  function ac() {
+    if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (!A) return null; try { ctx = new A(); } catch (e) { return null; } }
+    if (ctx.state === 'suspended') ctx.resume().catch(function () {});
+    return ctx;
+  }
+  /* Los navegadores solo permiten audio después de un clic o una tecla: se prepara en la primera interacción. */
+  ['pointerdown', 'keydown'].forEach(function (t) { document.addEventListener(t, function () { ac(); }, { capture: true, passive: true }); });
+  function tone(c, f, at, dur, vol) {
+    var o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(), g2 = c.createGain();
+    o.type = 'sine'; o.frequency.value = f;
+    o2.type = 'sine'; o2.frequency.value = f * 2.01; g2.gain.value = 0.18;   /* armónico tenue: brillo de cristal */
+    g.gain.setValueAtTime(0.0001, at);
+    g.gain.exponentialRampToValueAtTime(vol, at + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(c.destination);
+    o.start(at); o2.start(at); o.stop(at + dur + 0.05); o2.stop(at + dur + 0.05);
+  }
+  function play() {
+    var c = ac(); if (!c || c.state !== 'running') return false;
+    var t = c.currentTime + 0.02;
+    tone(c, 880.00, t, 0.55, 0.11);         /* La5 */
+    tone(c, 1318.51, t + 0.11, 0.9, 0.09);  /* Mi6: quinta ascendente, suena «resuelta» y amable */
+    return true;
+  }
+  return { play: play };
+})();
+function soundOn() { return prefGet('sound', true) !== false; }
+function checkAssignSound() {
+  if (!state || !session.role) return;
+  var me = actorPerson(); if (!me) return;
+  var key = 'seenAssign.' + me.id, seen = prefGet(key, null), first = !Array.isArray(seen);
+  var mine = state.items.filter(function (it) { return it.responsable === me.id; });
+  var known = {}; (seen || []).forEach(function (id) { known[id] = 1; });
+  var cutoff = Date.now() - 3 * 864e5;
+  var fresh = first ? [] : mine.filter(function (it) {
+    return !known[it.id] && it.estado !== 'listo' && it.asignadoPor !== me.id && Date.parse(it.creado || '') > cutoff;
+  });
+  if (first || fresh.length || mine.some(function (it) { return !known[it.id]; })) prefSet(key, mine.map(function (it) { return it.id; }).slice(-500));
+  if (!fresh.length) return;
+  if (soundOn()) Chime.play();
+  setTimeout(function () { toast(fresh.length === 1 ? 'Nueva tarea asignada: «' + fresh[0].titulo + '»' : 'Se le asignaron ' + fresh.length + ' tareas nuevas', 4200); }, 0);
+}
+ACT.soundToggle = function () { prefSet('sound', !soundOn()); if (soundOn()) Chime.play(); render(); };
+ACT.soundTest = function () { if (!Chime.play()) toast('Haga clic en cualquier parte de la página y vuelva a intentarlo'); };
 
 /* =====================================================================
    AUDITORÍA · CONFIGURACIÓN · DOCUMENTACIÓN · NOTIFICACIONES · ACCESO
