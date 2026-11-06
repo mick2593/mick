@@ -84,7 +84,7 @@ hr.sep{border:0;border-top:1px solid var(--line2);margin:14px 0}
 .seg{display:inline-flex;background:var(--mist);border-radius:10px;padding:3px;gap:2px}
 .seg button{border:0;background:transparent;padding:7px 12px;border-radius:8px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .seg button.on{background:var(--white);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.1)}
-input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=url],input[type=search],input[type=tel],select,textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--white);outline:none;font-size:13.5px}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=time],input[type=url],input[type=search],input[type=tel],select,textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--white);outline:none;font-size:13.5px}
 input:focus,select:focus,textarea:focus{border-color:var(--oxford);box-shadow:0 0 0 3px rgba(84,88,90,.16)}
 input[disabled],select[disabled],textarea[disabled]{background:var(--paper);color:var(--muted)}
 textarea{resize:vertical;min-height:70px;line-height:1.45}
@@ -737,7 +737,7 @@ main{max-width:1560px;width:100%;margin:0;padding:14px 26px 70px}
 .seg{background:var(--soft2);border-radius:999px;padding:4px;gap:2px}
 .seg button{border-radius:999px;padding:7px 14px}
 .seg button.on{background:var(--coal);color:#fff;box-shadow:none}
-input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=url],input[type=search],input[type=tel],select,textarea{border-radius:12px;border-color:var(--rim);background:#fff;padding:9px 12px}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=time],input[type=url],input[type=search],input[type=tel],select,textarea{border-radius:12px;border-color:var(--rim);background:#fff;padding:9px 12px}
 .filters select,.filters input{border-radius:999px;padding:8px 14px}
 .chip{border-radius:999px}
 .empty{border-radius:18px;background:var(--soft);border-color:#D3D6DB}
@@ -2105,8 +2105,10 @@ var STATUSES = [
 function statusOf(id) { return byId(STATUSES, id) || STATUSES[0]; }
 var GROUPS = [
   { id: 'sem', nombre: 'Objetivos semanales', periodo: 'Semanal' },
-  { id: 'men', nombre: 'Objetivos mensuales', periodo: 'Mensual' }
+  { id: 'men', nombre: 'Objetivos mensuales', periodo: 'Mensual' },
+  { id: 'unica', nombre: 'Tareas de una sola vez', periodo: 'Ninguna' }
 ];
+function grupoCorto(g) { return g === 'sem' ? 'Semanal' : g === 'men' ? 'Mensual' : 'Una sola vez'; }
 var PRIORIDADES = ['Alta', 'Media', 'Baja'];
 var PERMS = [
   ['crearTareas', 'Crear y asignar tareas'],
@@ -2330,10 +2332,14 @@ function semaforo(it, today) {
   if (!validISO(it.limite)) return { k: 'verde', label: 'Sin fecha', dias: null };
   var d = daysBetween(today, it.limite);
   if (d < 0) return { k: 'vencida', label: 'Vencida', dias: d };
-  if (d === 0) return { k: 'rojo', label: 'Vence hoy', dias: 0 };
+  if (d === 0) {
+    if (/^\d{2}:\d{2}$/.test(it.horaLimite || '') && today === TODAY()) { var n = new Date(), hm = pad2(n.getHours()) + ':' + pad2(n.getMinutes()); if (hm > it.horaLimite) return { k: 'vencida', label: 'Vencida', dias: 0 }; }
+    return { k: 'rojo', label: 'Vence hoy', dias: 0 };
+  }
   if (d <= umbralDe(it)) return { k: 'amarillo', label: 'Por vencer', dias: d };
   return { k: 'verde', label: 'En tiempo', dias: d };
 }
+function limTxt(it) { return fmtShort(it.limite) + (it.horaLimite ? ' · ' + fmtHora(it.horaLimite) : ''); }
 function diasTxt(s) {
   if (s.dias == null) return s.k === 'concluida' ? '—' : '';
   if (s.dias < 0) return 'hace ' + plural(-s.dias, 'día');
@@ -2724,7 +2730,7 @@ VIEWS.tablero = function () {
   var f = ui.filters, me = actorPerson();
   var personOpts = '<option value="">Todo el equipo</option>' + activePeople().filter(function (p) { return p.rol !== 'vocal'; }).map(function (p) { return '<option value="' + p.id + '"' + (f.persona === p.id ? ' selected' : '') + '>' + esc(pshort(p)) + '</option>'; }).join('');
   var semOpts = [['', 'Todo el semáforo'], ['alerta', 'Requieren atención'], ['abiertas', 'Abiertas (sin concluir)'], ['vencida', 'Vencidas'], ['hoy', 'Vencen hoy'], ['rojo', 'Vencen hoy o vencidas'], ['amarillo', 'Por vencer'], ['verde', 'En tiempo'], ['concluida', 'Concluidas']].map(function (o) { return '<option value="' + o[0] + '"' + (f.sem === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('');
-  var grpOpts = '<option value="">Semanales y mensuales</option>' + GROUPS.map(function (g) { return '<option value="' + g.id + '"' + (f.grupo === g.id ? ' selected' : '') + '>' + g.nombre + '</option>'; }).join('');
+  var grpOpts = '<option value="">Todas las periodicidades</option>' + GROUPS.map(function (g) { return '<option value="' + g.id + '"' + (f.grupo === g.id ? ' selected' : '') + '>' + g.nombre + '</option>'; }).join('');
   var estOpts = '<option value="">Todos los estados</option>' + STATUSES.map(function (s) { return '<option value="' + s.id + '"' + (f.estado === s.id ? ' selected' : '') + '>' + s.label + '</option>'; }).join('') + '<option value="curso"' + (f.estado === 'curso' ? ' selected' : '') + '>En curso (proceso, revisión o detenida)</option>';
   var anyF = f.persona || f.sem || f.grupo || f.estado || f.q || f.equipo;
   var mineOn = me && f.persona === me.id;
@@ -2838,7 +2844,7 @@ function rowHTML(it, opts) {
     '<td class="cb">' + semBlock(it) + '</td>' +
     '<td class="small" title="' + esc(it.objetivo) + '">' + (num(it.meta) > 0 ? '<b>' + num(it.avance) + '</b> de ' + num(it.meta) + ' ' + esc(it.unidad) : '<span class="muted">' + esc(it.objetivo || '—') + '</span>') + '</td>' +
     '<td style="min-width:130px">' + progressHTML(pct(it), true) + '</td>' +
-    '<td class="nowrap small">' + fmtShort(it.inicio) + '</td><td class="nowrap small"><b>' + fmtShort(it.limite) + '</b></td>' +
+    '<td class="nowrap small">' + fmtShort(it.inicio) + '</td><td class="nowrap small"><b>' + fmtShort(it.limite) + (it.horaLimite ? '<br><span class="tiny muted">' + fmtHora(it.horaLimite) + '</span>' : '') + '</b></td>' +
     '<td class="days' + (s.dias != null && s.dias < 0 ? ' neg' : '') + '">' + dd + '</td>' +
     '<td><span class="prio ' + esc(it.prioridad) + '">' + esc(it.prioridad) + '</span></td><td class="nowrap">' + mail + '</td></tr>';
   if (exp) html += it.subitems.map(function (sb) {
@@ -2893,7 +2899,7 @@ function kanbanHTML(list) {
       cards.map(function (it) {
         var sm = semaforo(it), p = personBy(it.responsable), drag = canTouch(it);
         return '<div class="kb-card s-' + sm.k + '" data-act="openItem" data-id="' + it.id + '">' + (drag ? '<span class="kb-handle" title="Arrastrar a otro estado" aria-label="Arrastrar">' + ic('grip', 'sm') + '</span>' : '') +
-          '<div class="kt">' + esc(it.titulo) + '</div><div class="km">' + semBadge(it) + '<span>' + ic('calendar', 'sm') + ' ' + fmtShort(it.limite) + '</span><span class="chip">' + (it.grupo === 'sem' ? 'Semanal' : 'Mensual') + '</span>' + (it.equipo ? '<span class="teamtag">' + ic('users') + 'Equipo</span>' : '') + '</div>' +
+          '<div class="kt">' + esc(it.titulo) + '</div><div class="km">' + semBadge(it) + '<span>' + ic('calendar', 'sm') + ' ' + limTxt(it) + '</span><span class="chip">' + grupoCorto(it.grupo) + '</span>' + (it.equipo ? '<span class="teamtag">' + ic('users') + 'Equipo</span>' : '') + '</div>' +
           '<div class="kf">' + avatarHTML(p) + '<span class="small" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(pshort(p)) + '</span><span class="pct">' + pct(it) + '%</span></div><div class="progress thin" style="margin-top:7px"><span style="width:' + pct(it) + '%"></span></div></div>';
       }).join('') + (cards.length ? '' : '<div class="tiny muted" style="padding:10px;text-align:center">' + (anyDrag ? 'Arrastre aquí' : 'Sin tareas') + '</div>') + '</div></div>';
   }).join('') + '</div>';
@@ -3058,7 +3064,7 @@ function timelineHTML(it) {
   var ex = clamp(Math.round(clamp(daysBetween(it.inicio, T) + 1, 0, total) / total * 100), 0, 100);
   var expl = s.k === 'concluida' ? 'Tarea concluida.' : !r ? '' : r.bajo ? 'A esta fecha se esperaría un avance de <b>' + r.esperado + '%</b> y lleva <b>' + r.real + '%</b>: conviene revisar con el responsable.' : 'Avance esperado a hoy: <b>' + r.esperado + '%</b> · avance real: <b>' + r.real + '%</b>.';
   return '<div><div class="lbl" style="margin-bottom:2px">Ritmo de la tarea</div><div class="tline"><div class="tr"></div><div class="fl k-' + s.k + '-bg" style="width:' + real + '%"></div>' + (inRange && s.k !== 'concluida' ? '<div class="ex" data-l="Hoy" style="left:calc(' + ex + '% - 1px)"></div>' : '') +
-    '<div class="ends"><span>Inicio ' + fmtShort(it.inicio) + '</span><span>Avance ' + real + '%</span><span>Límite ' + fmtShort(it.limite) + '</span></div></div>' + (expl ? '<div class="small muted">' + expl + '</div>' : '') + '</div>';
+    '<div class="ends"><span>Inicio ' + fmtShort(it.inicio) + '</span><span>Avance ' + real + '%</span><span>Límite ' + limTxt(it) + '</span></div></div>' + (expl ? '<div class="small muted">' + expl + '</div>' : '') + '</div>';
 }
 function teamPanelHTML(it, E) {
   var list = sortItems(teamItems(it.equipo)), st = teamStats(list);
@@ -3082,9 +3088,10 @@ function itemModal() {
     '<div class="field"><label>Periodicidad del objetivo</label><select name="grupo"' + dis(E) + '>' + GROUPS.map(function (g) { return '<option value="' + g.id + '"' + (it.grupo === g.id ? ' selected' : '') + '>' + g.periodo + ' (' + g.nombre.toLowerCase() + ')</option>'; }).join('') + '</select></div></div>' +
     '<div class="field"><label>Objetivo del periodo</label><input name="objetivo" type="text" value="' + esc(it.objetivo) + '" placeholder="Resultado verificable que se espera al cierre del periodo"' + dis(E) + '></div>' +
     (isNew || !(num(it.meta) > 0) ? '' : '<div class="fgrid3"><div class="field"><label>' + (team || it.equipo ? 'Meta por persona' : 'Meta (cantidad)') + '</label><input name="meta" type="number" min="0" step="1" value="' + num(it.meta) + '"' + dis(E) + '></div><div class="field"><label>Unidad</label><input name="unidad" type="text" value="' + esc(it.unidad) + '" placeholder="registros, visitas…"' + dis(E) + '></div><div class="field"><label>Avance logrado</label><input name="avance" type="number" min="0" step="1" value="' + num(it.avance) + '"' + dis(S && !team) + '></div></div>') +
-    '<div class="fgrid"><div class="field"><label>Inicio</label><input name="inicio" type="date" value="' + esc(it.inicio) + '"' + dis(E) + '></div><div class="field"><label>Fecha límite</label><input name="limite" type="date" value="' + esc(it.limite) + '"' + dis(E) + '>' +
-    (E ? '<div class="row" style="gap:6px"><button type="button" class="btn sm ghost" data-act="quickDate" data-q="vie">Viernes de esta semana</button><button type="button" class="btn sm ghost" data-act="quickDate" data-q="mes">Fin de mes</button></div>' : '') + '</div></div>' +
-    '<div class="fgrid"><div class="field"><label>Estado</label><select name="estado"' + dis(S) + '>' + STATUSES.map(function (s) { return '<option value="' + s.id + '"' + (it.estado === s.id ? ' selected' : '') + '>' + s.label + '</option>'; }).join('') + '</select></div>' +
+    '<div class="fgrid3"><div class="field"><label>Inicio</label><input name="inicio" type="date" value="' + esc(it.inicio) + '"' + dis(E) + '></div><div class="field"><label>Fecha límite</label><input name="limite" type="date" value="' + esc(it.limite) + '"' + dis(E) + '>' +
+    (E ? '<div class="row" style="gap:4px;flex-wrap:nowrap"><button type="button" class="btn sm ghost" data-act="quickDate" data-q="vie">Este viernes</button><button type="button" class="btn sm ghost" data-act="quickDate" data-q="mes">Fin de mes</button></div>' : '') + '</div>' +
+    '<div class="field"><label>Hora de entrega</label><input name="horaLimite" type="time" value="' + esc(it.horaLimite || '') + '"' + dis(E) + '><span class="tiny muted">Opcional</span></div></div>' +
+    '<div class="fgrid">' + (isNew ? '' : '<div class="field"><label>Estado</label><select name="estado"' + dis(S) + '>' + STATUSES.map(function (s) { return '<option value="' + s.id + '"' + (it.estado === s.id ? ' selected' : '') + '>' + s.label + '</option>'; }).join('') + '</select></div>') +
     '<div class="field"><label>Prioridad</label><select name="prioridad"' + dis(E) + '>' + PRIORIDADES.map(function (p) { return '<option' + (it.prioridad === p ? ' selected' : '') + '>' + p + '</option>'; }).join('') + '</select></div></div>' +
     '<div class="field"><label>Indicaciones del Vocal</label><textarea name="descripcion" rows="2"' + dis(E) + '>' + esc(it.descripcion) + '</textarea></div></form>';
   if (!isNew) {
@@ -3098,10 +3105,10 @@ function itemModal() {
     (isEdit() ? '<div class="row" style="margin-top:8px;flex-wrap:nowrap"><input type="text" id="updText" placeholder="Escribir una actualización para el equipo…" data-enter="postUpdate"><button class="btn" data-act="postUpdate">' + ic('send', 'sm') + 'Publicar</button></div>' : '') + '</div>';
   var foot = '';
   if (!isNew && can('eliminarTareas')) foot += '<button class="btn danger" data-act="deleteItem">' + ic('trash', 'sm') + 'Eliminar</button>';
-  if (!isNew && can('crearTareas')) foot += '<button class="btn" data-act="renewItem" title="Crea la misma tarea para la siguiente semana o mes">' + ic('refresh', 'sm') + 'Renovar periodo</button>';
+  if (!isNew && can('crearTareas') && it.grupo !== 'unica') foot += '<button class="btn" data-act="renewItem" title="Crea la misma tarea para la siguiente semana o mes">' + ic('refresh', 'sm') + 'Renovar periodo</button>';
   if (!isNew && can('comunicaciones') && sm.k !== 'concluida') foot += '<button class="btn" data-act="openComm" data-id="' + it.id + '" data-tipo="' + (sm.k === 'vencida' ? 'apercibimiento' : 'recordatorio') + '">' + ic(sm.k === 'vencida' ? 'alert' : 'mail', 'sm') + (sm.k === 'vencida' ? 'Apercibimiento' : 'Recordatorio') + '</button>';
   foot += '<span class="spacer"></span><button class="btn" data-act="closeModal">' + (E || S ? 'Cancelar' : 'Cerrar') + '</button>' + (E || S ? '<button class="btn primary" data-act="saveItem">' + ic('check', 'sm') + (isNew ? (team ? 'Asignar al equipo' : 'Crear tarea') : 'Guardar cambios') + '</button>' : '');
-  var head = isNew ? '' : '<span class="chip">' + (it.grupo === 'sem' ? 'Semanal' : 'Mensual') + '</span>' + (it.equipo ? '<span class="teamtag">' + ic('users') + 'Equipo</span>' : '');
+  var head = isNew ? '' : '<span class="chip">' + grupoCorto(it.grupo) + '</span>' + (it.equipo ? '<span class="teamtag">' + ic('users') + 'Equipo</span>' : '');
   openModal({ title: isNew ? (team ? 'Nueva tarea de equipo' : 'Nueva tarea') : it.titulo + (it.equipo ? ' · ' + pshort(personBy(it.responsable)) : ''), body: body, foot: foot, noFocus: !isNew, headExtra: head });
 }
 function subsHTML(it, editable) {
@@ -3137,7 +3144,7 @@ function itemModalKeep() {
   itemModal();
   var g = $('#itemForm'); if (g) Object.keys(vals).forEach(function (k) { if (g[k] && !g[k].disabled) g[k].value = vals[k]; });
 }
-var FIELD_LABELS = { titulo: 'Tarea', responsable: 'Responsable', grupo: 'Periodicidad', objetivo: 'Objetivo', meta: 'Meta', unidad: 'Unidad', avance: 'Avance', inicio: 'Inicio', limite: 'Fecha límite', estado: 'Estado', prioridad: 'Prioridad', enlace: 'Evidencia', descripcion: 'Indicaciones' };
+var FIELD_LABELS = { horaLimite: 'Hora de entrega', titulo: 'Tarea', responsable: 'Responsable', grupo: 'Periodicidad', objetivo: 'Objetivo', meta: 'Meta', unidad: 'Unidad', avance: 'Avance', inicio: 'Inicio', limite: 'Fecha límite', estado: 'Estado', prioridad: 'Prioridad', enlace: 'Evidencia', descripcion: 'Indicaciones' };
 function fieldTxt(k, v) {
   if (k === 'responsable') return pname(personBy(v));
   if (k === 'estado') return statusOf(v).label;
@@ -3163,7 +3170,7 @@ ACT.saveItem = function () {
   if (!S) return;
   var team = isNew && editing.mode === 'team';
   var v = {};
-  ['titulo', 'responsable', 'grupo', 'objetivo', 'unidad', 'inicio', 'limite', 'estado', 'prioridad', 'enlace', 'descripcion'].forEach(function (k) { v[k] = f[k] ? (f[k].value || '').trim() : d[k]; });
+  ['titulo', 'responsable', 'grupo', 'objetivo', 'unidad', 'inicio', 'limite', 'horaLimite', 'estado', 'prioridad', 'enlace', 'descripcion'].forEach(function (k) { v[k] = f[k] ? (f[k].value || '').trim() : d[k]; });
   v.meta = f.meta ? Math.max(0, num(f.meta.value)) : num(d.meta); v.avance = f.avance ? Math.max(0, num(f.avance.value)) : num(d.avance);
   if (!E) ['titulo', 'responsable', 'grupo', 'objetivo', 'unidad', 'inicio', 'limite', 'prioridad', 'descripcion', 'meta'].forEach(function (k) { v[k] = d[k]; });
   if (!v.titulo) return toast('Escriba el nombre de la tarea');
@@ -3173,6 +3180,7 @@ ACT.saveItem = function () {
   if (!validISO(v.inicio) || !validISO(v.limite)) return toast('Revise las fechas de inicio y límite');
   if (toUTC(v.limite) < toUTC(v.inicio)) return toast('La fecha límite no puede ser anterior al inicio');
   if (v.enlace && !/^https?:\/\//i.test(v.enlace)) v.enlace = 'https://' + v.enlace;
+  if (!/^\d{2}:\d{2}$/.test(v.horaLimite || '')) v.horaLimite = '';
   if (isNew) {
     var made = [];
     if (team) {
@@ -3183,7 +3191,7 @@ ACT.saveItem = function () {
     } else {
       var it1 = Object.assign(d, v); it1.lastSem = null;
       state.items.push(it1); made.push(it1);
-      audit('Tarea creada', it1.titulo, 'Responsable: ' + pname(personBy(it1.responsable)) + ' · ' + (it1.grupo === 'sem' ? 'Semanal' : 'Mensual') + ' · Límite: ' + fmtDate(it1.limite) + (num(it1.meta) ? ' · Meta: ' + it1.meta + ' ' + it1.unidad : ''));
+      audit('Tarea creada', it1.titulo, 'Responsable: ' + pname(personBy(it1.responsable)) + ' · ' + grupoCorto(it1.grupo) + ' · Límite: ' + fmtDate(it1.limite) + (num(it1.meta) ? ' · Meta: ' + it1.meta + ' ' + it1.unidad : ''));
     }
     made.forEach(function (it) { Engine.emit('created', { item: it }); Engine.emit('assigned', { item: it }); it.lastSem = semaforo(it).k; });
     closeModal(); editing = null; scanSemaforos(); commit();
@@ -3631,7 +3639,7 @@ var ACTIONS = {
   add_update: 'Publicar una actualización'
 };
 var COND_FIELDS = {
-  grupo: { label: 'Periodicidad', opts: function () { return [['sem', 'Semanal'], ['men', 'Mensual']]; } },
+  grupo: { label: 'Periodicidad', opts: function () { return [['sem', 'Semanal'], ['men', 'Mensual'], ['unica', 'Ninguna']]; } },
   prioridad: { label: 'Prioridad', opts: function () { return PRIORIDADES.map(function (p) { return [p, p]; }); } },
   area: { label: 'Figura del responsable', opts: function () { return state.areas.map(function (a) { return [a.id, a.cargo]; }).concat([['staff', 'Asistente']]); } },
   responsable: { label: 'Responsable', opts: function () { return assignable().map(function (p) { return [p.id, pshort(p)]; }); } }
@@ -4086,7 +4094,7 @@ function syncPromoHTML() {
 }
 function myTaskCard(it) {
   var s = semaforo(it), touch = canTouch(it), meta = num(it.meta), next = NEXT_STEP[it.estado];
-  return '<div class="mtask s-' + s.k + '"><div class="mm">' + semBadge(it) + '<span>' + ic('calendar', 'sm') + ' ' + fmtShort(it.limite) + (s.dias != null && s.k !== 'concluida' ? ' · ' + diasTxt(s) : '') + '</span>' + (it.equipo ? '<span class="teamtag" data-tip="Tarea de equipo: varias personas tienen esta misma tarea">' + ic('users') + 'Equipo</span>' : '') + '</div>' +
+  return '<div class="mtask s-' + s.k + '"><div class="mm">' + semBadge(it) + '<span>' + ic('calendar', 'sm') + ' ' + limTxt(it) + (s.dias != null && s.k !== 'concluida' ? ' · ' + diasTxt(s) : '') + '</span>' + (it.equipo ? '<span class="teamtag" data-tip="Tarea de equipo: varias personas tienen esta misma tarea">' + ic('users') + 'Equipo</span>' : '') + '</div>' +
     '<div class="mt" data-act="openItem" data-id="' + it.id + '">' + esc(it.titulo) + '</div>' + (it.objetivo ? '<div class="small muted">' + esc(it.objetivo) + '</div>' : '') +
     progressHTML(pct(it)) +
     '<div class="row" style="justify-content:space-between;gap:8px">' + (meta > 0 ? (touch ? '<span class="stepper" data-tip="Registre su avance con − y +"><button data-act="stepAvance" data-id="' + it.id + '" data-d="-1" aria-label="Restar uno">' + ic('minus', 'sm') + '</button><span>' + num(it.avance) + ' de ' + meta + ' ' + esc(it.unidad) + '</span><button data-act="stepAvance" data-id="' + it.id + '" data-d="1" aria-label="Sumar uno">' + ic('plus', 'sm') + '</button></span>' : '<span class="small"><b>' + num(it.avance) + '</b> de ' + meta + ' ' + esc(it.unidad) + '</span>') : '<span></span>') + statusPill(it.estado) + '</div>' +
@@ -5008,7 +5016,9 @@ function agendaOK() { return session.role === 'vocal'; }
 function agKey(sc, k) { return (sc === 'p' ? 'pag' : 'ag') + k; }
 function agMode(sc) { return ui[agKey(sc, 'Mode')] || prefGet(agKey(sc, 'Mode'), 'semana'); }
 function agDay(sc) { var d = ui[agKey(sc, 'Day')]; return validISO(d) ? d : TODAY(); }
-function agTasks(pool, d) { return sortItems(pool.filter(function (it) { return it.limite === d; })); }
+function agTasks(pool, d) {
+  return sortItems(pool.filter(function (it) { return it.limite === d; })).sort(function (a, b) { var ha = a.horaLimite || '99:99', hb = b.horaLimite || '99:99'; return ha < hb ? -1 : ha > hb ? 1 : 0; });
+}
 /* Anotaciones que el Vocal haya hecho con la versión anterior de la agenda (ya no se agregan nuevas). */
 function agNotes(d) {
   return (state.agenda || []).filter(function (n) { return n.fecha === d; }).sort(function (a, b) {
@@ -5020,7 +5030,7 @@ function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
 function agTaskHTML(it, showP) {
   var s = semaforo(it), p = personBy(it.responsable);
-  var when = s.k === 'concluida' ? 'Concluida' : s.label + (s.dias != null && s.k !== 'rojo' ? ' · ' + diasTxt(s) : '');
+  var when = (it.horaLimite ? fmtHora(it.horaLimite) + ' · ' : '') + (s.k === 'concluida' ? 'Concluida' : s.label + (s.dias != null && s.dias !== 0 ? ' · ' + diasTxt(s) : ''));
   return '<button class="ag-task as-' + s.k + '" data-act="openItem" data-id="' + it.id + '">' +
     '<span class="ag-tx"><span class="ag-tt">' + esc(it.titulo) + '</span>' +
     '<span class="ag-tm">' + (showP ? esc(pshort(p)) + ' · ' : '') + esc(when) + (it.equipo ? ' · equipo' : '') + '</span></span>' +
@@ -5388,8 +5398,8 @@ CHG.importJSON = function (el) {
   rd.readAsText(f);
 };
 ACT.exportCSV = function () {
-  var rows = [['Periodicidad', 'Tarea', 'Responsable', 'Cargo', 'Estado', 'Semáforo', 'Días restantes', 'Objetivo', 'Meta', 'Unidad', 'Avance', '% avance', 'Inicio', 'Fecha límite', 'Prioridad']];
-  sortItems(state.items).forEach(function (it) { var p = personBy(it.responsable), s = semaforo(it); rows.push([it.grupo === 'sem' ? 'Semanal' : 'Mensual', it.titulo, pname(p), p ? p.cargo : '', statusOf(it.estado).label, s.label, s.dias == null ? '' : s.dias, it.objetivo, it.meta, it.unidad, it.avance, pct(it), fmtDate(it.inicio), fmtDate(it.limite), it.prioridad]); });
+  var rows = [['Periodicidad', 'Tarea', 'Responsable', 'Cargo', 'Estado', 'Semáforo', 'Días restantes', 'Objetivo', 'Meta', 'Unidad', 'Avance', '% avance', 'Inicio', 'Fecha límite', 'Hora de entrega', 'Prioridad']];
+  sortItems(state.items).forEach(function (it) { var p = personBy(it.responsable), s = semaforo(it); rows.push([grupoCorto(it.grupo), it.titulo, pname(p), p ? p.cargo : '', statusOf(it.estado).label, s.label, s.dias == null ? '' : s.dias, it.objetivo, it.meta, it.unidad, it.avance, pct(it), fmtDate(it.inicio), fmtDate(it.limite), it.horaLimite || '', it.prioridad]); });
   downloadText('Tareas_VCEyEC_' + TODAY() + '.csv', toCSV(rows), 'text/csv;charset=utf-8');
 };
 ACT.removeDemo = function () {
