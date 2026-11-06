@@ -2548,7 +2548,6 @@ var TABS = [
   { id: 'persona', label: 'Mi espacio', icon: 'user' },
   { id: 'tablero', label: 'Tablero de tareas', icon: 'table' },
   { id: 'equipo', label: 'Equipo y permisos', icon: 'users' },
-  { id: 'evidencias', label: 'Evidencias', icon: 'bookmark' },
   { id: 'nube', label: 'Trabajo en equipo (nube)', icon: 'cloud' },
   { sep: true },
   { id: 'comunicaciones', label: 'Comunicaciones', icon: 'mail', perm: 'comunicaciones' },
@@ -3087,7 +3086,6 @@ function itemModal() {
     (E ? '<div class="row" style="gap:6px"><button type="button" class="btn sm ghost" data-act="quickDate" data-q="vie">Viernes de esta semana</button><button type="button" class="btn sm ghost" data-act="quickDate" data-q="mes">Fin de mes</button></div>' : '') + '</div></div>' +
     '<div class="fgrid"><div class="field"><label>Estado</label><select name="estado"' + dis(S) + '>' + STATUSES.map(function (s) { return '<option value="' + s.id + '"' + (it.estado === s.id ? ' selected' : '') + '>' + s.label + '</option>'; }).join('') + '</select></div>' +
     '<div class="field"><label>Prioridad</label><select name="prioridad"' + dis(E) + '>' + PRIORIDADES.map(function (p) { return '<option' + (it.prioridad === p ? ' selected' : '') + '>' + p + '</option>'; }).join('') + '</select></div></div>' +
-    (isNew ? '' : '<div class="field"><label>Enlace a la evidencia</label><input name="enlace" type="url" value="' + esc(it.enlace) + '" placeholder="https://… (carpeta compartida, acta, reporte)"' + dis(S) + '></div>') +
     '<div class="field"><label>Indicaciones del Vocal</label><textarea name="descripcion" rows="2"' + dis(E) + '>' + esc(it.descripcion) + '</textarea></div></form>';
   if (!isNew) {
     body += '<div class="calc"><div><span class="lbl">Semáforo</span>' + semBadge(it) + '</div><div><span class="lbl">Días restantes</span><b>' + (sm.dias == null ? '—' : sm.dias) + '</b> <span class="tiny muted">' + diasTxt(sm) + '</span></div><div><span class="lbl">Avance</span><b>' + pct(it) + '%</b></div><div><span class="lbl">Prioridad</span><b>' + esc(it.prioridad) + '</b></div></div>' + timelineHTML(it);
@@ -4107,7 +4105,7 @@ function myTasksHTML() {
 function reviewRowsHTML(list) {
   return '<div class="alist2">' + list.slice(0, 8).map(function (it) {
     var p = personBy(it.responsable), url = safeURL(it.enlace);
-    return '<div class="arow two">' + avatarHTML(p) + '<div style="min-width:0"><div class="tt" data-act="openItem" data-id="' + it.id + '">' + esc(it.titulo) + '</div><div class="meta"><span>' + esc(pshort(p)) + '</span><span>Avance ' + pct(it) + '%</span><span>Vence ' + fmtShort(it.limite) + '</span>' + (url ? '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + ic('link', 'sm') + ' Evidencia</a>' : '<span>Sin evidencia</span>') + '</div>' +
+    return '<div class="arow two">' + avatarHTML(p) + '<div style="min-width:0"><div class="tt" data-act="openItem" data-id="' + it.id + '">' + esc(it.titulo) + '</div><div class="meta"><span>' + esc(pshort(p)) + '</span><span>Avance ' + pct(it) + '%</span><span>Vence ' + fmtShort(it.limite) + '</span>' + '</div>' +
       (canTouch(it) ? '<div class="row" style="margin-top:8px"><button class="btn sm primary" data-act="setStatus" data-via="revisión de la Vocalía" data-id="' + it.id + '" data-st="listo">' + ic('check', 'sm') + 'Aprobar</button><button class="btn sm" data-act="setStatus" data-via="devuelta por la Vocalía" data-id="' + it.id + '" data-st="proceso">Devolver</button></div>' : '') + '</div></div>';
   }).join('') + '</div>';
 }
@@ -4924,7 +4922,7 @@ if (window.__WOS_TEST__) window.__wosTest = { poll: Sync._poll, flush: Sync._flu
    ===================================================================== */
 var TOUR = [
   { center: true, tab: 'panel', h: 'Bienvenido/a al Work OS', p: 'En un minuto le mostramos cómo leer el tablero y cómo usarlo. Puede salir en cualquier momento con «Terminar» o con la tecla Esc.' },
-  { sel: '.side', tab: 'panel', h: 'Menú de apartados', p: 'Aquí están los apartados: <b>Inicio</b>, <b>Mi espacio</b>, el <b>Tablero de tareas</b>, <b>Equipo y permisos</b>, <b>Evidencias</b> y <b>Trabajo en equipo</b>. Pase el cursor sobre cada ícono para ver su nombre.' },
+  { sel: '.side', tab: 'panel', h: 'Menú de apartados', p: 'Aquí están los apartados: <b>Inicio</b>, <b>Mi espacio</b>, el <b>Tablero de tareas</b>, <b>Mi agenda</b>, <b>Equipo y permisos</b> y <b>Trabajo en equipo</b>. Pase el cursor sobre cada ícono para ver su nombre.' },
   { sel: '#hero', tab: 'panel', h: 'Su resumen del día', p: 'De un vistazo: cuántas tareas hay abiertas y cuáles requieren atención. Los botones llevan a lo más común: asignar, ver su espacio o entrar con su cuenta.' },
   { sel: '#myTasks', tab: 'panel', optional: true, h: 'Sus tareas', p: 'Al entrar con su cuenta, aquí aparecen sus tareas abiertas. Use <b>Comenzar</b>, registre su avance con <b>−</b> y <b>+</b>, y <b>Enviar a revisión</b> al terminar.' },
   { sel: '#cardSem', tab: 'panel', h: 'El semáforo', p: 'Cada barra cuenta las tareas de un color: <b>verde</b> con margen, <b>amarillo</b> por vencer, <b>rojo</b> el último día y <b>rojo oscuro</b> si ya venció; gris oscuro, concluida. Clic en una barra para ver esas tareas; el botón <b>?</b> explica cada color.' },
@@ -5390,8 +5388,8 @@ CHG.importJSON = function (el) {
   rd.readAsText(f);
 };
 ACT.exportCSV = function () {
-  var rows = [['Periodicidad', 'Tarea', 'Responsable', 'Cargo', 'Estado', 'Semáforo', 'Días restantes', 'Objetivo', 'Meta', 'Unidad', 'Avance', '% avance', 'Inicio', 'Fecha límite', 'Prioridad', 'Evidencia']];
-  sortItems(state.items).forEach(function (it) { var p = personBy(it.responsable), s = semaforo(it); rows.push([it.grupo === 'sem' ? 'Semanal' : 'Mensual', it.titulo, pname(p), p ? p.cargo : '', statusOf(it.estado).label, s.label, s.dias == null ? '' : s.dias, it.objetivo, it.meta, it.unidad, it.avance, pct(it), fmtDate(it.inicio), fmtDate(it.limite), it.prioridad, it.enlace]); });
+  var rows = [['Periodicidad', 'Tarea', 'Responsable', 'Cargo', 'Estado', 'Semáforo', 'Días restantes', 'Objetivo', 'Meta', 'Unidad', 'Avance', '% avance', 'Inicio', 'Fecha límite', 'Prioridad']];
+  sortItems(state.items).forEach(function (it) { var p = personBy(it.responsable), s = semaforo(it); rows.push([it.grupo === 'sem' ? 'Semanal' : 'Mensual', it.titulo, pname(p), p ? p.cargo : '', statusOf(it.estado).label, s.label, s.dias == null ? '' : s.dias, it.objetivo, it.meta, it.unidad, it.avance, pct(it), fmtDate(it.inicio), fmtDate(it.limite), it.prioridad]); });
   downloadText('Tareas_VCEyEC_' + TODAY() + '.csv', toCSV(rows), 'text/csv;charset=utf-8');
 };
 ACT.removeDemo = function () {
