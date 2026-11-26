@@ -328,7 +328,7 @@ details ol,details ul{margin:8px 0 0; padding-left:20px; display:grid; gap:6px; 
 </style>
 <script>window.GX_H3D={set:{armcircles:1,bench:1,birddog:1,calf:1,catcow:1,curl:1,curlcable:1,dbrow:1,deadbug:1,deadhang:1,dip:1,extrot:1,facepull:1,fly:1,glutebridge:1,goblet:1,gobletheel:1,hammer:1,hammerrope:1,hinge:1,hipswing:1,jj:1,lateral:1,legcurl:1,legext:1,legraise:1,lunge:1,ohp:1,ohpbar:1,plank:1,pulldown:1,pullneg:1,pullup_close:1,pullup_wide:1,pushdown:1,rdl:1,row:1,shrug:1,sideplank:1,split:1,squat:1,tricable:1,trihigh:1,trioverhead:1,wallslide:1,yraise:1},src:"h3d.js?v=c62d841c9c",model:"body.glb?v=c91b3c1fe4"};</script><script src="config.js"></script>
 <script>
-window.BITACORA_VER='20261126121020';
+window.BITACORA_VER='20261126132908';
 /* Actualización automática: compara la versión publicada con la que está abierta. */
 (function(){
   var V=window.BITACORA_VER,reg=null,hiddenAt=0;
@@ -587,12 +587,16 @@ function render(pr,cm,s,svgOpts){
 }
 /* Equipo: pila de pesas de una torre de poleas y rueda de polea */
 function stack(x,z,y0,y1,w,dp){
-  /* torre de discos: dos guías, carro y un poste horizontal con discos (hacia afuera del centro) */
-  w=w||16;var o=[],s=x>2?1:x<-2?-1:1,yc=y0+18,top=y1+60;
-  o.push(S([x-6,4,z],[x-6,top,z],1.8,'e'),S([x+6,4,z],[x+6,top,z],1.8,'e'));
-  o.push(Pl([[x-8,yc-10,z],[x+8,yc-10,z],[x+8,yc+10,z],[x-8,yc+10,z]],'stk'));
-  o.push(S([x,yc,z],[x+s*24,yc,z],3.2,'e'));
-  [9,13,17].forEach(function(d){o.push(disc([x+s*d,yc,z],[1,0,0],16,'plate'))});
+  /* torre de discos: dos guías, carro con poste y discos, y el cable que sube del carro a la rueda de arriba.
+     Las piezas con car:1 se mueven con la carga (car:'a' = solo el extremo a). */
+  w=w||16;var o=[],s=x>2?1:x<-2?-1:1,yc=y0+18,top=y1+60,lim=top-yc-34;
+  var C=function(q,m){q.car=m||1;q.lim=lim;return q};
+  o.push(S([x-6,4,z],[x-6,top,z],1.8,'e'),S([x+6,4,z],[x+6,top,z],1.8,'e'),S([x-8,top,z],[x+8,top,z],2.4,'e'));
+  o.push(C(Pl([[x-8,yc-10,z],[x+8,yc-10,z],[x+8,yc+10,z],[x-8,yc+10,z]],'stk')));
+  o.push(C(S([x,yc,z],[x+s*24,yc,z],3.2,'e')));
+  [9,13,17].forEach(function(d){o.push(C(disc([x+s*d,yc,z],[1,0,0],16,'plate')))});
+  o.push(C(S([x,yc+10,z],[x,top-5,z],1.1,'k'),'a'));
+  o=o.concat(wheel([x,top-5,z],[1,0,0],3.6));
   return o;
 }
 function wheel(p,axis,r){return [disc(p,axis||[1,0,0],r||4.2,'whl'),{k:'d',p:p,r:1.2,c:'jt'}]}
@@ -899,9 +903,10 @@ pose:function(p){
   for(var i=0;i<2;i++){var g=sgn(i),rel=mix([g*21,50,8],[g*21,-4,14],p);
     var wr=add(add(N,[g*19,0,0]),rel);wrs.push(wr);
     arm.push({wr:wr,pole:[g,-1,-0.2]});leg.push({an:[g*18,8,40],pole:[0,1,0.15]});}
-  var a=add(wrs[0],mul(sub(wrs[0],wrs[1]),0.15)),b=add(wrs[1],mul(sub(wrs[1],wrs[0]),0.15));
-  var mid=mix(wrs[0],wrs[1],0.5);
-  var eq=[S(a,b,2.6,'bar'),S([0,44,-24],[0,44,14],14,'pad'),S([-20,70,32],[20,70,32],9,'pad'),S([0,46,32],[0,70,32],4,'e'),S([0,0,-26],[0,0,64],5,'e'),S([0,0,62],[0,246,62],6,'e'),S([0,246,62],[0,246,12],5,'e'),S([0,241,12],mid,1.4,'k'),S([0,241,58],[0,84,58],1.1,'k'),S([0,0,-24],[0,44,-24],5,'e')].concat(wheel([0,241,12]),wheel([0,241,60]),stack(0,66,6,84,16,9));
+  var hb=wrs.map(function(w){return add(w,[0,7,0])});
+  var a=add(hb[0],mul(sub(hb[0],hb[1]),0.15)),b=add(hb[1],mul(sub(hb[1],hb[0]),0.15));
+  var mid=mix(hb[0],hb[1],0.5);
+  var eq=[S(a,b,2.6,'bar'),S([0,44,-24],[0,44,14],14,'pad'),S([-20,70,32],[20,70,32],9,'pad'),S([0,46,32],[0,70,32],4,'e'),S([0,0,-26],[0,0,64],5,'e'),S([0,0,62],[0,246,62],6,'e'),S([0,246,62],[0,246,12],5,'e'),S([0,246,62],[0,246,78],5,'e'),S([0,241,12],mid,1.4,'k'),S([0,241,12],[0,241,78],1.1,'k'),S([0,0,-24],[0,44,-24],5,'e')].concat(wheel([0,241,12]),stack(0,78,6,186,16,9));
   return {o:{P:P,lean:lean,arm:arm,leg:leg},eq:eq,m:['el',0,'Codo']};
 }};
 
@@ -1283,6 +1288,27 @@ pose:function(p){
   o.arm=arm;return {o:o,eq:eq,m:['el',0,'Codo']};
 }};
 })(GX);
+
+/* La carga de cada polea sube y baja con el cable: lo que se alarga el cable del lado de la persona
+   es lo que sube el carro (polea 1:1). */
+(function(G){
+var EX=G.EX,base={};
+function lens(eq){var o=[];eq.forEach(function(q){if(q.k==='s'&&q.c==='k'&&!q.car)o.push(Math.hypot(q.b[0]-q.a[0],q.b[1]-q.a[1],q.b[2]-q.a[2]))});return o}
+function hasCar(eq){for(var i=0;i<eq.length;i++)if(eq[i].car)return true;return false}
+function mv(v,l){return [v[0],v[1]+l,v[2]]}
+Object.keys(EX).forEach(function(k){var d=EX[k],f=d.pose;if(!f)return;
+  d.pose=function(p,rep,t){var r=f.call(this,p,rep,t);if(!r||!r.eq||!hasCar(r.eq))return r;
+    if(base[k]===undefined){var mn=[],mx=[];[0,0.1,0.25,0.4,0.5,0.6,0.75,0.9,1].forEach(function(q){try{lens(f.call(d,q,0,0).eq).forEach(function(L,i){mn[i]=Math.min(mn[i]==null?L:mn[i],L);mx[i]=Math.max(mx[i]==null?L:mx[i],L)})}catch(e){}});
+      base[k]={mn:mn,mv:mx.map(function(x,i){return x-mn[i]>1})}}
+    var B=base[k],ls=lens(r.eq),sum=0,n=0;ls.forEach(function(L,i){if(B.mv[i]){sum+=L-B.mn[i];n++}});if(!n)return r;var lift=Math.max(0,sum/n);
+    r.eq=r.eq.map(function(q){if(!q.car)return q;var l=Math.min(lift,q.lim||999);
+      if(q.k==='p')return {k:'p',pts:q.pts.map(function(v){return mv(v,l)}),c:q.c,car:1};
+      if(q.k==='d')return {k:'d',p:mv(q.p,l),r:q.r,c:q.c,car:1};
+      if(q.car==='a')return {k:'s',a:mv(q.a,l),b:q.b,w:q.w,c:q.c,car:'a'};
+      return {k:'s',a:mv(q.a,l),b:mv(q.b,l),w:q.w,c:q.c,car:1};});
+    return r;};});
+})(GX);
+
 
 
 
